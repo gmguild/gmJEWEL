@@ -18,26 +18,26 @@ export default function Stake() {
             <hr />
             <section>
               <p>
-                Provide liquidity to the JEWEL - GMG pair on DefiKingdoms exchange
-                to receive further rewards in $GMG.
-              </p>
-              <StakeMasterJewelerUI
-                poolId={0}
-                LPToken={addresses.JGMGLPToken}
-                tokenName="JEWEL-GMG LP token"
-              />
-            </section>
-            <hr />
-            <section>
-              <p>
                 Provide liquidity to the JEWEL - gmJEWEL pair on DefiKingdoms
                 exchange to receive rewards in $GMG. You will also receive trading
                 fees for every trade made against this pair.
               </p>
               <StakeMasterJewelerUI
-                poolId={1}
+                poolId={0}
                 LPToken={addresses.JgmJLPToken}
                 tokenName="JEWEL-gmJEWEL LP token"
+              />
+            </section>
+              <hr />
+            <section>
+              <p>
+                Provide liquidity to the JEWEL - GMG pair on DefiKingdoms exchange
+                to receive further rewards in $GMG.
+              </p>
+              <StakeMasterJewelerUI
+                poolId={1}
+                LPToken={addresses.JGMGLPToken}
+                tokenName="JEWEL-GMG LP token"
               />
             </section>
             <hr />

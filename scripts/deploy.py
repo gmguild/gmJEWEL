@@ -152,11 +152,11 @@ def main():
     master_jeweler = deploy_masterjeweler(deployer, GMG_token)
     staked_GMG = deploy_stakedGMG(deployer, GMG_token)
 
-    gmg_pair = seed_gmg_pool(deployer, GMG_token, accounts, is_dev)
-    master_jeweler.add(1, gmg_pair, True, {"from": deployer})
-
     gm_jewel_pair = seed_gm_jewel_pool(deployer, gm_jewel, accounts, is_dev)
     master_jeweler.add(1, gm_jewel_pair, True, {"from": deployer})
+
+    gmg_pair = seed_gmg_pool(deployer, GMG_token, accounts, is_dev)
+    master_jeweler.add(1, gmg_pair, True, {"from": deployer})
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
 
