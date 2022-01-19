@@ -36,6 +36,19 @@ RUN_EVERY_X_SECONDS = 6
 
 is_dev = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
 
+script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+deployment_rel_path = "../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"
+pawn_shop_rel_path = "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json"
+
+addresses = json.load(
+    open(os.path.join(script_dir, deployment_rel_path)))
+
+CONTRACT_ADDRESS = addresses["PawnShop"]
+CONTRACT_FILE = json.load(open(
+    os.path.join(script_dir, pawn_shop_rel_path), "r"))
+CONTRACT_ABI = CONTRACT_FILE["abi"]
+FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
+
 
 class EventScannerState(ABC):
     """Application state that remembers what blocks we have scanned in the case of crash."""
@@ -461,24 +474,6 @@ def _fetch_events_for_all_contracts(
         # but deferring the timeout exception caused the throttle logic not to work
         all_events.append(evt)
     return all_events
-
-
-# Simple demo that scans all the token transfers of RCC token (11k).
-# The demo supports persistant state by using a JSON file.
-# You will need an Ethereum node for this.
-# Running this script will consume around 20k JSON-RPC calls.
-# With locally running Geth, the script takes 10 minutes.
-# The resulting JSON state file is 2.9 MB.
-
-script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-deployment_rel_path = "../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"
-addresses = json.load(
-    open(os.path.join(script_dir, deployment_rel_path)))
-CONTRACT_ADDRESS = addresses["PawnShop"]
-CONTRACT_FILE = json.load(open(
-    "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json", "r"))
-CONTRACT_ABI = CONTRACT_FILE["abi"]
-FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
 
 
 class SqliteDictState(EventScannerState):
