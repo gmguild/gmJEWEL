@@ -2,7 +2,7 @@ import { BigNumber, utils } from "ethers";
 import { useMemo } from "react";
 import { useContractRead } from "wagmi";
 import { B_1 } from "../../utils/constants";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 export function usexGMGToken(): {
   stakedBalance: BigNumber | undefined;

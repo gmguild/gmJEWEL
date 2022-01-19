@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { useUnstakeLPToken } from "../hooks/staking/useUnstakeLPToken";
 import { useStakeLPToken } from "../hooks/staking/useStakeLPToken";
-import { addresses } from "../utils/contracts";
+import { addresses } from "../utils/env";
 import { BigNumberToFloat } from "../utils/conversion";
 import { useLPToken } from "../hooks/staking/useLPToken";
 import { useFormattedBigNumber } from "../hooks/util/useFormattedBigNumber";

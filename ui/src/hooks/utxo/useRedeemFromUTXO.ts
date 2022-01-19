@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useContractWrite } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 import { BigNumber, } from "ethers";
 
 export function useRedeemFromUTXO(utxoAddress: string, jewelAmount: BigNumber): [() => Promise<void>, boolean] {

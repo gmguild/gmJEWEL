@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useAccount, useBlockNumber, useContractRead } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 export function useGmJewelBalance(): [{ balance: BigNumber | undefined }, boolean] {
   const [loading, setLoading] = useState(true);

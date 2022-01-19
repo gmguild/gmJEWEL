@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccount } from "wagmi";
 import { classNames } from "../utils/classNames";
-import { addresses } from "../utils/contracts";
+import { addresses } from "../utils/env";
 
 export default function Trade() {
   const [{ data: accountData }] = useAccount();

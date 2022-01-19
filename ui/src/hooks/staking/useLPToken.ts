@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useAccount, useContractRead } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 export function useLPToken(
   LPToken: string,

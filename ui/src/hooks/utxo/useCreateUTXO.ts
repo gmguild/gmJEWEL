@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useAccount, useContractWrite } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 import { toBytes32 } from "../../utils/conversion";
 
 export function useCreateUTXO(): [() => Promise<void>, boolean] {

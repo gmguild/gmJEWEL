@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useCallback } from "react";
 import { useContractWrite } from "wagmi";
-import { abis } from "../../utils/contracts";
+import { abis } from "../../utils/env";
 
 export function useERC20Approve(ERC20Address: string, spender: string) {
   const [, write] = useContractWrite(

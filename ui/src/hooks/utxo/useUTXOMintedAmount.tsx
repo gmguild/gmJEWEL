@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber, useContractRead } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 export function useUTXOMintedAmount(utxoAddress: string): [ethers.utils.Result | undefined, boolean] {
   const [loading, setLoading] = useState(true);

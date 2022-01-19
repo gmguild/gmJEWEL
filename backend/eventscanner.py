@@ -34,6 +34,8 @@ logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
 RUN_EVERY_X_SECONDS = 6
 
+is_dev = os.environ['PRODUCTION'] != 'true'
+
 
 class EventScannerState(ABC):
     """Application state that remembers what blocks we have scanned in the case of crash."""
@@ -346,7 +348,8 @@ class EventScanner:
                 )
 
             # Try to guess how many blocks to fetch over `eth_getLogs` API next time
-            chunk_size = self.estimate_next_chunk_size(chunk_size, len(new_entries))
+            chunk_size = self.estimate_next_chunk_size(
+                chunk_size, len(new_entries))
 
             # Set where the next chunk starts
             current_block = current_end + 1
@@ -410,7 +413,8 @@ def _fetch_events_for_all_contracts(
     """
 
     if from_block is None:
-        raise TypeError("Missing mandatory keyword argument to getLogs: fromBlock")
+        raise TypeError(
+            "Missing mandatory keyword argument to getLogs: fromBlock")
 
     # Currently no way to poke this using a public Web3.py API.
     # This will return raw underlying ABI JSON object for the event
@@ -466,11 +470,13 @@ def _fetch_events_for_all_contracts(
 # With locally running Geth, the script takes 10 minutes.
 # The resulting JSON state file is 2.9 MB.
 
-addresses = json.load(open("../ui/deployment.json"))
-CONTRACT_ADDRESS = addresses["pawn_shop"]
-CONTRACT_FILE = json.load(open("../build/contracts/PawnShop.json", "r"))
+addresses = json.load(
+    open("../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"))
+CONTRACT_ADDRESS = addresses["PawnShop"]
+CONTRACT_FILE = json.load(open(
+    "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json", "r"))
 CONTRACT_ABI = CONTRACT_FILE["abi"]
-FIRST_BLOCK_TO_SCAN = addresses["deployment_block"]
+FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
 
 
 class SqliteDictState(EventScannerState):
@@ -582,7 +588,8 @@ class SqliteDictState(EventScannerState):
                     list_for_minter.append(object["utxoAddress"])
                 self.state_utxos_by_user[object["minter"]] = list_for_minter
             else:
-                self.state_utxos_by_user[object["minter"]] = [object["utxoAddress"]]
+                self.state_utxos_by_user[object["minter"]] = [
+                    object["utxoAddress"]]
         elif event["event"] == "UTXOValue":
             object = {
                 "utxoAddress": args["UTXOAddress"].lower(),
@@ -662,7 +669,8 @@ def run(sc):
 
     # Scan from [last block scanned] - [latest ethereum block]
     # Note that our chain reorg safety blocks cannot go negative
-    start_block = max(state.get_last_scanned_block() - chain_reorg_safety_blocks, 0)
+    start_block = max(state.get_last_scanned_block() -
+                      chain_reorg_safety_blocks, 0)
     end_block = scanner.get_suggested_scan_end_block()
     blocks_to_scan = end_block - start_block
 

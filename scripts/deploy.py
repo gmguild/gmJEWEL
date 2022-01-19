@@ -165,16 +165,16 @@ def main():
     ) as outfile:
         json.dump(
             {
-                "utxo_template": utxo_template.address,
-                "gm_jewel": gm_jewel.address,
-                "central_bank": central_bank.address,
-                "pawn_shop": pawn_shop.address,
-                "GMG_token": GMG_token.address,
-                "master_jeweler": master_jeweler.address,
+                "UTXOTemplate": utxo_template.address,
+                "gmJEWEL": gm_jewel.address,
+                "CentralBank": central_bank.address,
+                "PawnShop": pawn_shop.address,
+                "GMGToken": GMG_token.address,
+                "MasterJeweler": master_jeweler.address,
                 "staked_GMG": staked_GMG.address,
-                "deployment_block": blocknumber,
-                "GMG_jewel_LP_token": gmg_pair,
-                "gmJEWEL_jewel_LP_token": gm_jewel_pair,
+                "deploymentBlock": blocknumber,
+                "JGMGLPToken": gmg_pair,
+                "JgmJLPToken": gm_jewel_pair,
             },
             outfile,
         )

@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useAccount, useContractRead } from "wagmi";
-import { abis } from "../../utils/contracts";
+import { abis } from "../../utils/env";
 
 export function useERC20(
   tokenAddress: string,

@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccount } from "wagmi";
 import { StakedGMGUI, StakeMasterJewelerUI } from "../components/StakeUI";
-import { addresses } from "../utils/contracts";
+import { addresses } from "../utils/env";
 
 export default function Stake() {
   const [{ data: accountData }] = useAccount();
@@ -23,7 +23,7 @@ export default function Stake() {
               </p>
               <StakeMasterJewelerUI
                 poolId={0}
-                LPToken={addresses.GMGLPToken}
+                LPToken={addresses.JGMGLPToken}
                 tokenName="JEWEL-GMG LP token"
               />
             </section>

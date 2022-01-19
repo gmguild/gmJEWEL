@@ -2,13 +2,14 @@ import { useAccount } from "wagmi";
 import { LoadingOrErroredValue, useAsyncValue } from "../util/useAsyncValue";
 import axios from "axios";
 import type { FullUTXO } from "./types";
+import { serverUrl } from "../../utils/env";
 
 
 export function useGetUTXOsForUser(): [FullUTXO[], boolean, LoadingOrErroredValue['forceRefresh']] {
   const [{ data: accountData }] = useAccount();
 
   const val = useAsyncValue(
-    () => axios.get("http://127.0.0.1:8000/utxo/user", {
+    () => axios.get(`${serverUrl}/utxo/user`, {
       params: { address: accountData?.address },
     }),
     [accountData?.address],

@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { useContractWrite } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 
 export function useStakeLPToken(poolId: number, amount: BigNumber) {

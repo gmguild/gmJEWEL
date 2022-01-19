@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useAccount, useBlockNumber, useContractRead } from "wagmi";
-import { abis } from "../../utils/contracts";
+import { abis } from "../../utils/env";
 
 export function useJewelBalance(): [{
   combinedBalance: BigNumber | undefined;

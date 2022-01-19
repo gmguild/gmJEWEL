@@ -9,18 +9,19 @@ import Mint from "../pages/Mint";
 import Redeem from "../pages/Redeem";
 import Stake from "../pages/Stake";
 import Trade from "../pages/Trade";
+import { rpcUrl } from "../utils/env";
 import { Header } from "./Header";
 
 const chains: Chain[] = [
   {
     id: 1666600000,
-    name: "Harmony Local",
+    name: "Harmony",
     nativeCurrency: {
       decimals: 18,
       name: "ONE",
       symbol: "ONE",
     },
-    rpcUrls: ["http://localhost:8545"],
+    rpcUrls: [rpcUrl],
     blockExplorers: [],
     testnet: true,
   },
@@ -32,7 +33,7 @@ const connectors = [
   }),
 ];
 
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 
 export function App() {
   return (

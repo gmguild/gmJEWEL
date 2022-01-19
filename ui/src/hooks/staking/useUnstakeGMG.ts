@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { useContractWrite } from "wagmi";
-import { abis, addresses } from "../../utils/contracts";
+import { abis, addresses } from "../../utils/env";
 
 export function useUnstakeGMG(amount: BigNumber) {
   const [, write] = useContractWrite(
