@@ -22,3 +22,10 @@ If you get an error regarding ganache, please ensure you have Node installed, an
 ```
 npm install -g ganache-cli
 ```
+
+
+IF you get the following error message with hardhat:
+
+`ValueError: {'code': -32999, 'message': "Invalid JSON-RPC response's result.\n\nErrors: Invalid value undefined supplied to : RpcBlockWithTransactions | null/totalDifficulty: QUANTITY"}`
+
+Then you must first run `npm i` to install patch-package which allows hardhat to be used for harmony forking.
