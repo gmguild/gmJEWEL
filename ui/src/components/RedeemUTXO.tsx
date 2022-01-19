@@ -10,6 +10,7 @@ import { classNames } from "../utils/classNames";
 import { BigNumberToFloat, shortenAddress } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
+import { getFees } from "../utils/fees";
 
 export function RedeemUTXO() {
   const [allUTXOs, loadingAllUTXOs, forceRefreshAllUTXOs] = useGetAllUTXOs();
