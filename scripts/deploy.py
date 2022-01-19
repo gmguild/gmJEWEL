@@ -89,7 +89,8 @@ def deploy_stakedGMG(deployer, GMG_token):
 def give_user_jewel(user):
     jewel_token = interface.Jewel(jewel_address)
     jewel_token.transfer(
-        user, 100 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+        user, 100 *
+        1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
 
 
@@ -105,7 +106,8 @@ def seed_gmg_pool(deployer, gmg_token, user, is_dev):
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
-            pool, 1000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+            pool, 1000 *
+            1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         gmg_token.mint(pool, 10_000 * 1e18, {"from": deployer})
         pool.mint(user, {"from": deployer})
@@ -120,7 +122,8 @@ def seed_llj_pool(deployer, llj_pool, user, is_dev):
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
-            pool, 2500 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+            pool, 2500 *
+            1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         llj_pool.mint(pool, 1_000 * 1e18, {"from": deployer})
         pool.mint(user, {"from": deployer})
@@ -141,19 +144,19 @@ def main():
     utxo_template = deploy_utxo(deployer)
     gm_jewel = deploy_gm_jewel(deployer)
     central_bank = deploy_central_bank(deployer, gm_jewel)
-    pawn_shop = deploy_pawnshop(deployer, gm_jewel, central_bank, utxo_template)
+    pawn_shop = deploy_pawnshop(
+        deployer, gm_jewel, central_bank, utxo_template)
 
     # Staking Contracts
     GMG_token = deploy_GMGtoken(deployer)
     master_jeweler = deploy_masterjeweler(deployer, GMG_token)
     staked_GMG = deploy_stakedGMG(deployer, GMG_token)
 
-    if is_dev:
-        gmg_lp_token = seed_gmg_pool(deployer, GMG_token, accounts[1], is_dev)
-        master_jeweler.add(1, gmg_lp_token, True, {"from": deployer})
+    gmg_lp_token = seed_gmg_pool(deployer, GMG_token, accounts[1], is_dev)
+    master_jeweler.add(1, gmg_lp_token, True, {"from": deployer})
 
-        llg_lp_token = seed_llj_pool(deployer, gm_jewel, accounts[1], is_dev)
-        master_jeweler.add(1, llg_lp_token, True, {"from": deployer})
+    llg_lp_token = seed_llj_pool(deployer, gm_jewel, accounts[1], is_dev)
+    master_jeweler.add(1, llg_lp_token, True, {"from": deployer})
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
 
