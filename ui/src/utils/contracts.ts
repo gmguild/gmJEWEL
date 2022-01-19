@@ -27,7 +27,7 @@ export const addresses = {
   gmJEWEL: Addresses["gm_jewel"],
   GMGToken: Addresses["GMG_token"],
   MasterJeweler: Addresses["master_jeweler"],
-  GMGLPToken: Addresses["GMG_LP_token"],
-  JgmJLPToken: Addresses["JLLJ_LP_token"],
+  GMGLPToken: Addresses["GMG_jewel_LP_token"],
+  JgmJLPToken: Addresses["gmJEWEL_jewel_LP_token"],
   xGMG: Addresses["staked_GMG"],
 };

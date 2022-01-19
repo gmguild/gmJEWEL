@@ -100,9 +100,9 @@ def give_user_gm_jewel(user, gm_jewel, deployer):
 
 def seed_gmg_pool(deployer, gmg_token, accounts, is_dev):
     jewel_token = interface.Jewel(jewel_address)
-    contract = interface.IUniswapV2Factory(uniswap_factory)
-    contract.createPair(gmg_token, jewel_token, {"from": deployer})
-    pool_addr = contract.getPair(gmg_token, jewel_token)
+    factory = interface.IUniswapV2Factory(uniswap_factory)
+    factory.createPair(gmg_token, jewel_token, {"from": deployer})
+    pool_addr = factory.getPair(gmg_token, jewel_token)
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
@@ -114,18 +114,18 @@ def seed_gmg_pool(deployer, gmg_token, accounts, is_dev):
     return pool_addr
 
 
-def seed_llj_pool(deployer, llj_pool, accounts, is_dev):
+def seed_gm_jewel_pool(deployer, gm_jewel, accounts, is_dev):
     jewel_token = interface.Jewel(jewel_address)
-    contract = interface.IUniswapV2Factory(uniswap_factory)
-    contract.createPair(llj_pool, jewel_token, {"from": deployer})
-    pool_addr = contract.getPair(llj_pool, jewel_token)
+    factory = interface.IUniswapV2Factory(uniswap_factory)
+    factory.createPair(gm_jewel, jewel_token, {"from": deployer})
+    pool_addr = factory.getPair(gm_jewel, jewel_token)
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
             pool, 2500 *
             1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
-        llj_pool.mint(pool, 1_000 * 1e18, {"from": deployer})
+        gm_jewel.mint(pool, 1_000 * 1e18, {"from": deployer})
         pool.mint(accounts[1], {"from": deployer})
     return pool_addr
 
@@ -152,11 +152,11 @@ def main():
     master_jeweler = deploy_masterjeweler(deployer, GMG_token)
     staked_GMG = deploy_stakedGMG(deployer, GMG_token)
 
-    gmg_lp_token = seed_gmg_pool(deployer, GMG_token, accounts, is_dev)
-    master_jeweler.add(1, gmg_lp_token, True, {"from": deployer})
+    gmg_pair = seed_gmg_pool(deployer, GMG_token, accounts, is_dev)
+    master_jeweler.add(1, gmg_pair, True, {"from": deployer})
 
-    llg_lp_token = seed_llj_pool(deployer, gm_jewel, accounts, is_dev)
-    master_jeweler.add(1, llg_lp_token, True, {"from": deployer})
+    gm_jewel_pair = seed_gm_jewel_pool(deployer, gm_jewel, accounts, is_dev)
+    master_jeweler.add(1, gm_jewel_pair, True, {"from": deployer})
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
 
@@ -173,8 +173,8 @@ def main():
                 "master_jeweler": master_jeweler.address,
                 "staked_GMG": staked_GMG.address,
                 "deployment_block": blocknumber,
-                "GMG_LP_token": gmg_lp_token,
-                "JLLJ_LP_token": llg_lp_token,
+                "GMG_jewel_LP_token": gmg_pair,
+                "gmJEWEL_jewel_LP_token": gm_jewel_pair,
             },
             outfile,
         )

@@ -1,0 +1,25 @@
+{
+  "1666600000": {
+    "CentralBank": [
+      "0x469D7A1eA871382875caA74ac615562E6235Be85"
+    ],
+    "GMGToken": [
+      "0x8d175DC448b1d3D0277AB87388a5362921eE1fEF"
+    ],
+    "MasterJeweler": [
+      "0x6C3249463bdbbF06d0c323d6848781e1FFF09b85"
+    ],
+    "PawnShop": [
+      "0x679354EAfC416A71fdB80F02c1FadbD7a4fC3fC3"
+    ],
+    "StakedGMG": [
+      "0x12804CFa07c82a470B59F03adFF55D7feD58Bf46"
+    ],
+    "UTXO": [
+      "0xf46BE5b96E3Eaa51AEf8Cd171DdD47677be917d0"
+    ],
+    "gmJEWEL": [
+      "0x3eC03857197159B68Ac60dfD765ede48F25a9F8B"
+    ]
+  }
+}
