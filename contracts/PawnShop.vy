@@ -10,6 +10,7 @@ interface JewelToken:
     def totalBalanceOf(_holder: address) -> uint256: view
     def balanceOf(_holder: address) -> uint256: view
     def lockOf(_holder: address) -> uint256: view
+    def approve(_spender : address, _amount : uint256) -> bool: nonpayable
     def transfer(_to: address, _amount: uint256) -> bool: nonpayable
     def transferFrom(_sender: address, _recipient: address, _amount: uint256): nonpayable
     def transferAll(_to: address): nonpayable
@@ -276,6 +277,7 @@ def _redeemUTXOForFullCombinedValue(_redeemer: address, _utxo: address, _jewelAm
     # amount of llJEWEL is "redeemed"
     if _jewelAmount > 0:
         JewelToken(JEWEL_TOKEN_ADDRESS).transferFrom(_redeemer, self, _jewelAmount)
+        JewelToken(JEWEL_TOKEN_ADDRESS).approve(CENTRAL_BANK_ADDRESS, _jewelAmount)
         CentralBank(CENTRAL_BANK_ADDRESS).buyWithReceiver(_jewelAmount, _redeemer)
 
     llJEWEL(LIQLOCKJEWEL_TOKEN_ADDRESS).redeem(_redeemer, utxoCombinedValue + feeToPay)
@@ -308,6 +310,7 @@ def _redeemUTXOForUnlockedValue(_redeemer: address, _utxo: address, _jewelAmount
     # amount of llJEWEL is "redeemed"
     if _jewelAmount > 0:
         JewelToken(JEWEL_TOKEN_ADDRESS).transferFrom(_redeemer, self, _jewelAmount)
+        JewelToken(JEWEL_TOKEN_ADDRESS).approve(CENTRAL_BANK_ADDRESS, _jewelAmount)
         CentralBank(CENTRAL_BANK_ADDRESS).buyWithReceiver(_jewelAmount, _redeemer)
 
     llJEWEL(LIQLOCKJEWEL_TOKEN_ADDRESS).redeem(_redeemer, utxoUnlockedValue + feeToPay)
