@@ -29,5 +29,5 @@ export const addresses = {
   MasterJeweler: Addresses["MasterJeweler"],
   JGMGLPToken: Addresses["JGMGLPToken"],
   JgmJLPToken: Addresses["JgmJLPToken"],
-  xGMG: Addresses["staked_GMG"],
+  xGMG: Addresses["StakedGMG"],
 };

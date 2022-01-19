@@ -171,7 +171,7 @@ def main():
                 "PawnShop": pawn_shop.address,
                 "GMGToken": GMG_token.address,
                 "MasterJeweler": master_jeweler.address,
-                "staked_GMG": staked_GMG.address,
+                "StakedGMG": staked_GMG.address,
                 "deploymentBlock": blocknumber,
                 "JGMGLPToken": gmg_pair,
                 "JgmJLPToken": gm_jewel_pair,

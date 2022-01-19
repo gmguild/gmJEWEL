@@ -126,6 +126,20 @@ export default function Trade() {
                 </tr>
                 <tr>
                   <td className="flex flex-col items-enter">
+                    xGMG
+
+                    <Button
+                      className="text-xs p-1 mr-auto"
+                      onClick={() => addTokenToWallet(addresses.xGMG, "xGMG", SmallGMG)}
+                      disabled={addingTokenToWallet}
+                    >
+                      Add to Wallet
+                    </Button>
+                  </td>
+                  <td className="my-auto">{addresses.GMGToken}</td>
+                </tr>
+                <tr>
+                  <td className="flex flex-col items-enter">
                     JEWEL-gmJEWEL LP Token
 
                     <Button
