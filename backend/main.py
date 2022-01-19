@@ -8,7 +8,8 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:8080",
-    "https://gmg.money"
+    "https://gmg.money",
+    "https://www.gmg.money",
 ]
 
 app.add_middleware(
