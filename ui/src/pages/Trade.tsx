@@ -46,6 +46,14 @@ export default function Trade() {
                   <td>GMG</td>
                   <td>{addresses.GMGToken}</td>
                 </tr>
+                <tr>
+                  <td>JEWEL-gmJEWEL LP Token</td>
+                  <td>{addresses.JgmJLPToken}</td>
+                </tr>
+                <tr>
+                  <td>JEWEL-GMG LP Token</td>
+                  <td>{addresses.JGMGLPToken}</td>
+                </tr>
               </tbody>
             </table>
           </div>
