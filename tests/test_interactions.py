@@ -13,6 +13,11 @@ def test_buyback(central_bank, jewel_token, deployer, alice, gmg_token, staked_g
     # set fee wallet as GMG stkaing
     central_bank.updateFeeWallet(staked_gmg, {"from": deployer})
 
+    # alice to deposit
+    gmg_token.mint(alice, value, {"from": deployer})
+    gmg_token.approve(staked_gmg, value, {"from": alice})
+    staked_gmg.enter(value, {"from": alice})
+
     # NOW SIMULATE BUYBACK
     central_bank.withdrawCentralBankJewel(value)
     assert jewel_token.balanceOf(staked_gmg) == value
@@ -20,3 +25,8 @@ def test_buyback(central_bank, jewel_token, deployer, alice, gmg_token, staked_g
     start_bal = gmg_token.balanceOf(staked_gmg)
     staked_gmg.swap([jewel_token, gmg_token], value, value // 1.05, {"from": deployer})
     assert gmg_token.balanceOf(staked_gmg) > start_bal
+
+    # alice to withdraw
+    shares = staked_gmg.balanceOf(alice)
+    staked_gmg.leave(shares, {"from": alice})
+    assert gmg_token.balanceOf(alice) > value
