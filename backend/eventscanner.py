@@ -1,3 +1,5 @@
+# Code is modified from version provided at https://web3py.readthedocs.io/en/latest/examples.html#example-code
+
 """A stateful event scanner for Ethereum-based blockchains using Web3.py.
 
 With the stateful mechanism, you can do one batch scan or incremental scans,
@@ -343,8 +345,7 @@ class EventScanner:
                 )
 
             # Try to guess how many blocks to fetch over `eth_getLogs` API next time
-            chunk_size = self.estimate_next_chunk_size(
-                chunk_size, len(new_entries))
+            chunk_size = self.estimate_next_chunk_size(chunk_size, len(new_entries))
 
             # Set where the next chunk starts
             current_block = current_end + 1
@@ -408,8 +409,7 @@ def _fetch_events_for_all_contracts(
     """
 
     if from_block is None:
-        raise TypeError(
-            "Missing mandatory keyword argument to getLogs: fromBlock")
+        raise TypeError("Missing mandatory keyword argument to getLogs: fromBlock")
 
     # Currently no way to poke this using a public Web3.py API.
     # This will return raw underlying ABI JSON object for the event
@@ -490,12 +490,24 @@ class SqliteDictState(EventScannerState):
         self.commit()
 
     def restore(self):
-        self.state_meta = SqliteDict(filename='./state_meta.sqlite', autocommit=False,
-                                     flag="c", journal_mode="WAL")
-        self.state_utxo = SqliteDict(filename='./state_utxo.sqlite', autocommit=False,
-                                     flag="c", journal_mode="WAL")
-        self.state_utxos_by_user = SqliteDict(filename='./state_utxos_by_user.sqlite', autocommit=False,
-                                              flag="c", journal_mode="WAL")
+        self.state_meta = SqliteDict(
+            filename="./state_meta.sqlite",
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
+        self.state_utxo = SqliteDict(
+            filename="./state_utxo.sqlite",
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
+        self.state_utxos_by_user = SqliteDict(
+            filename="./state_utxos_by_user.sqlite",
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
 
     def save(self):
         logger.debug("...CLOSING STATE...")
@@ -517,7 +529,11 @@ class SqliteDictState(EventScannerState):
 
     def get_last_scanned_block(self):
         """The number of the last block we have stored."""
-        return self.state_meta["last_scanned_block"] if "last_scanned_block" in self.state_meta else FIRST_BLOCK_TO_SCAN
+        return (
+            self.state_meta["last_scanned_block"]
+            if "last_scanned_block" in self.state_meta
+            else FIRST_BLOCK_TO_SCAN
+        )
 
     def delete_data(self, since_block):
         """Remove potentially reorganised blocks from the scan data."""
@@ -533,9 +549,7 @@ class SqliteDictState(EventScannerState):
         self.state_meta["last_scanned_block"] = block_number
         self.commit()
 
-    def process_event(
-        self, block_when: datetime.datetime, event: AttributeDict
-    ) -> str:
+    def process_event(self, block_when: datetime.datetime, event: AttributeDict) -> str:
         """Record a ERC-20 transfer in our database."""
         # Events are keyed by their transaction hash and log index
         # One transaction may contain multiple events
@@ -551,16 +565,23 @@ class SqliteDictState(EventScannerState):
         args = event["args"]
         if event["event"] == "UTXOCreated":
             object = {
-                "utxoAddress": args["utxoAddress"].lower(), "minter": args["minter"].lower()}
+                "utxoAddress": args["utxoAddress"].lower(),
+                "minter": args["minter"].lower(),
+            }
 
-            if object["minter"] in self.state_utxos_by_user and self.state_utxos_by_user[object["minter"]] is not None:
+            if (
+                object["minter"] in self.state_utxos_by_user
+                and self.state_utxos_by_user[object["minter"]] is not None
+            ):
                 list_for_minter = self.state_utxos_by_user[object["minter"]]
-                if object["utxoAddress"] not in self.state_utxos_by_user[object["minter"]]:
+                if (
+                    object["utxoAddress"]
+                    not in self.state_utxos_by_user[object["minter"]]
+                ):
                     list_for_minter.append(object["utxoAddress"])
                 self.state_utxos_by_user[object["minter"]] = list_for_minter
             else:
-                self.state_utxos_by_user[object["minter"]] = [
-                    object["utxoAddress"]]
+                self.state_utxos_by_user[object["minter"]] = [object["utxoAddress"]]
         elif event["event"] == "UTXOValue":
             object = {
                 "utxoAddress": args["UTXOAddress"].lower(),
@@ -573,7 +594,10 @@ class SqliteDictState(EventScannerState):
             logger.debug(event["event"])
             raise AttributeError
 
-        if object["utxoAddress"] in self.state_utxo and self.state_utxo[object["utxoAddress"]] is not None:
+        if (
+            object["utxoAddress"] in self.state_utxo
+            and self.state_utxo[object["utxoAddress"]] is not None
+        ):
             current_object = self.state_utxo[object["utxoAddress"]]
             current_object.update(object)
             self.state_utxo[object["utxoAddress"]] = current_object
@@ -637,8 +661,7 @@ def run(sc):
 
     # Scan from [last block scanned] - [latest ethereum block]
     # Note that our chain reorg safety blocks cannot go negative
-    start_block = max(state.get_last_scanned_block() -
-                      chain_reorg_safety_blocks, 0)
+    start_block = max(state.get_last_scanned_block() - chain_reorg_safety_blocks, 0)
     end_block = scanner.get_suggested_scan_end_block()
     blocks_to_scan = end_block - start_block
 
