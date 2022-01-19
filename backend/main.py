@@ -9,7 +9,9 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "https://gmg.money",
-    "https://www.gmg.money",
+    "https://*.gmg.money",
+    "https://gmjewel.netlify.app",
+    "https://*--gmjewel.netlify.app",
 ]
 
 app.add_middleware(
