@@ -17,7 +17,7 @@ export function useRedeemFromUTXO(utxoAddress: string, jewelAmount: BigNumber): 
     try {
       setLoading(true)
       const output = await write({ args: [utxoAddress, jewelAmount] });
-      await output.data?.wait(1);
+      await output.data?.wait(3);
     } catch(err) {
       console.error(err) // todo: error toast
     } finally {

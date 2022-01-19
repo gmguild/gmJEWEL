@@ -20,7 +20,7 @@ export function useMintFromUTXO(utxoAddress: string): [() => Promise<void>, bool
     try {
       setLoading(true)
       const output = await write();
-      await output.data?.wait(1);
+      await output.data?.wait(3);
     } catch(err) {
       console.error(err) // todo: error toast
     } finally {
