@@ -9,6 +9,10 @@ def get_random_name():
     return name
 
 
+def bank_address():
+    return "0xa9ce83507d872c5e1273e745abcfda849daa654f"
+
+
 def users_with_locked_jewel():
     return [
         "0x1e3B6b278BA3b340d4BE7321e9be6DfeD0121Eac",
