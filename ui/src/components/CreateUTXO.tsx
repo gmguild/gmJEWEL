@@ -163,7 +163,7 @@ function ActiveUTXO({
           <span className="text-gray-500">Stash Value</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedUTXOValue : '...loading...'}</span>
         </p>
         <p className="flex flex-row">
-          <span className="text-gray-500">gmJEWEL Minted</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedMintedAmount : '...loading...'}</span>
+          <span className="text-gray-500">gmJEWEL Minted</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="locked-jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedMintedAmount : '...loading...'}</span>
         </p>
 
         <Button

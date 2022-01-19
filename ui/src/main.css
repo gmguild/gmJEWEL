@@ -29,6 +29,13 @@ body {
   background-repeat: no-repeat;
 }
 
+.locked-jewel-icon {
+  background-image: url('./assets/DFKLockedJewel.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .font-lora {
   font-family: 'Lora', serif;
 }

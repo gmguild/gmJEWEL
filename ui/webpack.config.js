@@ -43,7 +43,7 @@ module.exports = function(_env, argv) {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "./src/index.html"),
         title: 'Greedy Merchants Guild',
-        // favicon: path.resolve(__dirname, "./src/assets/favicon.png"),
+        favicon: path.resolve(__dirname, "./src/assets/DFKLockedJewel.png"),
       }),
       new webpack.EnvironmentPlugin({
         PRODUCTION: 'false',

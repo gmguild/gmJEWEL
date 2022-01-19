@@ -66,7 +66,7 @@ export function RedeemUTXO() {
         <p className="flex flex-row text-center mx-auto">
           Your Balance (gmJEWEL) is{" "}
           <span className="ml-2 text-gray-900 flex flex-row items-center">
-            <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+            <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
             {!loadingInformation ? formattedGmBalance : "...loading..."}
           </span>
         </p>
@@ -100,7 +100,7 @@ export function RedeemUTXO() {
               <p className="flex flex-row mb-1">
                 <span className="text-gray-500">Value</span>{" "}
                 <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
                   {!loadingInformation
                     ? formattedSelectedUTXOValue
                     : "...loading..."}
@@ -110,7 +110,7 @@ export function RedeemUTXO() {
               <p className="flex flex-row mb-2">
                 <span className="text-gray-500">Cost</span>{" "}
                 <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
                   {!loadingInformation ? formattedCostToBuy : "...loading..."}
                 </span>
               </p>
