@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
 RUN_EVERY_X_SECONDS = 6
 
-is_dev = os.environ['PRODUCTION'] != 'true'
+is_dev = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
 
 
 class EventScannerState(ABC):
@@ -622,7 +622,7 @@ s = sched.scheduler(time.time, time.sleep)
 
 
 def run(sc):
-    api_url = os.environ['RPC_URL'] or "http://127.0.0.1:8545"
+    api_url = os.environ['RPC_URL'] if 'RPC_URL' in os.environ else "http://127.0.0.1:8545"
 
     # Enable logs to the stdout.
     # DEBUG is very verbose level
