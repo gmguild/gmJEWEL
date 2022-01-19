@@ -1,0 +1,13 @@
+networks:
+  default: hardhat-harmony-fork
+  hardhat-harmony-fork:
+    chain_id: 1666600000
+
+compiler:
+  vyper:
+    version: 0.3.1
+  solidity:
+    version: 0.6.12
+
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@3.3.0

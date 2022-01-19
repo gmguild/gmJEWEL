@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-image: url('./assets/Banner.jpeg');
+  background-position: 0 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+#app {
+  @apply bg-gray-100/90;
+  min-height: 100vh;
+}
+
+.jewel-stash {
+  background-image: url('./assets/JewelStash.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.jewel-icon {
+  background-image: url('./assets/DFKJewel.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.font-lora {
+  font-family: 'Lora', serif;
+}
+
+.inc.progress-bar {
+  animation: progress-bar-increase 2s ease-in-out infinite
+}
+
+.dec.progress-bar {
+  animation: progress-bar-decrease 2s 0.9s ease-in-out infinite
+}
+
+@keyframes progress-bar-increase {
+  from {
+    left: -5%;
+    width :5%;
+  }
+  to {
+    left: 130%;
+    width: 150%;
+  }
+}
+
+@keyframes progress-bar-decrease {
+  from {
+    left: -90%;
+    width: 90%;
+  }
+  to {
+    left:110%;
+    width:10%
+  }
+}

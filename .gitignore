@@ -1,0 +1,16 @@
+__pycache__
+.env
+.history
+.hypothesis/
+build/
+reports/
+
+.vscode/
+node_modules
+ui/src/contract-types
+dist
+
+venv/
+ui/deployment.json
+backend/state.json
+backend/state*.sqlite*

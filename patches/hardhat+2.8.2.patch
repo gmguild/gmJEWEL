@@ -1,0 +1,154 @@
+diff --git a/node_modules/hardhat/internal/core/config/config-loading.js b/node_modules/hardhat/internal/core/config/config-loading.js
+index 96f8663..55d7c09 100644
+--- a/node_modules/hardhat/internal/core/config/config-loading.js
++++ b/node_modules/hardhat/internal/core/config/config-loading.js
+@@ -42,7 +42,7 @@ function loadConfigAndTasks(hardhatArguments, { showEmptyConfigWarning = false,
+ }) {
+     let configPath = hardhatArguments !== undefined ? hardhatArguments.config : undefined;
+     configPath = resolveConfigPath(configPath);
+-    log(`Loading Hardhat config from ${configPath}`);
++    log(`Loading Hardhaasdfasdfasdt config from ${configPath}`);
+     // Before loading the builtin tasks, the default and user's config we expose
+     // the config env in the global object.
+     const configEnv = require("./config-env");
+diff --git a/node_modules/hardhat/internal/core/jsonrpc/types/output/block.js b/node_modules/hardhat/internal/core/jsonrpc/types/output/block.js
+index 5f9202f..0abbd7f 100644
+--- a/node_modules/hardhat/internal/core/jsonrpc/types/output/block.js
++++ b/node_modules/hardhat/internal/core/jsonrpc/types/output/block.js
+@@ -35,8 +35,6 @@ const baseBlockResponse = {
+     stateRoot: base_types_1.rpcHash,
+     receiptsRoot: base_types_1.rpcHash,
+     miner: base_types_1.rpcAddress,
+-    difficulty: base_types_1.rpcQuantity,
+-    totalDifficulty: base_types_1.rpcQuantity,
+     extraData: base_types_1.rpcData,
+     size: base_types_1.rpcQuantity,
+     gasLimit: base_types_1.rpcQuantity,
+diff --git a/node_modules/hardhat/internal/hardhat-network/jsonrpc/client.js b/node_modules/hardhat/internal/hardhat-network/jsonrpc/client.js
+index 868ec09..669a44b 100644
+--- a/node_modules/hardhat/internal/hardhat-network/jsonrpc/client.js
++++ b/node_modules/hardhat/internal/hardhat-network/jsonrpc/client.js
+@@ -59,6 +59,7 @@ class JsonRpcClient {
+         ], base_types_1.rpcData, () => blockNumber);
+     }
+     async getBlockByNumber(blockNumber, includeTransactions = false) {
++        console.log('getting blocks innit blud')
+         if (includeTransactions) {
+             return this._perform("eth_getBlockByNumber", [(0, base_types_1.numberToRpcQuantity)(blockNumber), true], (0, io_ts_1.nullable)(block_1.rpcBlockWithTransactions), (block) => { var _a; return (_a = block === null || block === void 0 ? void 0 : block.number) !== null && _a !== void 0 ? _a : undefined; });
+         }
+@@ -140,6 +141,7 @@ class JsonRpcClient {
+         }
+         const rawResult = await this._send(method, params);
+         const decodedResult = (0, decodeJsonRpcResponse_1.decodeJsonRpcResponse)(rawResult, tType);
++        console.log(method, decodedResult['number'], decodedResult['hash'])
+         const blockNumber = getMaxAffectedBlockNumber(decodedResult);
+         if (this._canBeCached(blockNumber)) {
+             this._storeInCache(cacheKey, decodedResult);
+diff --git a/node_modules/hardhat/internal/hardhat-network/jsonrpc/handler.js b/node_modules/hardhat/internal/hardhat-network/jsonrpc/handler.js
+index 86b3c8a..9806d58 100644
+--- a/node_modules/hardhat/internal/hardhat-network/jsonrpc/handler.js
++++ b/node_modules/hardhat/internal/hardhat-network/jsonrpc/handler.js
+@@ -7,6 +7,7 @@ exports.JsonRpcHandler = void 0;
+ const raw_body_1 = __importDefault(require("raw-body"));
+ const errors_1 = require("../../core/providers/errors");
+ const jsonrpc_1 = require("../../util/jsonrpc");
++const fs = require('fs')
+ /* eslint-disable @nomiclabs/hardhat-internal-rules/only-hardhat-error */
+ class JsonRpcHandler {
+     constructor(_provider) {
+@@ -122,7 +123,16 @@ class JsonRpcHandler {
+     _sendResponse(res, rpcResp) {
+         res.statusCode = 200;
+         res.setHeader("Content-Type", "application/json");
+-        res.end(JSON.stringify(rpcResp));
++        try{
++            res.end(JSON.stringify(rpcResp));
++        } catch {
++            console.log('dumping file to trace.txt')
++            rpcResp['result']['structLogs'].forEach((log) => {
++                fs.writeFile('trace.txt',JSON.stringify(log),'utf-8', (err) => {
++                    if(err) console.error(err)
++                })
++            })
++        }
+     }
+     async _handleSingleRequest(req) {
+         if (!(0, jsonrpc_1.isValidJsonRequest)(req)) {
+diff --git a/node_modules/hardhat/internal/hardhat-network/provider/fork/ForkBlockchain.js b/node_modules/hardhat/internal/hardhat-network/provider/fork/ForkBlockchain.js
+index 016b59a..7cd88a3 100644
+--- a/node_modules/hardhat/internal/hardhat-network/provider/fork/ForkBlockchain.js
++++ b/node_modules/hardhat/internal/hardhat-network/provider/fork/ForkBlockchain.js
+@@ -84,19 +84,7 @@ class ForkBlockchain {
+         }
+     }
+     async getTotalDifficulty(blockHash) {
+-        let td = this._data.getTotalDifficulty(blockHash);
+-        if (td !== undefined) {
+-            return td;
+-        }
+-        const block = await this.getBlock(blockHash);
+-        if (block === null) {
+-            throw new Error("Block not found");
+-        }
+-        td = this._data.getTotalDifficulty(blockHash);
+-        if (td === undefined) {
+-            throw new Error("This should never happen");
+-        }
+-        return td;
++        return 0
+     }
+     async getTransaction(transactionHash) {
+         const tx = this.getLocalTransaction(transactionHash);
+@@ -233,22 +221,7 @@ class ForkBlockchain {
+         return block;
+     }
+     async _computeTotalDifficulty(block) {
+-        var _a;
+-        const difficulty = new ethereumjs_util_1.BN(block.header.difficulty);
+-        const blockNumber = new ethereumjs_util_1.BN(block.header.number);
+-        if (blockNumber.eqn(0)) {
+-            return difficulty;
+-        }
+-        const parentBlock = (_a = this._data.getBlockByNumber(blockNumber.subn(1))) !== null && _a !== void 0 ? _a : (await this.getBlock(blockNumber.subn(1)));
+-        if (parentBlock === null) {
+-            throw new Error("Block not found");
+-        }
+-        const parentHash = parentBlock.hash();
+-        const parentTD = this._data.getTotalDifficulty(parentHash);
+-        if (parentTD === undefined) {
+-            throw new Error("This should never happen");
+-        }
+-        return parentTD.add(difficulty);
++        return 0
+     }
+     _delBlock(block) {
+         if (new ethereumjs_util_1.BN(block.header.number).lte(this._forkBlockNumber)) {
+diff --git a/node_modules/hardhat/src/builtin-tasks/node.ts b/node_modules/hardhat/src/builtin-tasks/node.ts
+index 9258538..e5909e4 100644
+--- a/node_modules/hardhat/src/builtin-tasks/node.ts
++++ b/node_modules/hardhat/src/builtin-tasks/node.ts
+@@ -360,7 +360,7 @@ task(TASK_NODE, "Starts a JSON-RPC server on top of Hardhat Network")
+         if (HardhatError.isHardhatError(error)) {
+           throw error;
+         }
+-
++        console.log('hi')
+         if (error instanceof Error) {
+           throw new HardhatError(
+             ERRORS.BUILTIN_TASKS.JSONRPC_SERVER_ERROR,
+diff --git a/node_modules/hardhat/src/internal/core/jsonrpc/types/output/decodeJsonRpcResponse.ts b/node_modules/hardhat/src/internal/core/jsonrpc/types/output/decodeJsonRpcResponse.ts
+index bca887b..b7cdfb2 100644
+--- a/node_modules/hardhat/src/internal/core/jsonrpc/types/output/decodeJsonRpcResponse.ts
++++ b/node_modules/hardhat/src/internal/core/jsonrpc/types/output/decodeJsonRpcResponse.ts
+@@ -9,8 +9,11 @@ import { InvalidResponseError } from "../../../providers/errors";
+  * This function decodes an RPC out type, throwing InvalidResponseError if it's not valid.
+  */
+ export function decodeJsonRpcResponse<T>(value: unknown, codec: t.Type<T>): T {
++  console.log('c',value,codec)
+   const result = codec.decode(value);
+ 
++  console.log(result)
++
+   if (result.isLeft()) {
+     throw new InvalidResponseError(
+       `Invalid JSON-RPC response's result.

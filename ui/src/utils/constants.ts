@@ -1,0 +1,4 @@
+import { BigNumber, utils } from "ethers";
+
+export const B_0 = BigNumber.from(0);
+export const B_1 = utils.parseEther("1");
