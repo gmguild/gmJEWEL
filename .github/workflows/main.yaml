@@ -47,7 +47,7 @@ jobs:
       run: |
          python -m pip install --user pipx
          python -m pipx ensurepath
-         pipx install brownie
+         pipx install eth-brownie
 
     - name: Add network
       run: brownie networks add Development "harmony-fork" host=http://127.0.0.1 cmd=ganache-cli fork=https://a.api.s0.t.hmny.io port=8545 chain_id=1666600000
