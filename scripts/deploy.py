@@ -89,8 +89,7 @@ def deploy_stakedGMG(deployer, GMG_token):
 def give_user_jewel(user):
     jewel_token = interface.Jewel(jewel_address)
     jewel_token.transfer(
-        user, 100 *
-        1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+        user, 100 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
 
 
@@ -106,8 +105,7 @@ def seed_gmg_pool(deployer, gmg_token, user, is_dev):
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
-            pool, 1000 *
-            1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+            pool, 1000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         gmg_token.mint(pool, 10_000 * 1e18, {"from": deployer})
         pool.mint(user, {"from": deployer})
@@ -122,8 +120,7 @@ def seed_llj_pool(deployer, llj_pool, user, is_dev):
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
-            pool, 2500 *
-            1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+            pool, 2500 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         llj_pool.mint(pool, 1_000 * 1e18, {"from": deployer})
         pool.mint(user, {"from": deployer})
@@ -144,8 +141,7 @@ def main():
     utxo_template = deploy_utxo(deployer)
     gm_jewel = deploy_gm_jewel(deployer)
     central_bank = deploy_central_bank(deployer, gm_jewel)
-    pawn_shop = deploy_pawnshop(
-        deployer, gm_jewel, central_bank, utxo_template)
+    pawn_shop = deploy_pawnshop(deployer, gm_jewel, central_bank, utxo_template)
 
     # Staking Contracts
     GMG_token = deploy_GMGtoken(deployer)
@@ -161,7 +157,9 @@ def main():
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
 
-    with open("ui/deployment.json" if is_dev else "ui/deployment-prod.json", "w") as outfile:
+    with open(
+        "ui/deployment.json" if is_dev else "ui/deployment-prod.json", "w"
+    ) as outfile:
         json.dump(
             {
                 "utxo_template": utxo_template.address,

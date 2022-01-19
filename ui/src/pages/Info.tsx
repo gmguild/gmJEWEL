@@ -2,6 +2,7 @@ import React from "react";
 import { classNames } from "../utils/classNames";
 import TokenSupply from "../assets/TokenSupply.png";
 
+// TODO: Update this page to get fees from smart contract rather than being hard-coded
 export default function Info() {
   return (
     <div className="max-w-5xl mx-auto">
@@ -72,22 +73,22 @@ export default function Info() {
                   <tr>
                     <td>1</td>
                     <td>0-1000</td>
-                    <td>1%</td>
+                    <td>1.5%</td>
                   </tr>
                   <tr>
                     <td>2</td>
-                    <td>1000-10000</td>
-                    <td>0.6%</td>
+                    <td>1000-10,000</td>
+                    <td>1.0%</td>
                   </tr>
                   <tr>
                     <td>3</td>
                     <td>10,000-100,000</td>
-                    <td>0.3%</td>
+                    <td>0.5%</td>
                   </tr>
                   <tr>
                     <td>4</td>
                     <td>100,000+</td>
-                    <td>0.1%</td>
+                    <td>0.25%</td>
                   </tr>
                 </tbody>
               </table>

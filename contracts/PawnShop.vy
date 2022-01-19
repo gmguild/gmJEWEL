@@ -125,12 +125,12 @@ def __init__(_lljewel: address, _template: address, _central_bank: address, _jew
 
     self.owner = msg.sender
 
-    self.FEES_BPS = [10,30,60,100]
+    self.FEES_BPS = [25,50,100,150]
     self.FEES_THRESHOLD = [
-        as_wei_value(100_000, "ether"), # TIER 4: 0.1%
-        as_wei_value(10_000, "ether"),  # TIER 3: 0.3%
-        as_wei_value(1_000, "ether"),   # TIER 2: 0.6%
-        0]                              # TIER 1: 1%
+        as_wei_value(100_000, "ether"), # TIER 4: 0.25%
+        as_wei_value(10_000, "ether"),  # TIER 3: 0.5%
+        as_wei_value(1_000, "ether"),   # TIER 2: 1.0%
+        0]                              # TIER 1: 1.5%
 
 
 @internal
