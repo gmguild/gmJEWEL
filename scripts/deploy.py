@@ -98,7 +98,7 @@ def give_user_gm_jewel(user, gm_jewel, deployer):
     gm_jewel.mint(user, 10 * 1e18, {"from": deployer})
 
 
-def seed_gmg_pool(deployer, gmg_token, user, is_dev):
+def seed_gmg_pool(deployer, gmg_token, accounts, is_dev):
     jewel_token = interface.Jewel(jewel_address)
     contract = interface.IUniswapV2Factory(uniswap_factory)
     contract.createPair(gmg_token, jewel_token, {"from": deployer})
@@ -110,11 +110,11 @@ def seed_gmg_pool(deployer, gmg_token, user, is_dev):
             1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         gmg_token.mint(pool, 10_000 * 1e18, {"from": deployer})
-        pool.mint(user, {"from": deployer})
+        pool.mint(accounts[1], {"from": deployer})
     return pool_addr
 
 
-def seed_llj_pool(deployer, llj_pool, user, is_dev):
+def seed_llj_pool(deployer, llj_pool, accounts, is_dev):
     jewel_token = interface.Jewel(jewel_address)
     contract = interface.IUniswapV2Factory(uniswap_factory)
     contract.createPair(llj_pool, jewel_token, {"from": deployer})
@@ -126,7 +126,7 @@ def seed_llj_pool(deployer, llj_pool, user, is_dev):
             1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
         llj_pool.mint(pool, 1_000 * 1e18, {"from": deployer})
-        pool.mint(user, {"from": deployer})
+        pool.mint(accounts[1], {"from": deployer})
     return pool_addr
 
 
@@ -152,10 +152,10 @@ def main():
     master_jeweler = deploy_masterjeweler(deployer, GMG_token)
     staked_GMG = deploy_stakedGMG(deployer, GMG_token)
 
-    gmg_lp_token = seed_gmg_pool(deployer, GMG_token, accounts[1], is_dev)
+    gmg_lp_token = seed_gmg_pool(deployer, GMG_token, accounts, is_dev)
     master_jeweler.add(1, gmg_lp_token, True, {"from": deployer})
 
-    llg_lp_token = seed_llj_pool(deployer, gm_jewel, accounts[1], is_dev)
+    llg_lp_token = seed_llj_pool(deployer, gm_jewel, accounts, is_dev)
     master_jeweler.add(1, llg_lp_token, True, {"from": deployer})
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
