@@ -11,7 +11,7 @@ origins = [
     "https://gmg.money",
     "https://*.gmg.money",
     "https://gmjewel.netlify.app",
-    "https://*--gmjewel.netlify.app",
+    "https://dev--gmjewel.netlify.app",
 ]
 
 app.add_middleware(
