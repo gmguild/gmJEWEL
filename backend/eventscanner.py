@@ -470,8 +470,10 @@ def _fetch_events_for_all_contracts(
 # With locally running Geth, the script takes 10 minutes.
 # The resulting JSON state file is 2.9 MB.
 
+script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+deployment_rel_path = "../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"
 addresses = json.load(
-    open("../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"))
+    open(os.path.join(script_dir, deployment_rel_path)))
 CONTRACT_ADDRESS = addresses["PawnShop"]
 CONTRACT_FILE = json.load(open(
     "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json", "r"))
