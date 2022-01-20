@@ -22,7 +22,7 @@ export const Header = () => {
         >
           <div className={classNames("flex flex-col items-center text-center hidden sm:block sm:-ml-4")}>
             <img src={logo} className={classNames("h-24 w-full mx-auto")} />
-            <a className="text-xs underline text-gray-700 hover:text-blue-60" href="https://twitter.com/gmguild69" target="_blank" rel="noreferrer">
+            <a className="text-xs underline text-gray-700 hover:text-blue-600" href="https://twitter.com/gmguild69" target="_blank" rel="noreferrer">
               Twitter
             </a>
           </div>

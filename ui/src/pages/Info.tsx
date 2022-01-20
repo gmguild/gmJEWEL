@@ -7,7 +7,7 @@ export default function Info() {
   return (
     <div className="max-w-5xl mx-auto">
       <div>
-        <article className="font-lora prose lg:prose-xl mx-auto pb-32">
+        <article className="font-lora prose mx-auto pb-32">
           <section>
             <p>
               The Greedy Merchants Guild is a new community-run initiative
@@ -133,6 +133,20 @@ export default function Info() {
             <p>
               10% of tokens will be reserved for the dev team (which follows a
               similar emissions pattern)
+            </p>
+          </section>
+          <section>
+            <h3>Transparency</h3>
+            <p>
+              All our contracts are open source: <a className="hover:text-blue-600" href="https://github.com/gmguild/gmJEWEL" target="_blank" rel="noreferrer">gmguild/gmJEWEL</a>
+              <br />
+              As some of them are in Vyper, and not in Solidity, we are currently not able to verify these contracts on the Harmony explorer.
+            </p>
+            <p>
+              Some contracts are Ownable, or have a &quot;devaddr [dev&apos;s address]&quot;.
+              <br />
+              The owner of the contracts is Harmony Multisig safe, at address: 0x913C806bf4318e213EFfff70f5B187333cd2f838
+              <br />
             </p>
           </section>
           <section>

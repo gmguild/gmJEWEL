@@ -3,7 +3,7 @@ import React from "react";
 export default function Home() {
   return (
     <div className="max-w-5xl mx-auto">
-      <article className="prose lg:prose-xl font-lora mx-auto mt-4 p-4 pb-32">
+      <article className="prose font-lora mx-auto mt-4 p-4 pb-32">
         <h2>About The Greedy Merchants Guild</h2>
         <p>
           Greedy Merchants Guild creates a market for heroes to trade their
