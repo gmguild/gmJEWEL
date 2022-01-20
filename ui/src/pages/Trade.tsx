@@ -136,7 +136,7 @@ export default function Trade() {
                       Add to Wallet
                     </Button>
                   </td>
-                  <td className="my-auto">{addresses.GMGToken}</td>
+                  <td className="my-auto">{addresses.xGMG}</td>
                 </tr>
                 <tr>
                   <td className="flex flex-col items-enter">
