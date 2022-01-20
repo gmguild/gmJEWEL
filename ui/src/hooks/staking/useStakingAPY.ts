@@ -6,8 +6,11 @@ import { BigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
 import { usePrices } from "../token/usePrices";
 import { getEmissionRate } from "../util/getEmissionRate";
+import { useStakingAUM } from "./useStakingAUM";
 
-export function useStakingAPY(poolId: number, lpToken: string) {
+export function useStakingAPY(poolId: number): number | undefined {
+  const AUM = useStakingAUM(poolId);
+
   const [{ data: blockNumber }] = useBlockNumber({
     watch: true,
   });
@@ -61,7 +64,6 @@ export function useStakingAPY(poolId: number, lpToken: string) {
   const [{ gmgPriceInUSD: price }] = usePrices();
 
   //   get AUM
-  const AUM = 50000;
 
   const APY = useMemo(() => {
     if (!tokensEmitted) return undefined;
@@ -70,5 +72,5 @@ export function useStakingAPY(poolId: number, lpToken: string) {
     return (tokensEmitted * price) / AUM;
   }, [tokensEmitted, price, AUM]);
 
-  console.log(APY);
+  return APY;
 }

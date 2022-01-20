@@ -8,6 +8,7 @@ export function usePrices(): [
   {
     jewelPrice: number | undefined;
     gmJewelPriceInJewel: number | undefined;
+    gmJewelPriceInUSD: number | undefined;
     gmgPriceInJewel: number | undefined;
     gmgPriceInUSD: number | undefined;
   },
@@ -69,6 +70,12 @@ export function usePrices(): [
     );
   }, [jewelgmJewelReserves]);
 
+  const gmJewelPriceInUSD = useMemo(() => {
+    if (!gmJewelPriceInJewel) return undefined;
+    if (!jewelPrice) return undefined;
+    return gmJewelPriceInJewel * jewelPrice;
+  }, [gmJewelPriceInJewel, jewelPrice]);
+
   const [{ data: gmgReserves }, readJewelGmgReserves] = useContractRead(
     {
       // jewel-GMG
@@ -121,7 +128,13 @@ export function usePrices(): [
   }, []);
 
   return [
-    { jewelPrice, gmJewelPriceInJewel, gmgPriceInJewel, gmgPriceInUSD },
+    {
+      jewelPrice,
+      gmJewelPriceInJewel,
+      gmJewelPriceInUSD,
+      gmgPriceInJewel,
+      gmgPriceInUSD,
+    },
     loading,
   ];
 }
