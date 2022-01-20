@@ -55,7 +55,7 @@ export function usePrices(): [{
     if (!jewelgmJewelReserves[0]) return undefined;
     if (!jewelgmJewelReserves[1]) return undefined;
     return BigNumberToFloat(
-      jewelgmJewelReserves[0].mul(B_1).div(jewelgmJewelReserves[1] || 1),
+      jewelgmJewelReserves[1].mul(B_1).div(jewelgmJewelReserves[0] || 1),
       18
     );
   }, [jewelgmJewelReserves]);
