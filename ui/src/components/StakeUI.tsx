@@ -63,8 +63,8 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
   const APY = useStakingAPY(props.poolId);
 
   const formattedAPY = useMemo(() => {
-    if (!APY) return "";
-    return APY.toFixed(1);
+    if (!APY) return <span className="italic">..loading...</span>;
+    return APY.toFixed(1) + "%";
   }, [APY]);
 
   const loadingInformation = loadingLpToken;
@@ -74,7 +74,9 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
   return (
     <div className="bg-rune-edge p-4 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">{props.tokenName}</h3>
-      <p className="text-gray-300">APY: {formattedAPY}%</p>
+      <p className="text-gray-300/50">
+        APY: <span className="text-gray-100">{formattedAPY}</span>
+      </p>
       {pendingReward && pendingReward.gt(BigNumber.from(0)) && (
         <div className="flex flex-row items-center">
           <p className="text-gray-300/50">
