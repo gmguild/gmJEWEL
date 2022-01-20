@@ -21,6 +21,7 @@ export function useUnstakeLPToken(poolId: number, amount: BigNumber): [() => Pro
     try {
       setLoading(true);
       const output = await write();
+      if(output.error) throw output.error;
       await output.data?.wait(2);
     } catch(err) {
       console.error(err); // todo: error toast

@@ -23,6 +23,7 @@ export function useCreateUTXO(): [() => Promise<void>, boolean] {
         args: [toBytes32(name)],
       });
       console.log(output);
+      if(output.error) throw output.error;
       console.debug("Waiting...")
       await output.data?.wait(2);
       console.debug("Waited!")
