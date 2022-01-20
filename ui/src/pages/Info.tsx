@@ -143,7 +143,7 @@ export default function Info() {
               As some of them are in Vyper, and not in Solidity, we are currently not able to verify these contracts on the Harmony explorer.
             </p>
             <p>
-              Some contracts are Ownable, or have a developer&qout;s address for the dev fund allocation.
+              Some contracts are Ownable, or have a developer&apos;s address for the dev fund allocation.
               <br />
               The owner of the contracts is a Harmony Multisig safe, at address: 0x913C806bf4318e213EFfff70f5B187333cd2f838
               <br />
