@@ -69,7 +69,7 @@ export function useStakingAPY(poolId: number): number | undefined {
     if (!tokensEmitted) return undefined;
     if (!price) return undefined;
     if (!AUM) return undefined;
-    return (tokensEmitted * price) / AUM;
+    return (100 * tokensEmitted * price) / AUM;
   }, [tokensEmitted, price, AUM]);
 
   return APY;
