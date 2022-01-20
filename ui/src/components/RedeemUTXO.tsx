@@ -81,7 +81,7 @@ export function RedeemUTXO() {
 
   useEffect(() => {
     if(price) {
-      setSelectedJewelAmount(ethers.utils.parseEther((price * (fee || 0)).toString()));
+      setSelectedJewelAmount(ethers.utils.parseEther((price * (fee || 0)).toFixed(18)));
     } else {
       setSelectedJewelAmount(null);
     }
