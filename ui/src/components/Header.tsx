@@ -5,12 +5,14 @@ import { shortenAddress } from "../utils/conversion";
 import logo from "../assets/GMG.png";
 import { Link, useLocation } from "react-router-dom";
 import { MarketSounds } from "./MarketSounds";
+import { usePrices } from "../hooks/token/usePrices";
 
 export const Header = () => {
   const [{ data: connectData, error: connectError }, connect] = useConnect();
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
   });
+  const [prices, loadingPrices] = usePrices();
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -27,9 +29,17 @@ export const Header = () => {
             </a>
           </div>
 
-          <h1 className={classNames("text-2xl my-2 text-gray-700 text-center")}>
-            Greedy Merchants Guild
-          </h1>
+          <div className="flex flex-col items-center">
+            <h1 className={classNames("text-lg md:text-2xl my-2 text-gray-700 text-center")}>
+              Greedy Merchants Guild
+            </h1>
+
+            <div className="flex flex-row flex-wrap items-center justify-center text-sm space-x-2 my-2">
+              <p><span className="text-gray-500">$JEWEL</span> {loadingPrices ? '...' : prices.jewelPrice?.toFixed(3)} USDC</p>
+              <p><span className="text-gray-500">$gmJEWEL</span> {loadingPrices ? '...' : prices.gmJewelPriceInJewel?.toFixed(3)} JEWEL</p>
+              <p><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(3)} JEWEL</p>
+            </div>
+          </div>
 
           <div className={classNames("my-auto flex flex-col items-center font-lora")}>
             {accountData ? (
