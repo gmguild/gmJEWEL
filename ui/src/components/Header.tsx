@@ -28,7 +28,7 @@ export const Header = () => {
           </div>
 
           <h1 className={classNames("text-2xl my-2 text-gray-700 text-center")}>
-            Greedy Merchant Guild
+            Greedy Merchants Guild
           </h1>
 
           <div className={classNames("my-auto flex flex-col items-center font-lora")}>

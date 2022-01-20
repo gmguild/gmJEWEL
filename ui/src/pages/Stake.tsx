@@ -13,7 +13,7 @@ export default function Stake() {
           <div>
             <h4 className="text-center">
               There are multiple ways of obtaining yield with the Greedy
-              Merchant Guild!
+              Merchants Guild!
             </h4>
             <hr />
             <section>

@@ -4,9 +4,9 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto">
       <article className="prose lg:prose-xl font-lora mx-auto mt-4 p-4 pb-32">
-        <h2>About The Greedy Merchant Guild</h2>
+        <h2>About The Greedy Merchants Guild</h2>
         <p>
-          Greedy Merchant Guild creates a market for heroes to trade their
+          Greedy Merchants Guild creates a market for heroes to trade their
           locked Jewel. We utilise clever smart contracts to create
           &apos;gmJEWEL&apos;, an ERC20 token which represents your locked
           Jewel. This ERC20 token can be used to interact with other DeFi

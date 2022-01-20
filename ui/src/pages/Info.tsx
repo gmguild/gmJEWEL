@@ -10,7 +10,7 @@ export default function Info() {
         <article className="font-lora prose lg:prose-xl mx-auto pb-32">
           <section>
             <p>
-              The Greedy Merchant Guild is a new community-run initiative
+              The Greedy Merchants Guild is a new community-run initiative
               designed for the greedy merchants of Defi Kingdoms. Our first
               feature is a secondary liquid marketplace for locked Jewel. We
               take inspiration from other liquid staking projects and utilise
@@ -97,7 +97,7 @@ export default function Info() {
           <section>
             <h3>Governance</h3>
             <p>
-              As mentioned, the Greedy Merchant Guild is being run as a
+              As mentioned, the Greedy Merchants Guild is being run as a
               community project. Fee Parameters are able to be adjusted
               according to a governance vote. As such, there will be a
               governance token $GMG which can be used as a voting token. 100% of
