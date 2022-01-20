@@ -149,14 +149,14 @@ export function StakedGMGUI() {
     <div className="bg-rune-edge p-8 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">xGMG single sided staking pool</h3>
       <p className="text-gray-300/50">
-        Staking Ratio: <span className="text-gray-100">{formattedRatio}</span>
+        Staking Ratio: <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedRatio}</span>
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-content-between">
         <div>
           <h4 className="text-lg text-gray-300 text-center">Deposit</h4>
           <p className="text-gray-300/50">
             GMG in inventory{" "}
-            <span className="text-gray-100">{formattedBalance}</span>
+            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedBalance}</span>
           </p>
           <TextFieldWithMax
             updateValue={setDepositValue}
@@ -178,7 +178,7 @@ export function StakedGMGUI() {
           <h4 className="text-lg text-gray-300 text-center">Withdraw</h4>
           <p className="text-gray-300/50">
             Staked GMG{" "}
-            <span className="text-gray-100">{formattedStakedBalance}</span>
+            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedStakedBalance}</span>
           </p>
           <TextFieldWithMax
             updateValue={setWithdrawValue}
