@@ -4,16 +4,19 @@ import { B_1 } from "../../utils/constants";
 import { BigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
 
-export function usePrices(): [{
-  jewelPrice: number | undefined;
-  gmJewelPriceInJewel: number | undefined;
-  gmgPriceInJewel: number | undefined;
-}, boolean] {
+export function usePrices(): [
+  {
+    jewelPrice: number | undefined;
+    gmJewelPriceInJewel: number | undefined;
+    gmJewelPriceInUSD: number | undefined;
+    gmgPriceInJewel: number | undefined;
+    gmgPriceInUSD: number | undefined;
+  },
+  boolean
+] {
   const [loading, setLoading] = useState(true);
-  const [{
-    data: blockNumber
-  }] = useBlockNumber({
-    watch: true
+  const [{ data: blockNumber }] = useBlockNumber({
+    watch: true,
   });
 
   const [{ data: jewelUsdcReserves }, readJewelUsdcReserves] = useContractRead(
@@ -23,9 +26,12 @@ export function usePrices(): [{
       contractInterface: abis.UniswapV2Pair,
     },
     "getReserves",
-    useMemo(() => ({
-      skip: true,
-    }), [] )
+    useMemo(
+      () => ({
+        skip: true,
+      }),
+      []
+    )
   );
 
   const jewelPrice = useMemo(() => {
@@ -38,17 +44,21 @@ export function usePrices(): [{
     );
   }, [jewelUsdcReserves]);
 
-  const [{ data: jewelgmJewelReserves }, readJewelGmJewelReserves] = useContractRead(
-    {
-      // jewel-gmJewel
-      addressOrName: addresses.JgmJLPToken,
-      contractInterface: abis.UniswapV2Pair,
-    },
-    "getReserves",
-    useMemo(() => ({
-      skip: true,
-    }), []),
-  );
+  const [{ data: jewelgmJewelReserves }, readJewelGmJewelReserves] =
+    useContractRead(
+      {
+        // jewel-gmJewel
+        addressOrName: addresses.JgmJLPToken,
+        contractInterface: abis.UniswapV2Pair,
+      },
+      "getReserves",
+      useMemo(
+        () => ({
+          skip: true,
+        }),
+        []
+      )
+    );
 
   const gmJewelPriceInJewel = useMemo(() => {
     if (!jewelgmJewelReserves) return undefined;
@@ -60,6 +70,12 @@ export function usePrices(): [{
     );
   }, [jewelgmJewelReserves]);
 
+  const gmJewelPriceInUSD = useMemo(() => {
+    if (!gmJewelPriceInJewel) return undefined;
+    if (!jewelPrice) return undefined;
+    return gmJewelPriceInJewel * jewelPrice;
+  }, [gmJewelPriceInJewel, jewelPrice]);
+
   const [{ data: gmgReserves }, readJewelGmgReserves] = useContractRead(
     {
       // jewel-GMG
@@ -67,27 +83,39 @@ export function usePrices(): [{
       contractInterface: abis.UniswapV2Pair,
     },
     "getReserves",
-    useMemo(() => ({
-      skip: true,
-    }), []),
+    useMemo(
+      () => ({
+        skip: true,
+      }),
+      []
+    )
   );
   const gmgPriceInJewel = useMemo(() => {
     if (!gmgReserves) return undefined;
     if (!gmgReserves[0]) return undefined;
     if (!gmgReserves[1]) return undefined;
     if (!jewelPrice) return undefined;
-    return BigNumberToFloat(gmgReserves[0].mul(B_1).div(gmgReserves[1] || 1), 18);
+    return BigNumberToFloat(
+      gmgReserves[0].mul(B_1).div(gmgReserves[1] || 1),
+      18
+    );
   }, [gmgReserves]);
 
+  const gmgPriceInUSD = useMemo(() => {
+    if (!gmgPriceInJewel) return undefined;
+    if (!jewelPrice) return undefined;
+    return gmgPriceInJewel * jewelPrice;
+  }, [gmgPriceInJewel, jewelPrice]);
+
   useEffect(() => {
-    if(!blockNumber) return;
-    if(loading) return;
+    if (!blockNumber) return;
+    if (loading) return;
 
     Promise.allSettled([
       readJewelUsdcReserves(),
       readJewelGmJewelReserves(),
-      readJewelGmgReserves()
-    ])
+      readJewelGmgReserves(),
+    ]);
   }, [blockNumber]);
 
   useEffect(() => {
@@ -95,9 +123,18 @@ export function usePrices(): [{
     Promise.allSettled([
       readJewelUsdcReserves(),
       readJewelGmJewelReserves(),
-      readJewelGmgReserves()
+      readJewelGmgReserves(),
     ]).finally(() => setLoading(false));
-  }, [])
+  }, []);
 
-  return [{ jewelPrice, gmJewelPriceInJewel, gmgPriceInJewel }, loading];
+  return [
+    {
+      jewelPrice,
+      gmJewelPriceInJewel,
+      gmJewelPriceInUSD,
+      gmgPriceInJewel,
+      gmgPriceInUSD,
+    },
+    loading,
+  ];
 }

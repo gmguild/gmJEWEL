@@ -15,6 +15,7 @@ import { Button } from "./Button";
 import { usexGMGToken } from "../hooks/staking/usexGMGToken";
 import { B_0 } from "../utils/constants";
 import { Spinner } from "./Spinner";
+import { useStakingAPY } from "../hooks/staking/useStakingAPY";
 
 interface IStakeUI {
   poolId: number;
@@ -30,10 +31,8 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
     BigNumber.from(0)
   );
 
-  const [{ balance, allowance, stakedBalance, pendingReward }, loadingLpToken] = useLPToken(
-    props.LPToken,
-    props.poolId
-  );
+  const [{ balance, allowance, stakedBalance, pendingReward }, loadingLpToken] =
+    useLPToken(props.LPToken, props.poolId);
 
   const formattedBalance = useMemo(() => {
     if (!balance) return "?.??";
@@ -50,25 +49,48 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
     return BigNumberToFloat(pendingReward).toFixed(2);
   }, [pendingReward]);
 
-  const [approve, approving] = useERC20Approve(props.LPToken, addresses.MasterJeweler);
+  const [approve, approving] = useERC20Approve(
+    props.LPToken,
+    addresses.MasterJeweler
+  );
   const [stake, staking] = useStakeLPToken(props.poolId, depositValue);
   const [unstake, unstaking] = useUnstakeLPToken(props.poolId, withdrawValue);
-  const [claimRewards, claimingRewards] = useUnstakeLPToken(props.poolId, BigNumber.from(0))
+  const [claimRewards, claimingRewards] = useUnstakeLPToken(
+    props.poolId,
+    BigNumber.from(0)
+  );
+
+  const APY = useStakingAPY(props.poolId);
+
+  const formattedAPY = useMemo(() => {
+    if (!APY) return <span className="italic">..loading...</span>;
+    return APY.toFixed(1) + "%";
+  }, [APY]);
 
   const loadingInformation = loadingLpToken;
-  const doing = loadingInformation || approving || staking || unstaking || claimingRewards;
+  const doing =
+    loadingInformation || approving || staking || unstaking || claimingRewards;
 
   return (
     <div className="bg-rune-edge p-4 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">{props.tokenName}</h3>
+      <p className="text-gray-300/50">
+        APY: <span className="text-gray-100">{formattedAPY}</span>
+      </p>
       {pendingReward && pendingReward.gt(BigNumber.from(0)) && (
         <div className="flex flex-row items-center">
           <p className="text-gray-300/50">
             Pending rewards{" "}
-            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedPendingRewards}</span>
+            <span className="text-gray-100">
+              {loadingInformation ? "...loading..." : formattedPendingRewards}
+            </span>
           </p>
 
-          <Button className="mx-3" disabled={doing} onClick={() => claimRewards()}>
+          <Button
+            className="mx-3"
+            disabled={doing}
+            onClick={() => claimRewards()}
+          >
             Claim
           </Button>
         </div>
@@ -78,7 +100,9 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
           <h4 className="text-lg text-gray-300 text-center">Deposit</h4>
           <p className="text-gray-300/50">
             LP tokens in inventory{" "}
-            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedBalance}</span>
+            <span className="text-gray-100">
+              {loadingInformation ? "...loading..." : formattedBalance}
+            </span>
           </p>
           <TextFieldWithMax
             updateValue={setDepositValue}
@@ -86,11 +110,19 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
           />
           <div className="flex flex-row justify-evenly py-2">
             {allowance && balance && allowance.lt(balance) && (
-              <Button disabled={doing} onClick={() => approve()}>Approve</Button>
+              <Button disabled={doing} onClick={() => approve()}>
+                Approve
+              </Button>
             )}
             <Button
               onClick={() => depositValue.gt(B_0) && stake()}
-              disabled={doing || !balance || !allowance || balance.eq(BigNumber.from(0)) || allowance.lt(balance)}
+              disabled={
+                doing ||
+                !balance ||
+                !allowance ||
+                balance.eq(BigNumber.from(0)) ||
+                allowance.lt(balance)
+              }
             >
               Deposit
             </Button>
@@ -100,7 +132,9 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
           <h4 className="text-lg text-gray-300 text-center">Withdraw</h4>
           <p className="text-gray-300/50">
             Staked LP Tokens{" "}
-            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedStakedBalance}</span>
+            <span className="text-gray-100">
+              {loadingInformation ? "...loading..." : formattedStakedBalance}
+            </span>
           </p>
           <TextFieldWithMax
             updateValue={setWithdrawValue}
@@ -108,7 +142,13 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
           />
           <div className="flex flex-row justify-evenly py-2">
             <Button
-              disabled={doing || !stakedBalance || !withdrawValue || withdrawValue.eq(0) || stakedBalance.eq(0)}
+              disabled={
+                doing ||
+                !stakedBalance ||
+                !withdrawValue ||
+                withdrawValue.eq(0) ||
+                stakedBalance.eq(0)
+              }
               onClick={() => withdrawValue.gt(B_0) && unstake()}
             >
               Unstake
@@ -121,8 +161,13 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
 }
 
 export function StakedGMGUI() {
-  const [{ balance, allowance }, loadingGMGToken]= useERC20(addresses.GMGToken, addresses.xGMG);
-  const [{ balance: stakedBalance }, loadingStakedBalance]= useERC20(addresses.xGMG);
+  const [{ balance, allowance }, loadingGMGToken] = useERC20(
+    addresses.GMGToken,
+    addresses.xGMG
+  );
+  const [{ balance: stakedBalance }, loadingStakedBalance] = useERC20(
+    addresses.xGMG
+  );
 
   const [{ ratio }, loadingxGMGToken] = usexGMGToken();
 
@@ -138,25 +183,34 @@ export function StakedGMGUI() {
     BigNumber.from(0)
   );
 
-  const [approve, approving] = useERC20Approve(addresses.GMGToken, addresses.xGMG);
+  const [approve, approving] = useERC20Approve(
+    addresses.GMGToken,
+    addresses.xGMG
+  );
   const [stake, staking] = useStakeGMG(depositValue);
   const [unstake, unstaking] = useUnstakeGMG(withdrawValue);
 
-  const loadingInformation = loadingGMGToken || loadingStakedBalance || loadingxGMGToken;
+  const loadingInformation =
+    loadingGMGToken || loadingStakedBalance || loadingxGMGToken;
   const doing = loadingInformation || approving || staking || unstaking;
 
   return (
     <div className="bg-rune-edge p-8 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">xGMG single sided staking pool</h3>
       <p className="text-gray-300/50">
-        Staking Ratio: <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedRatio}</span>
+        Staking Ratio:{" "}
+        <span className="text-gray-100">
+          {loadingInformation ? "...loading..." : formattedRatio}
+        </span>
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-content-between">
         <div>
           <h4 className="text-lg text-gray-300 text-center">Deposit</h4>
           <p className="text-gray-300/50">
             GMG in inventory{" "}
-            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedBalance}</span>
+            <span className="text-gray-100">
+              {loadingInformation ? "...loading..." : formattedBalance}
+            </span>
           </p>
           <TextFieldWithMax
             updateValue={setDepositValue}
@@ -164,11 +218,19 @@ export function StakedGMGUI() {
           />
           <div className="flex flex-row justify-evenly py-2">
             {allowance && balance && allowance.lt(balance) && (
-              <Button disabled={doing} onClick={() => approve()}>Approve</Button>
+              <Button disabled={doing} onClick={() => approve()}>
+                Approve
+              </Button>
             )}
             <Button
               onClick={() => depositValue.gt(B_0) && stake()}
-              disabled={doing || !balance || !allowance || balance.eq(BigNumber.from(0)) || allowance.lt(balance)}
+              disabled={
+                doing ||
+                !balance ||
+                !allowance ||
+                balance.eq(BigNumber.from(0)) ||
+                allowance.lt(balance)
+              }
             >
               Deposit
             </Button>
@@ -178,7 +240,9 @@ export function StakedGMGUI() {
           <h4 className="text-lg text-gray-300 text-center">Withdraw</h4>
           <p className="text-gray-300/50">
             Staked GMG{" "}
-            <span className="text-gray-100">{loadingInformation ? '...loading...' : formattedStakedBalance}</span>
+            <span className="text-gray-100">
+              {loadingInformation ? "...loading..." : formattedStakedBalance}
+            </span>
           </p>
           <TextFieldWithMax
             updateValue={setWithdrawValue}
@@ -186,7 +250,13 @@ export function StakedGMGUI() {
           />
           <div className="flex flex-row justify-evenly py-2">
             <Button
-              disabled={doing || !stakedBalance || !withdrawValue || withdrawValue.eq(0) || stakedBalance.eq(0)}
+              disabled={
+                doing ||
+                !stakedBalance ||
+                !withdrawValue ||
+                withdrawValue.eq(0) ||
+                stakedBalance.eq(0)
+              }
               onClick={() => withdrawValue.gt(B_0) && unstake()}
             >
               Unstake
