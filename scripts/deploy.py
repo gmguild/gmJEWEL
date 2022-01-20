@@ -122,10 +122,10 @@ def seed_gm_jewel_pool(deployer, gm_jewel, accounts, is_dev):
     if is_dev:
         pool = interface.IUniswapV2Pair(pool_addr)
         jewel_token.transfer(
-            pool, 2500 *
+            pool, 1000 *
             1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
         )
-        gm_jewel.mint(pool, 1_000 * 1e18, {"from": deployer})
+        gm_jewel.mint(pool, 2500 * 1e18, {"from": deployer})
         pool.mint(accounts[1], {"from": deployer})
     return pool_addr
 
