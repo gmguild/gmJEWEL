@@ -6,6 +6,7 @@ import Profiles from "../../../../build/interfaces/Profiles.json";
 import JewelToken from "../../../../build/interfaces/Jewel.json";
 import MasterJeweler from "../../../../build/contracts/MasterJeweler.json";
 import ERC20 from "../../abi/ERC20.json";
+import UniswapV2Pair from "../../abi/UniswapV2Pair.json";
 import xGMG from "../../../../build/contracts/StakedGMG.json";
 import Addresses from "../../../deployment.json";
 
@@ -19,6 +20,7 @@ export const abis = {
   MasterJeweler: MasterJeweler.abi,
   ERC20: ERC20,
   xGMG: xGMG.abi,
+  UniswapV2Pair: UniswapV2Pair,
 };
 
 export const addresses = {

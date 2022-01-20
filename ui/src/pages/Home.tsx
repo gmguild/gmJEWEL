@@ -15,8 +15,8 @@ export default function Home() {
         <h2>Getting Started</h2>
         <p>
           If you want to sell your locked Jewel, please go to the
-          &quot;Mint&quot; page. This will allow you to create gmJEWEL, which can
-          be sold on the secondary market.
+          &quot;Mint&quot; page. This will allow you to create gmJEWEL, which
+          can be sold on the secondary market.
         </p>
         <p>
           If you are looking to buy locked Jewel, please go to the

@@ -8,6 +8,7 @@ import MasterJeweler from "../../../../prod-deployment/contracts/MasterJeweler.j
 import ERC20 from "../../abi/ERC20.json";
 import xGMG from "../../../../prod-deployment/contracts/StakedGMG.json";
 import Addresses from "../../../deployment-prod.json";
+import UniswapV2Pair from "../../abi/UniswapV2Pair.json";
 
 export const abis = {
   PawnShop: PawnShop.abi,
@@ -19,6 +20,7 @@ export const abis = {
   MasterJeweler: MasterJeweler.abi,
   ERC20: ERC20,
   xGMG: xGMG.abi,
+  UniswapV2Pair: UniswapV2Pair,
 };
 
 export const addresses = {
