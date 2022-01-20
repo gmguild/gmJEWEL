@@ -1,18 +1,24 @@
 import { BigNumber } from "ethers";
-import { useMemo } from "react";
-import { useAccount, useContractRead } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount, useBlockNumber, useContractRead } from "wagmi";
 import { abis, addresses } from "../../utils/env";
 
 export function useLPToken(
   LPToken: string,
   poolId: number
-): {
+): [{
   balance: BigNumber | undefined;
   allowance: BigNumber | undefined;
   stakedSupply: BigNumber | undefined;
   stakedBalance: BigNumber | undefined;
   pendingReward: BigNumber | undefined;
-} {
+}, boolean] {
+  const [loading, setLoading] = useState(true);
+  const [{
+    data: blockNumber
+  }] = useBlockNumber({
+    watch: true
+  });
   const [{ data: accountData }] = useAccount();
   const user = useMemo(() => [accountData?.address], [accountData?.address]);
   const onMaster = useMemo(() => [addresses.MasterJeweler], []);
@@ -24,68 +30,92 @@ export function useLPToken(
     () => [poolId, accountData?.address],
     [poolId, accountData?.address]
   );
-  const [{ data: stakedBalance }] = useContractRead(
+
+  const [{ data: stakedBalance }, readStakedBalance] = useContractRead(
     {
       addressOrName: addresses.MasterJeweler,
       contractInterface: abis.MasterJeweler,
     },
     "userInfo",
-    { watch: true, args: userStaked }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  const [{ data: balance }] = useContractRead(
+  const [{ data: balance }, readBalance] = useContractRead(
     {
       addressOrName: LPToken,
       contractInterface: abis.ERC20,
     },
     "balanceOf",
-    {
-      watch: true,
-      args: user,
-    }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  const [{ data: allowance }] = useContractRead(
+  const [{ data: allowance }, readAllowance] = useContractRead(
     {
       addressOrName: LPToken,
       contractInterface: abis.ERC20,
     },
     "allowance",
-    {
-      watch: true,
-      args: userMaster,
-    }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  const [{ data: stakedSupply }] = useContractRead(
+  const [{ data: stakedSupply }, readStakedSupply] = useContractRead(
     {
       addressOrName: LPToken,
       contractInterface: abis.ERC20,
     },
     "balanceOf",
-    {
-      watch: true,
-      args: onMaster,
-    }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  const [{ data: pendingReward }] = useContractRead(
+  const [{ data: pendingReward }, readPendingReward] = useContractRead(
     {
       addressOrName: addresses.MasterJeweler,
       contractInterface: abis.MasterJeweler,
     },
     "pendingToken",
-    {
-      watch: true,
-      args: userStaked,
-    }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  return {
+
+  useEffect(() => {
+    if(!blockNumber) return;
+    if(loading) return;
+
+    Promise.allSettled([
+      readStakedBalance({args: userStaked}),
+      readBalance({args: user}),
+      readAllowance({args: userMaster}),
+      readStakedSupply({args: onMaster}),
+      readPendingReward({args: userStaked}),
+    ])
+  }, [blockNumber]);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.allSettled([
+      readStakedBalance({args: userStaked}),
+      readBalance({args: user}),
+      readAllowance({args: userMaster}),
+      readStakedSupply({args: onMaster}),
+      readPendingReward({args: userStaked}),
+    ]).finally(() => setLoading(false));
+  }, [userStaked, user, userMaster, onMaster, userStaked])
+
+  return [{
     balance: balance as any,
     allowance: allowance as any,
     stakedSupply: stakedSupply as any,
     stakedBalance: stakedBalance && (stakedBalance[0] as any),
     pendingReward: pendingReward as any,
-  };
+  }, loading];
 }

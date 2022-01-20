@@ -1,32 +1,40 @@
-import { BigNumber, utils } from "ethers";
-import { useMemo } from "react";
-import { useContractRead } from "wagmi";
+import { BigNumber } from "ethers";
+import { useEffect, useMemo, useState } from "react";
+import { useBlockNumber, useContractRead } from "wagmi";
 import { B_1 } from "../../utils/constants";
 import { abis, addresses } from "../../utils/env";
 
-export function usexGMGToken(): {
+export function usexGMGToken(): [{
   stakedBalance: BigNumber | undefined;
   stakingTokens: BigNumber | undefined;
   ratio: BigNumber | undefined;
-} {
-  const [{ data: stakedBalance }] = useContractRead(
+}, boolean] {
+  const [loading, setLoading] = useState(true);
+  const [{
+    data: blockNumber
+  }] = useBlockNumber({
+    watch: true
+  });
+  const [{ data: stakedBalance }, readStakedBalance] = useContractRead(
     {
       addressOrName: addresses.GMGToken,
       contractInterface: abis.ERC20,
     },
     "balanceOf",
-    { watch: true, args: addresses.xGMG }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
-  const [{ data: stakingToken }] = useContractRead(
+  const [{ data: stakingToken }, readStakingToken] = useContractRead(
     {
       addressOrName: addresses.xGMG,
       contractInterface: abis.xGMG,
     },
     "totalSupply",
-    {
-      watch: true,
-    }
+    useMemo(() => ({
+      skip: true,
+    }), []),
   );
 
   const ratio = useMemo(() => {
@@ -36,9 +44,27 @@ export function usexGMGToken(): {
     return stakedBalance.mul(B_1).div(stakingToken);
   }, [stakingToken, stakedBalance]);
 
-  return {
+  useEffect(() => {
+    if(!blockNumber) return;
+    if(loading) return;
+
+    Promise.allSettled([
+      readStakedBalance({args: [addresses.xGMG]}),
+      readStakingToken(),
+    ])
+  }, [blockNumber]);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.allSettled([
+      readStakedBalance({args: [addresses.xGMG]}),
+      readStakingToken(),
+    ]).finally(() => setLoading(false));
+  }, [])
+
+  return [{
     stakingTokens: stakingToken as any,
     stakedBalance: stakedBalance as any,
     ratio: ratio as any,
-  };
+  }, loading];
 }

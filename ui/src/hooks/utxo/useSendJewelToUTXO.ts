@@ -19,7 +19,7 @@ export function useSendJewelToUTXO(utxoAddress: string): [() => Promise<void>, b
     try {
       setLoading(true)
       const output = await write();
-      await output.data?.wait(3);
+      await output.data?.wait(2);
     } catch(err) {
       console.error(err) // todo: error toast
     } finally {

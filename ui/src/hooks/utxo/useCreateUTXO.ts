@@ -24,7 +24,7 @@ export function useCreateUTXO(): [() => Promise<void>, boolean] {
       });
       console.log(output);
       console.debug("Waiting...")
-      await output.data?.wait(3);
+      await output.data?.wait(2);
       console.debug("Waited!")
     } catch(err) {
       console.error(err); // todo: error toast

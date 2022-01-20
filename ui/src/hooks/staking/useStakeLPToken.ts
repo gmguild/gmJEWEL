@@ -1,10 +1,11 @@
 import { BigNumber } from "ethers";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useContractWrite } from "wagmi";
 import { abis, addresses } from "../../utils/env";
 
 
-export function useStakeLPToken(poolId: number, amount: BigNumber) {
+export function useStakeLPToken(poolId: number, amount: BigNumber): [() => Promise<void>, boolean] {
+  const [loading, setLoading] = useState(false);
   const [, write] = useContractWrite(
     {
       addressOrName: addresses.MasterJeweler,
@@ -16,8 +17,16 @@ export function useStakeLPToken(poolId: number, amount: BigNumber) {
     }
   );
 
-  return useCallback(async () => {
-    const output = await write();
-    await output.data?.wait(1);
-  }, [write]);
+  const fn = useCallback(async () => {
+    try {
+      setLoading(true);
+      const output = await write();
+      await output.data?.wait(2);
+    } catch(err) {
+      console.error(err); // todo: error toast
+    } finally {
+      setLoading(false)
+    }  }, [write]);
+
+  return [fn, loading]
 }
