@@ -144,7 +144,7 @@ export default function Trade() {
 
                     <Button
                       className="text-xs p-1 mr-auto"
-                      onClick={() => addTokenToWallet(addresses.JgmJLPToken, "GMGLP")}
+                      onClick={() => addTokenToWallet(addresses.JgmJLPToken, "JEWEL-LP")}
                       disabled={addingTokenToWallet}
                     >
                       Add to Wallet
@@ -158,7 +158,7 @@ export default function Trade() {
 
                     <Button
                       className="text-xs p-1 mr-auto"
-                      onClick={() => addTokenToWallet(addresses.JGMGLPToken, "GMGLP")}
+                      onClick={() => addTokenToWallet(addresses.JGMGLPToken, "JEWEL-LP")}
                       disabled={addingTokenToWallet}
                     >
                       Add to Wallet
