@@ -5,18 +5,9 @@ from sqlitedict import SqliteDict
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    "https://gmg.money",
-    "https://*.gmg.money",
-    "https://gmjewel.netlify.app",
-    "https://dev--gmjewel.netlify.app",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origin_regex='https?:\/\/(localhost|gmg\.money|.*\.gmg\.money|.*--gmjewel.netlify.app)(:8080)?',
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
