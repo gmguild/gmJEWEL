@@ -4,7 +4,7 @@ import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { useUnstakeLPToken } from "../hooks/staking/useUnstakeLPToken";
 import { useStakeLPToken } from "../hooks/staking/useStakeLPToken";
 import { addresses } from "../utils/env";
-import { BigNumberToFloat } from "../utils/conversion";
+import { bigNumberToFloat } from "../utils/conversion";
 import { useLPToken } from "../hooks/staking/useLPToken";
 import { useFormattedBigNumber } from "../hooks/util/useFormattedBigNumber";
 import { useERC20 } from "../hooks/token/useERC20";
@@ -36,17 +36,17 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
 
   const formattedBalance = useMemo(() => {
     if (!balance) return "?.??";
-    return BigNumberToFloat(balance).toFixed(2);
+    return bigNumberToFloat(balance).toFixed(2);
   }, [balance]);
 
   const formattedStakedBalance = useMemo(() => {
     if (!stakedBalance) return "?.??";
-    return BigNumberToFloat(stakedBalance).toFixed(2);
+    return bigNumberToFloat(stakedBalance).toFixed(2);
   }, [stakedBalance]);
 
   const formattedPendingRewards = useMemo(() => {
     if (!pendingReward) return "?.??";
-    return BigNumberToFloat(pendingReward).toFixed(2);
+    return bigNumberToFloat(pendingReward).toFixed(2);
   }, [pendingReward]);
 
   const [approve, approving] = useERC20Approve(

@@ -20,6 +20,7 @@ export function useERC20Approve(ERC20Address: string, spender: string): [() => P
     try {
       setLoading(true);
       const output = await write();
+      if(output.error) throw output.error;
       await output.data?.wait(2);
     } catch(err) {
       console.error(err); // todo: error toast

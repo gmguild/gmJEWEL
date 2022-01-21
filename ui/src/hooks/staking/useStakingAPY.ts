@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useBlockNumber, useContractRead } from "wagmi";
 import { BLOCKS_PER_YEAR } from "../../utils/constants";
-import { BigNumberToFloat } from "../../utils/conversion";
+import { bigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
 import { usePrices } from "../token/usePrices";
 import { getEmissionRate } from "../util/getEmissionRate";
@@ -49,8 +49,8 @@ export function useStakingAPY(poolId: number): number | undefined {
     if (!allocationPoint) return undefined;
     if (!totalAllocation) return undefined;
     return (
-      BigNumberToFloat(allocationPoint.allocPoint as unknown as BigNumber) /
-      BigNumberToFloat(totalAllocation as unknown as BigNumber)
+      bigNumberToFloat(allocationPoint.allocPoint as unknown as BigNumber) /
+      bigNumberToFloat(totalAllocation as unknown as BigNumber)
     );
   }, [allocationPoint, totalAllocation]);
 

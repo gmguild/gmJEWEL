@@ -3,7 +3,7 @@ import { useContractWrite } from "wagmi";
 import { abis, addresses } from "../../utils/env";
 import { BigNumber, } from "ethers";
 
-export function useRedeemFromUTXO(utxoAddress: string, jewelAmount: BigNumber): [() => Promise<void>, boolean] {
+export function useRedeemFromUTXO(utxoAddress: string, jewelAmount: BigNumber): [() => Promise<boolean>, boolean] {
   const [loading, setLoading] = useState(false);
   const [, write] = useContractWrite(
     {
@@ -17,11 +17,14 @@ export function useRedeemFromUTXO(utxoAddress: string, jewelAmount: BigNumber): 
     try {
       setLoading(true)
       const output = await write({ args: [utxoAddress, jewelAmount] });
+      if(output.error) throw output.error;
       await output.data?.wait(2);
+      setLoading(false)
+      return true;
     } catch(err) {
       console.error(err) // todo: error toast
-    } finally {
       setLoading(false)
+      return false;
     }
   }, [utxoAddress, jewelAmount, write]);
 
