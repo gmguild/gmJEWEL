@@ -208,13 +208,15 @@ export function RedeemUTXO() {
               </div>
 
               <div className="flex flex-row justify-center gap-2 flex-wrap">
-                <Button
-                  className="mx-auto"
-                  disabled={doing || redeemDisabled || !pawnShopAllowanceTooLow}
-                  onClick={() => approveJewelAtPawnShop()}
-                  >
-                  Approve JEWEL
-                </Button>
+                {jewelBalance?.gt(0) && (
+                  <Button
+                    className="mx-auto"
+                    disabled={doing || redeemDisabled || !pawnShopAllowanceTooLow}
+                    onClick={() => approveJewelAtPawnShop()}
+                    >
+                    Approve JEWEL
+                  </Button>
+                )}
 
                 <Button
                   className="mx-auto"
