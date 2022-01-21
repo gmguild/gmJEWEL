@@ -145,8 +145,9 @@ export default function Info() {
             <p>
               Some contracts are Ownable, or have a developer&apos;s address for the dev fund allocation.
               <br />
-              The owner of the contracts is a Harmony Multisig safe, at address: 0x913C806bf4318e213EFfff70f5B187333cd2f838
+              The current owner of the contracts is a Harmony Multisig safe also used for the dev fund, at address: 0x913C806bf4318e213EFfff70f5B187333cd2f838
               <br />
+              The plan is to create a separate multisig with prominent members of the DFK and GMG community, that will own the contracts, control fees, etc.
             </p>
           </section>
           <section>
