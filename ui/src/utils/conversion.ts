@@ -1,12 +1,20 @@
 import { BigNumber, BigNumberish, utils } from "ethers";
 import { getAddress } from "ethers/lib/utils";
 
-export function BigNumberToFloat(n: BigNumber | string, decimals = 18) {
+export function bigNumberToFloat(n: BigNumber | string, decimals = 18) {
   if (typeof n === "string") {
     return parseFloat(utils.formatUnits(BigNumber.from(n), decimals));
   } else {
     return parseFloat(utils.formatUnits(n, decimals));
   }
+}
+
+export function bigNumberMax(...numbers: BigNumberish[]) {
+  return numbers.map(n => BigNumber.from(n)).reduce((curMax, nextVal) => nextVal.gt(curMax) ? nextVal : curMax);
+}
+
+export function bigNumberMin(...numbers: BigNumberish[]) {
+  return numbers.map(n => BigNumber.from(n)).reduce((curMin, nextVal) => nextVal.lt(curMin) ? nextVal : curMin);
 }
 
 export function toBytes32(str: string) {

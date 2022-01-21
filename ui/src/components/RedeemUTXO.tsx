@@ -7,7 +7,7 @@ import { useGetAllUTXOs } from "../hooks/utxo/useGetAllUTXOs";
 import { useRedeemFromUTXO } from "../hooks/utxo/useRedeemFromUTXO";
 import { JewelStash } from "./JewelStash";
 import { classNames } from "../utils/classNames";
-import { BigNumberToFloat, shortenAddress } from "../utils/conversion";
+import { bigNumberMin, bigNumberToFloat, shortenAddress } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
 import { getFees } from "../utils/fees";
@@ -43,7 +43,7 @@ export function RedeemUTXO() {
   const {costToBuy, price, fee} = useMemo(() => {
     if (!selectedUTXO) return {};
     if (selectedUTXO.newVal == "") return {};
-    const price = BigNumberToFloat(BigNumber.from(selectedUTXO.newVal));
+    const price = bigNumberToFloat(BigNumber.from(selectedUTXO.newVal));
     // todo: don't hardcode fee tiers
     const fee = getFees(price);
     const costToBuy = ethers.utils.parseEther((price * (1 + fee)).toString());
@@ -63,17 +63,17 @@ export function RedeemUTXO() {
     return {
       formattedCostToBuy: (
         <span className={classNames(totalCostColour)}>
-          {BigNumberToFloat(costToBuy).toFixed(3)}
+          {bigNumberToFloat(costToBuy).toFixed(3)}
         </span>
       ),
       formattedJewelCost: (
         <span className={classNames(jewelCostColour)}>
-          {BigNumberToFloat(jewelAmount).toFixed(3)}
+          {bigNumberToFloat(jewelAmount).toFixed(3)}
         </span>
       ),
       formattedGmJewelCost: (
         <span className={classNames(gmJewelCostColour)}>
-          {BigNumberToFloat(costToBuy.sub(jewelAmount)).toFixed(3)}
+          {bigNumberToFloat(costToBuy.sub(jewelAmount)).toFixed(3)}
         </span>
       ),
     };
@@ -81,7 +81,8 @@ export function RedeemUTXO() {
 
   useEffect(() => {
     if(price) {
-      setSelectedJewelAmount(ethers.utils.parseEther((price * (fee || 0)).toFixed(18)));
+      const feeAmount = ethers.utils.parseEther((price * (fee || 0)).toFixed(18))
+      setSelectedJewelAmount(bigNumberMin(feeAmount, jewelBalance ?? BigNumber.from(0)));
     } else {
       setSelectedJewelAmount(null);
     }
@@ -196,9 +197,10 @@ export function RedeemUTXO() {
                   <input
                     type="range"
                     min={0}
-                    max={Math.min(BigNumberToFloat(jewelBalance), BigNumberToFloat(costToBuy))}
-                    value={BigNumberToFloat(jewelAmount)}
+                    max={Math.min(bigNumberToFloat(jewelBalance), bigNumberToFloat(costToBuy))}
+                    value={bigNumberToFloat(jewelAmount)}
                     onChange={(e) => setSelectedJewelAmount(ethers.utils.parseEther(e.target.value))}
+                    disabled={jewelBalance.lte(0)}
                   />
                 ) : (
                   <p>...loading...</p>

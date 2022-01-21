@@ -1,7 +1,7 @@
 import { utils } from "@usedapp/core/node_modules/ethers";
 import { BigNumber } from "ethers";
 import React, { SetStateAction } from "react";
-import { BigNumberToFloat } from "../utils/conversion";
+import { bigNumberToFloat } from "../utils/conversion";
 
 interface ITextFieldWithProps {
   maxValue: BigNumber;
@@ -13,7 +13,7 @@ export const TextFieldWithMax = (props: ITextFieldWithProps) => {
 
   const maxValueAsString = React.useMemo(() => {
     if (!props.maxValue) return "0";
-    return BigNumberToFloat(props.maxValue).toFixed(5);
+    return bigNumberToFloat(props.maxValue).toFixed(5);
   }, [props.maxValue]);
 
   const updateText = (event: React.ChangeEvent<HTMLInputElement>) => {

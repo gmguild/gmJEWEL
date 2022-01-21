@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber, useContractRead } from "wagmi";
 import { B_1 } from "../../utils/constants";
-import { BigNumberToFloat } from "../../utils/conversion";
+import { bigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
 
 export function usePrices(): [
@@ -38,7 +38,7 @@ export function usePrices(): [
     if (!jewelUsdcReserves) return undefined;
     if (!jewelUsdcReserves[0]) return undefined;
     if (!jewelUsdcReserves[1]) return undefined;
-    return BigNumberToFloat(
+    return bigNumberToFloat(
       jewelUsdcReserves[1].mul(B_1).div(jewelUsdcReserves[0] || 1),
       6
     );
@@ -64,7 +64,7 @@ export function usePrices(): [
     if (!jewelgmJewelReserves) return undefined;
     if (!jewelgmJewelReserves[0]) return undefined;
     if (!jewelgmJewelReserves[1]) return undefined;
-    return BigNumberToFloat(
+    return bigNumberToFloat(
       jewelgmJewelReserves[1].mul(B_1).div(jewelgmJewelReserves[0] || 1),
       18
     );
@@ -95,7 +95,7 @@ export function usePrices(): [
     if (!gmgReserves[0]) return undefined;
     if (!gmgReserves[1]) return undefined;
     if (!jewelPrice) return undefined;
-    return BigNumberToFloat(
+    return bigNumberToFloat(
       gmgReserves[0].mul(B_1).div(gmgReserves[1] || 1),
       18
     );

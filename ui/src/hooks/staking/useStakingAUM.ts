@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useContractRead } from "wagmi";
-import { BigNumberToFloat } from "../../utils/conversion";
+import { bigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
 import { MasterJewelerPool } from "../../utils/stakingpools";
 import { usePrices } from "../token/usePrices";
@@ -69,13 +69,13 @@ export function useStakingAUM(poolId: number): number | undefined {
     const token1Price = getTokenPrice(stakingPool.token1);
     if (!token1Price) return undefined;
     // token0amount
-    const t0a = BigNumberToFloat(token0Amount as unknown as BigNumber);
+    const t0a = bigNumberToFloat(token0Amount as unknown as BigNumber);
     // token1amount
-    const t1a = BigNumberToFloat(token1Amount as unknown as BigNumber);
+    const t1a = bigNumberToFloat(token1Amount as unknown as BigNumber);
     // staked lp
-    const slp = BigNumberToFloat(stakedLPTokens as unknown as BigNumber);
+    const slp = bigNumberToFloat(stakedLPTokens as unknown as BigNumber);
     // total lp
-    const tlp = BigNumberToFloat(totalLPTokens as unknown as BigNumber);
+    const tlp = bigNumberToFloat(totalLPTokens as unknown as BigNumber);
     return token0Price * t0a + (token1Price * t1a * slp) / tlp;
   }, [totalLPTokens, stakedLPTokens, token0Amount, token1Amount]);
 
