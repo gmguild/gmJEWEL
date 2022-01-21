@@ -37,7 +37,7 @@ export const Header = () => {
             <div className="flex flex-row flex-wrap items-center justify-center text-sm space-x-2 my-2">
               <p><span className="text-gray-500">$JEWEL</span> {loadingPrices ? '...' : prices.jewelPrice?.toFixed(3)} USDC</p>
               <p><span className="text-gray-500">$gmJEWEL</span> {loadingPrices ? '...' : prices.gmJewelPriceInJewel?.toFixed(3)} JEWEL</p>
-              <p><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(3)} JEWEL</p>
+              <p><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(5)} JEWEL</p>
             </div>
           </div>
 
