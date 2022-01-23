@@ -16,7 +16,6 @@ import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { addresses } from "../utils/env";
 import { useERC20 } from "../hooks/token/useERC20";
 import { useGetUTXORedemptionHistory } from "../hooks/utxo/useGetUTXORedemptionHistory";
-import { formatDistanceToNow } from "date-fns";
 import { UpdatingTimestamp } from "./UpdatingTimestamp";
 
 export function RedeemUTXO() {
