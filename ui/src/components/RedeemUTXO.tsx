@@ -17,6 +17,7 @@ import { addresses } from "../utils/env";
 import { useERC20 } from "../hooks/token/useERC20";
 import { useGetUTXORedemptionHistory } from "../hooks/utxo/useGetUTXORedemptionHistory";
 import { formatDistanceToNow } from "date-fns";
+import { UpdatingTimestamp } from "./UpdatingTimestamp";
 
 export function RedeemUTXO() {
   const [advancedSectionOpen, setAdvancedSectionOpen] = useState(false);
@@ -290,7 +291,7 @@ export function RedeemUTXO() {
                           {shortenTx(record.tx)}
                         </a>
                       </td>
-                      <td>{formatDistanceToNow(new Date(record.timestamp), {addSuffix: true})}</td>
+                      <td><UpdatingTimestamp date={new Date(record.timestamp)} /></td>
                       <td>
                         <a
                           className="underline font-bold text-gray-900 hover:text-blue-500"
