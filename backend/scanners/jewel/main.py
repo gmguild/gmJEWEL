@@ -580,6 +580,8 @@ class SqliteDictState(IEventScannerState):
         txhash = event.transactionHash.hex()  # Transaction hash
         block_number = event.blockNumber
 
+        utxoObject = None
+
         # Convert ERC-20 Transfer event to our internal format
         args = event["args"]
         if event["event"] == "UTXOCreated":
