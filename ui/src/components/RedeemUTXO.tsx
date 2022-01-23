@@ -15,11 +15,14 @@ import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { addresses } from "../utils/env";
 import { useERC20 } from "../hooks/token/useERC20";
+import { useGetUTXORedemptionHistory } from "../hooks/utxo/useGetUTXORedemptionHistory";
+import { formatDistanceToNow } from "date-fns";
 
 export function RedeemUTXO() {
   const [advancedSectionOpen, setAdvancedSectionOpen] = useState(false);
 
   const [allUTXOs, loadingAllUTXOs, forceRefreshAllUTXOs] = useGetAllUTXOs();
+  const [utxoRedemptionHistory, loadingUtxoRedemptionHistory] = useGetUTXORedemptionHistory();
   const [{ unlockedBalance: jewelBalance }, loadingJewelBalance] = useJewelBalance();
   const [{ balance: gmBalance }, loadingGmJewelBalance] = useGmJewelBalance();
 
@@ -106,151 +109,192 @@ export function RedeemUTXO() {
     || (jewelAmount?._isBigNumber && gmBalance?._isBigNumber && costToBuy?._isBigNumber && gmBalance.lt(costToBuy.sub(jewelAmount)));
 
   return (
-    <div className="max-w-5xl mx-auto font-lora p-4">
-      <article className={classNames("py-6 prose mx-auto")}>
-        <p className="flex flex-row justify-center mx-auto">
-          Your JEWEL balance is{" "}
-          <span className="ml-2 text-gray-900 flex flex-row items-center">
-            <div className="jewel-icon h-4 w-4 mr-1" />{" "}
-            {!loadingInformation ? formattedJewelBalance : "...loading..."}
-          </span>
-        </p>
-        <p className="flex flex-row justify-center mx-auto">
-          Your gmJEWEL balance is{" "}
-          <span className="ml-2 text-gray-900 flex flex-row items-center">
-            <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
-            {!loadingInformation ? formattedGmBalance : "...loading..."}
-          </span>
-        </p>
+    <>
+      <div className="max-w-5xl mx-auto font-lora p-4">
+        <article className={classNames("py-6 prose mx-auto")}>
+          <p className="flex flex-row justify-center mx-auto">
+            Your JEWEL balance is{" "}
+            <span className="ml-2 text-gray-900 flex flex-row items-center">
+              <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+              {!loadingInformation ? formattedJewelBalance : "...loading..."}
+            </span>
+          </p>
+          <p className="flex flex-row justify-center mx-auto">
+            Your gmJEWEL balance is{" "}
+            <span className="ml-2 text-gray-900 flex flex-row items-center">
+              <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+              {!loadingInformation ? formattedGmBalance : "...loading..."}
+            </span>
+          </p>
 
-        <p className="text-center">Please select a Stash to redeem</p>
-      </article>
+          <p className="text-center">Please select a Stash to redeem</p>
+        </article>
 
-      <div className="w-full my-4 mt-0">
-        <div
-          className={classNames(
-            "mx-auto max-w-xl",
-            !selectedUTXO && "flex flex-row my-8 justify-center",
-            selectedUTXO && "p-4 mb-4 flex flex-col items-center"
-          )}
-        >
-          {!selectedUTXO && <p className="italic">No Stash selected</p>}
-          {selectedUTXO && (
-            <>
-              <p className="italic mb-1">Selected stash</p>
-              <p className="mb-4">
-                <a
-                  className=" underline font-bold text-gray-900 hover:text-blue-500"
-                  target="_blank"
-                  href={`https://explorer.harmony.one/address/${selectedUTXO.utxoAddress}`}
-                  rel="noreferrer"
-                >
-                  {shortenAddress(selectedUTXO.utxoAddress)}
-                </a>
-              </p>
+        <div className="w-full my-4 mt-0">
+          <div
+            className={classNames(
+              "mx-auto max-w-xl",
+              !selectedUTXO && "flex flex-row my-8 justify-center",
+              selectedUTXO && "p-4 mb-4 flex flex-col items-center"
+            )}
+          >
+            {!selectedUTXO && <p className="italic">No Stash selected</p>}
+            {selectedUTXO && (
+              <>
+                <p className="italic mb-1">Selected stash</p>
+                <p className="mb-4">
+                  <a
+                    className=" underline font-bold text-gray-900 hover:text-blue-500"
+                    target="_blank"
+                    href={`https://explorer.harmony.one/address/${selectedUTXO.utxoAddress}`}
+                    rel="noreferrer"
+                  >
+                    {shortenAddress(selectedUTXO.utxoAddress)}
+                  </a>
+                </p>
 
-              <p className="flex flex-row mb-2">
-                <span className="text-gray-500">Value</span>{" "}
-                <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
-                  {!loadingInformation
-                    ? formattedSelectedUTXOValue
-                    : "...loading..."}
-                </span>
-              </p>
+                <p className="flex flex-row mb-2">
+                  <span className="text-gray-500">Value</span>{" "}
+                  <span className="ml-2 text-gray-900 flex flex-row items-center">
+                    <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+                    {!loadingInformation
+                      ? formattedSelectedUTXOValue
+                      : "...loading..."}
+                  </span>
+                </p>
 
-              <p className="flex flex-row mb-2">
-                <span className="text-gray-500">TOTAL Cost</span>{" "}
-                <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
-                  {!loadingInformation ? formattedCostToBuy : "...loading..."}
-                </span>
-              </p>
-              <p className="flex flex-row mb-2">
-                <span className="text-gray-500">Cost Paid in JEWEL</span>{" "}
-                <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
-                  {!loadingInformation ? formattedJewelCost : "...loading..."}
-                </span>
-              </p>
-              <p className="flex flex-row mb-1">
-                <span className="text-gray-500">Cost Paid in gmJEWEL</span>{" "}
-                <span className="ml-2 text-gray-900 flex flex-row items-center">
-                  <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
-                  {!loadingInformation ? formattedGmJewelCost : "...loading..."}
-                </span>
-              </p>
+                <p className="flex flex-row mb-2">
+                  <span className="text-gray-500">TOTAL Cost</span>{" "}
+                  <span className="ml-2 text-gray-900 flex flex-row items-center">
+                    <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+                    {!loadingInformation ? formattedCostToBuy : "...loading..."}
+                  </span>
+                </p>
+                <p className="flex flex-row mb-2">
+                  <span className="text-gray-500">Cost Paid in JEWEL</span>{" "}
+                  <span className="ml-2 text-gray-900 flex flex-row items-center">
+                    <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+                    {!loadingInformation ? formattedJewelCost : "...loading..."}
+                  </span>
+                </p>
+                <p className="flex flex-row mb-1">
+                  <span className="text-gray-500">Cost Paid in gmJEWEL</span>{" "}
+                  <span className="ml-2 text-gray-900 flex flex-row items-center">
+                    <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+                    {!loadingInformation ? formattedGmJewelCost : "...loading..."}
+                  </span>
+                </p>
 
-              <div className="flex flex-row justify-end mb-2">
-                <button
-                  className="text-center text-gray-500 cursor-pointer text-sm px-2 py-2"
-                  onClick={() => setAdvancedSectionOpen((open) => !open)}
-                >
-                  ADVANCED OPTIONS {advancedSectionOpen ? "-" : "+"}
-                </button>
-              </div>
+                <div className="flex flex-row justify-end mb-2">
+                  <button
+                    className="text-center text-gray-500 cursor-pointer text-sm px-2 py-2"
+                    onClick={() => setAdvancedSectionOpen((open) => !open)}
+                  >
+                    ADVANCED OPTIONS {advancedSectionOpen ? "-" : "+"}
+                  </button>
+                </div>
 
-              <div className={classNames(!advancedSectionOpen && "hidden", "mb-4")}>
-
+                <div className={classNames(!advancedSectionOpen && "hidden", "mb-4")}>
                   <p className="text-sm">Adjust JEWEL Ratio</p>
-                {(costToBuy && jewelAmount && price && fee) ? (
-                  <input
-                    type="range"
-                    min={bigNumberToFloat(ethers.utils.parseEther((price * (fee || 0)).toFixed(18)))}
-                    max={bigNumberToFloat(costToBuy)}
-                    value={bigNumberToFloat(jewelAmount)}
-                    onChange={(e) => setSelectedJewelAmount(ethers.utils.parseEther(e.target.value))}
-                  />
-                ) : (
-                  <p>...loading...</p>
-                )}
-              </div>
+                  {(costToBuy && jewelAmount && price && fee) ? (
+                    <input
+                      type="range"
+                      min={bigNumberToFloat(ethers.utils.parseEther((price * (fee || 0)).toFixed(18)))}
+                      max={bigNumberToFloat(costToBuy)}
+                      value={bigNumberToFloat(jewelAmount)}
+                      onChange={(e) => setSelectedJewelAmount(ethers.utils.parseEther(e.target.value))}
+                    />
+                  ) : (
+                    <p>...loading...</p>
+                  )}
+                </div>
 
-              <div className="flex flex-row justify-center gap-2 flex-wrap">
-                {jewelBalance?.gt(0) && (
+                <div className="flex flex-row justify-center gap-2 flex-wrap">
+                  {jewelBalance?.gt(0) && (
+                    <Button
+                      className="mx-auto"
+                      disabled={doing || redeemDisabled || !pawnShopAllowanceTooLow}
+                      onClick={() => approveJewelAtPawnShop()}
+                      >
+                      Approve JEWEL
+                    </Button>
+                  )}
+
                   <Button
                     className="mx-auto"
-                    disabled={doing || redeemDisabled || !pawnShopAllowanceTooLow}
-                    onClick={() => approveJewelAtPawnShop()}
+                    disabled={redeemDisabled || pawnShopAllowanceTooLow}
+                    onClick={redeemStash}
                     >
-                    Approve JEWEL
+                    Redeem Stash
                   </Button>
-                )}
+                </div>
+              </>
+            )}
+          </div>
 
-                <Button
-                  className="mx-auto"
-                  disabled={redeemDisabled || pawnShopAllowanceTooLow}
-                  onClick={redeemStash}
-                  >
-                  Redeem Stash
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div
-          className={classNames(
-            "grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
-          )}
-        >
-          {loadingAllUTXOs && (
-            <p className="text-center">...loading stashes...</p>
-          )}
-          {allUTXOs.map((utxo, i) => (
-              <JewelStash
-                key={i}
-                selected={
-                  !!selectedUTXO &&
-                  selectedUTXO.utxoAddress === utxo.utxoAddress
-                }
-                onClick={() => setSelectedUTXO(utxo)}
-                utxo={utxo}
-              />
-            )
-          )}
+          <div
+            className={classNames(
+              "grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+            )}
+          >
+            {loadingAllUTXOs && (
+              <p className="text-center">...loading stashes...</p>
+            )}
+            {allUTXOs.map((utxo, i) => (
+                <JewelStash
+                  key={i}
+                  selected={
+                    !!selectedUTXO &&
+                    selectedUTXO.utxoAddress === utxo.utxoAddress
+                  }
+                  onClick={() => setSelectedUTXO(utxo)}
+                  utxo={utxo}
+                />
+              )
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <article className="my-4 prose w-full mx-auto max-w-5xl font-lora">
+        <h4 className="italic text-center">Previous Redemptions</h4>
+        <table className={classNames("mt-4 min-w-full table-auto")}>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Stash</th>
+              <th>Redeemed By</th>
+              <th>Amount</th>
+              <th>Fee</th>
+              <th>Amount Paid in JEWEL</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+              {loadingUtxoRedemptionHistory ? (
+                <>
+                  <tr>
+                    <td colSpan={7}>Loading...</td>
+                  </tr>
+                </>
+              ) : (
+                <>
+                  {utxoRedemptionHistory.map((record, i) => (
+                    <tr key={i}>
+                      <td>{formatDistanceToNow(new Date(record.timestamp), {addSuffix: true})}</td>
+                      <td>{shortenAddress(record.utxoAddress)}</td>
+                      <td>{shortenAddress(record.redeemedBy)}</td>
+                      <td>{bigNumberToFloat(record.amount).toFixed(3)}</td>
+                      <td>{bigNumberToFloat(record.fee).toFixed(3)}</td>
+                      <td>{bigNumberToFloat(record.amountInJewel).toFixed(3)}</td>
+                      <td>{bigNumberToFloat(record.totalCost).toFixed(3)}</td>
+                    </tr>
+                  ))}
+                </>
+              )}
+          </tbody>
+        </table>
+      </article>
+    </>
   );
 }
