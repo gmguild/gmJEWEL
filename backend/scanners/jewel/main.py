@@ -10,7 +10,6 @@ import os
 import sched
 from web3.providers.rpc import HTTPProvider
 import json
-import sys
 import datetime
 import time
 import logging
@@ -28,7 +27,9 @@ from eth_abi.codec import ABICodec
 # but we need it to construct eth_getLogs parameters
 from web3._utils.filters import construct_event_filter_params
 from web3._utils.events import get_event_data
+from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
@@ -37,8 +38,8 @@ RUN_EVERY_X_SECONDS = 6
 is_dev = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
 
 script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-deployment_rel_path = "../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"
-pawn_shop_rel_path = "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json"
+deployment_rel_path = "../../../ui/deployment.json" if is_dev else "../../../ui/deployment-prod.json"
+pawn_shop_rel_path = "../../../build/contracts/PawnShop.json" if is_dev else "../../../prod-deployment/contracts/PawnShop.json"
 
 addresses = json.load(
     open(os.path.join(script_dir, deployment_rel_path)))
@@ -48,6 +49,8 @@ CONTRACT_FILE = json.load(open(
     os.path.join(script_dir, pawn_shop_rel_path), "r"))
 CONTRACT_ABI = CONTRACT_FILE["abi"]
 FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
+
+DB_FOLDER_PREFIX = os.path.join(script_dir, '../../db/jewel')
 
 
 class EventScannerState(ABC):
@@ -495,19 +498,20 @@ class SqliteDictState(EventScannerState):
 
     def restore(self):
         self.state_meta = SqliteDict(
-            filename="./state_meta.sqlite",
+            filename=os.path.join(DB_FOLDER_PREFIX, "./state_meta.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxo = SqliteDict(
-            filename="./state_utxo.sqlite",
+            filename=os.path.join(DB_FOLDER_PREFIX, "./state_utxo.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxos_by_user = SqliteDict(
-            filename="./state_utxos_by_user.sqlite",
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxos_by_user.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
@@ -615,11 +619,11 @@ class SqliteDictState(EventScannerState):
         return f"{block_number}-{txhash}-{log_index}"
 
 
-s = sched.scheduler(time.time, time.sleep)
+scheduler = sched.scheduler(time.time, time.sleep)
 
 
 def run(sc):
-    api_url = os.environ['RPC_URL'] if 'RPC_URL' in os.environ else "http://127.0.0.1:8545"
+    api_url = os.environ['HARMONY_RPC_URL'] if 'HARMONY_RPC_URL' in os.environ else "http://127.0.0.1:8545"
 
     # Enable logs to the stdout.
     # DEBUG is very verbose level
@@ -697,8 +701,7 @@ def run(sc):
     logger.info(
         f"Scanned total {len(result)} events, in {duration} seconds, total {total_chunks_scanned} chunk scans performed"
     )
-    s.enter(RUN_EVERY_X_SECONDS, 1, run, (sc,))
+    scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (sc,))
 
 
-s.enter(RUN_EVERY_X_SECONDS, 1, run, (s,))
-s.run()
+scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (scheduler,))

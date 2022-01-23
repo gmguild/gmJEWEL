@@ -1,27 +1,13 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 import json
-from fastapi.middleware.cors import CORSMiddleware
 from sqlitedict import SqliteDict
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origin_regex='https?:\/\/(localhost|gmg\.money|.*\.gmg\.money|.*--gmjewel.netlify.app)(:8080)?',
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter()
 
 state_utxo = SqliteDict(filename='./state_utxo.sqlite', autocommit=False,
                         flag="r", journal_mode="WAL")
 state_utxos_by_user = SqliteDict(filename='./state_utxos_by_user.sqlite', autocommit=False,
                                  flag="r", journal_mode="WAL")
-
-
-@app.get("/utxo/list")
-def get_all_utxos():
-    return [v for [_, v] in state_utxo.items()]
 
 
 def _sort_by_size(e):
@@ -30,7 +16,12 @@ def _sort_by_size(e):
     return int(e["newVal"])
 
 
-@app.get("/utxo/minted")
+@router.get("/utxo/list", deprecated=True)
+def get_all_utxos():
+    return [v for [_, v] in state_utxo.items()]
+
+
+@router.get("/utxo/minted", deprecated=True)
 def get_sorted_utxos():
     listed = [
         v for [_, v] in state_utxo.items()
@@ -40,7 +31,32 @@ def get_sorted_utxos():
     return listed
 
 
-@app.get("/utxo/user")
+@router.get("/utxo/user", deprecated=True)
+def get_utxos_for_user(address):
+    result = []
+    if address.lower() in state_utxos_by_user and state_utxos_by_user[address.lower()] is not None:
+        for utxo_address in state_utxos_by_user[address.lower()]:
+            result.routerend(state_utxo[utxo_address])
+        result.sort(key=_sort_by_size, reverse=True)
+    return result
+
+
+@router.get("/jewel/utxo/list")
+def get_all_utxos():
+    return [v for [_, v] in state_utxo.items()]
+
+
+@router.get("/jewel/utxo/minted")
+def get_sorted_utxos():
+    listed = [
+        v for [_, v] in state_utxo.items()
+        if "newVal" in v and int(v["newVal"]) > 0
+    ]
+    listed.sort(key=_sort_by_size, reverse=True)
+    return listed
+
+
+@router.get("/jewel/utxo/user")
 def get_utxos_for_user(address):
     result = []
     if address.lower() in state_utxos_by_user and state_utxos_by_user[address.lower()] is not None:
