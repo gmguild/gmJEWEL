@@ -33,27 +33,27 @@ load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
-RUN_EVERY_X_SECONDS = 6
+RUN_EVERY_X_SECONDS = 4
 
-is_dev = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
+IS_DEV = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
 
-script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-deployment_rel_path = "../../../ui/deployment.json" if is_dev else "../../../ui/deployment-prod.json"
-pawn_shop_rel_path = "../../../build/contracts/PawnShop.json" if is_dev else "../../../prod-deployment/contracts/PawnShop.json"
+SCRIPT_DIR = os.path.dirname(__file__)  # <-- absolute dir the script is in
+DEPLOYMENT_REL_PATH = "../../../ui/deployment.json" if IS_DEV else "../../../ui/deployment-prod.json"
+PAWN_SHOP_REL_PATH = "../../../build/contracts/PawnShop.json" if IS_DEV else "../../../prod-deployment/contracts/PawnShop.json"
 
-addresses = json.load(
-    open(os.path.join(script_dir, deployment_rel_path)))
+ADDRESSES = json.load(
+    open(os.path.join(SCRIPT_DIR, DEPLOYMENT_REL_PATH)))
 
-CONTRACT_ADDRESS = addresses["PawnShop"]
+CONTRACT_ADDRESS = ADDRESSES["PawnShop"]
 CONTRACT_FILE = json.load(open(
-    os.path.join(script_dir, pawn_shop_rel_path), "r"))
+    os.path.join(SCRIPT_DIR, PAWN_SHOP_REL_PATH), "r"))
 CONTRACT_ABI = CONTRACT_FILE["abi"]
-FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
+FIRST_BLOCK_TO_SCAN = ADDRESSES["deploymentBlock"]
 
-DB_FOLDER_PREFIX = os.path.join(script_dir, '../../db/jewel')
+DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, '../../db/jewel')
 
 
-class EventScannerState(ABC):
+class IEventScannerState(ABC):
     """Application state that remembers what blocks we have scanned in the case of crash."""
 
     @abstractmethod
@@ -116,7 +116,7 @@ class EventScanner:
         self,
         web3: Web3,
         contract: Contract,
-        state: EventScannerState,
+        state: IEventScannerState,
         events: List,
         filters: {},
         max_chunk_scan_size: int = 10000,
@@ -479,7 +479,7 @@ def _fetch_events_for_all_contracts(
     return all_events
 
 
-class SqliteDictState(EventScannerState):
+class SqliteDictState(IEventScannerState):
     """Store the state of scanned blocks and all events.
 
     All state is a dict backed by sqlite, by using sqlitedict.
@@ -493,7 +493,9 @@ class SqliteDictState(EventScannerState):
         self.state_meta.clear()
         self.state_utxo.clear()
         self.state_utxos_by_user.clear()
+        self.state_utxo_redemptions.clear()
         self.state_meta["last_scanned_block"] = FIRST_BLOCK_TO_SCAN
+        self.state_meta["last_utxo_redemption_index"] = 0
         self.commit()
 
     def restore(self):
@@ -516,12 +518,20 @@ class SqliteDictState(EventScannerState):
             flag="c",
             journal_mode="WAL",
         )
+        self.state_utxo_redemptions = SqliteDict(
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxo_redemptions.sqlite"),
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
 
     def save(self):
         logger.debug("...CLOSING STATE...")
         self.state_meta.close()
         self.state_utxo.close()
         self.state_utxos_by_user.close()
+        self.state_utxo_redemptions.close()
         logger.debug("...STATE CLOSED...")
 
     def commit(self):
@@ -529,6 +539,7 @@ class SqliteDictState(EventScannerState):
         self.state_meta.commit(blocking=True)
         self.state_utxo.commit(blocking=True)
         self.state_utxos_by_user.commit(blocking=True)
+        self.state_utxo_redemptions.commit(blocking=True)
         logger.debug("...STATE COMMITED...")
 
     #
@@ -572,46 +583,66 @@ class SqliteDictState(EventScannerState):
         # Convert ERC-20 Transfer event to our internal format
         args = event["args"]
         if event["event"] == "UTXOCreated":
-            object = {
+            utxoObject = {
                 "utxoAddress": args["utxoAddress"].lower(),
                 "minter": args["minter"].lower(),
             }
 
             if (
-                object["minter"] in self.state_utxos_by_user
-                and self.state_utxos_by_user[object["minter"]] is not None
+                utxoObject["minter"] in self.state_utxos_by_user
+                and self.state_utxos_by_user[utxoObject["minter"]] is not None
             ):
-                list_for_minter = self.state_utxos_by_user[object["minter"]]
+                list_for_minter = self.state_utxos_by_user[utxoObject["minter"]]
                 if (
-                    object["utxoAddress"]
-                    not in self.state_utxos_by_user[object["minter"]]
+                    utxoObject["utxoAddress"]
+                    not in self.state_utxos_by_user[utxoObject["minter"]]
                 ):
-                    list_for_minter.append(object["utxoAddress"])
-                self.state_utxos_by_user[object["minter"]] = list_for_minter
+                    list_for_minter.append(utxoObject["utxoAddress"])
+                self.state_utxos_by_user[utxoObject["minter"]
+                                         ] = list_for_minter
             else:
-                self.state_utxos_by_user[object["minter"]] = [
-                    object["utxoAddress"]]
+                self.state_utxos_by_user[utxoObject["minter"]] = [
+                    utxoObject["utxoAddress"]]
         elif event["event"] == "UTXOValue":
-            object = {
+            utxoObject = {
                 "utxoAddress": args["UTXOAddress"].lower(),
                 "newVal": str(args["newVal"]),
                 "blockNumber": block_number,
                 "timestamp": block_when.isoformat(),
             }
+        elif event["event"] == "UTXORedeemed":
+            last_utxo_redemption_index = (
+                self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
+            ) or "0"
+            next_utxo_redemption_index = int(last_utxo_redemption_index) + 1
+            self.state_utxo_redemptions[next_utxo_redemption_index] = {
+                "utxoAddress": args["UTXOAddress"].lower(),
+                "redeemedBy": args["redeemooor"].lower(),
+                "amount": str(args["redeemedAmount"]),
+                "fee": str(args["feePaid"]),
+                "amountInJewel": str(args["feeRatio"]),
+                "totalCost": str(args["totalCost"]),
+                "blockNumber": block_number,
+                "timestamp": block_when.isoformat(),
+            }
+            self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
         else:
             logger.debug(args)
             logger.debug(event["event"])
             raise AttributeError
 
-        if (
-            object["utxoAddress"] in self.state_utxo
-            and self.state_utxo[object["utxoAddress"]] is not None
+        if utxoObject is None:
+            # no update made to object
+            pass
+        elif (
+            utxoObject["utxoAddress"] in self.state_utxo
+            and self.state_utxo[utxoObject["utxoAddress"]] is not None
         ):
-            current_object = self.state_utxo[object["utxoAddress"]]
-            current_object.update(object)
-            self.state_utxo[object["utxoAddress"]] = current_object
+            current_object = self.state_utxo[utxoObject["utxoAddress"]]
+            current_object.update(utxoObject)
+            self.state_utxo[utxoObject["utxoAddress"]] = current_object
         else:
-            self.state_utxo[object["utxoAddress"]] = object
+            self.state_utxo[utxoObject["utxoAddress"]] = utxoObject
 
         self.commit()
 
@@ -651,7 +682,8 @@ def run(sc):
         web3=web3,
         contract=CONTRACT,
         state=state,
-        events=[CONTRACT.events.UTXOValue, CONTRACT.events.UTXOCreated],
+        events=[CONTRACT.events.UTXOValue,
+                CONTRACT.events.UTXOCreated, CONTRACT.events.UTXORedeemed],
         filters={"address": CONTRACT_ADDRESS},
         # How many maximum blocks at the time we request from JSON-RPC
         # and we are unlikely to exceed the response size limit of the JSON-RPC server
