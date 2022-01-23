@@ -10,7 +10,7 @@ export function useGetUTXORedemptionHistory(): [UTXORedemptionRecord[], boolean,
   const [{data: blockNumber}] = useBlockNumber();
   const val = useAsyncValue(
     () => axios.get(`${serverUrl}/jewel/utxo/redemption-history`, {
-      params: { limit: 10 },
+      params: { limit: 20 },
     }),
     [],
   );

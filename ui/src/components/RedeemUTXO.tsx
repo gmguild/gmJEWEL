@@ -258,7 +258,7 @@ export function RedeemUTXO() {
       </div>
 
       <article className="px-4 md:px-0 my-4 prose w-full mx-auto max-w-5xl font-lora">
-        <h4 className="italic text-center">Previous Redemptions</h4>
+        <h4 className="italic text-center">Previous Redemptions (max 20)</h4>
         <table className={classNames("mt-4 min-w-full table-auto")}>
           <thead>
             <tr>
