@@ -29,6 +29,9 @@ export const Header = () => {
             <a className="text-xs block my-1 mx-2 underline text-gray-700 hover:text-blue-600" href="https://discord.gg/7EKz446t4F" target="_blank" rel="noreferrer">
               Discord
             </a>
+            <a className="text-xs block my-1 mx-2 underline text-gray-700 hover:text-blue-600" href="https://github.com/gmguild/gmJEWEL" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
           </div>
 
           <div className="flex flex-col items-center">
