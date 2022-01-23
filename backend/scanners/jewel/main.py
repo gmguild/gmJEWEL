@@ -618,6 +618,7 @@ class SqliteDictState(IEventScannerState):
             ) or "0"
             next_utxo_redemption_index = int(last_utxo_redemption_index) + 1
             self.state_utxo_redemptions[next_utxo_redemption_index] = {
+                "tx": txhash,
                 "utxoAddress": args["UTXOAddress"].lower(),
                 "redeemedBy": args["redeemooor"].lower(),
                 "amount": str(args["redeemedAmount"]),

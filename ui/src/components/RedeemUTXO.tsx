@@ -7,7 +7,7 @@ import { useGetAllUTXOs } from "../hooks/utxo/useGetAllUTXOs";
 import { useRedeemFromUTXO } from "../hooks/utxo/useRedeemFromUTXO";
 import { JewelStash } from "./JewelStash";
 import { classNames } from "../utils/classNames";
-import { bigNumberMin, bigNumberToFloat, shortenAddress } from "../utils/conversion";
+import { bigNumberMin, bigNumberToFloat, shortenAddress, shortenTx } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
 import { getFees } from "../utils/fees";
@@ -144,7 +144,7 @@ export function RedeemUTXO() {
                 <p className="italic mb-1">Selected stash</p>
                 <p className="mb-4">
                   <a
-                    className=" underline font-bold text-gray-900 hover:text-blue-500"
+                    className="underline font-bold text-gray-900 hover:text-blue-500"
                     target="_blank"
                     href={`https://explorer.harmony.one/address/${selectedUTXO.utxoAddress}`}
                     rel="noreferrer"
@@ -256,17 +256,18 @@ export function RedeemUTXO() {
         </div>
       </div>
 
-      <article className="my-4 prose w-full mx-auto max-w-5xl font-lora">
+      <article className="px-4 md:px-0 my-4 prose w-full mx-auto max-w-5xl font-lora">
         <h4 className="italic text-center">Previous Redemptions</h4>
         <table className={classNames("mt-4 min-w-full table-auto")}>
           <thead>
             <tr>
+              <th>TX</th>
               <th>Time</th>
               <th>Stash</th>
               <th>Redeemed By</th>
               <th>Amount</th>
               <th>Fee</th>
-              <th>Amount Paid in JEWEL</th>
+              <th>JEWEL Paid</th>
               <th>Total Cost</th>
             </tr>
           </thead>
@@ -274,16 +275,38 @@ export function RedeemUTXO() {
               {loadingUtxoRedemptionHistory ? (
                 <>
                   <tr>
-                    <td colSpan={7}>Loading...</td>
+                    <td colSpan={8}>Loading...</td>
                   </tr>
                 </>
               ) : (
                 <>
                   {utxoRedemptionHistory.map((record, i) => (
                     <tr key={i}>
+                      <td>
+                        <a
+                          className="underline font-bold text-gray-900 hover:text-blue-500"
+                          target="_blank"
+                          href={`https://explorer.harmony.one/tx/${record.tx}`} rel="noreferrer">
+                          {shortenTx(record.tx)}
+                        </a>
+                      </td>
                       <td>{formatDistanceToNow(new Date(record.timestamp), {addSuffix: true})}</td>
-                      <td>{shortenAddress(record.utxoAddress)}</td>
-                      <td>{shortenAddress(record.redeemedBy)}</td>
+                      <td>
+                        <a
+                          className="underline font-bold text-gray-900 hover:text-blue-500"
+                          target="_blank"
+                          href={`https://explorer.harmony.one/address/${record.utxoAddress}`} rel="noreferrer">
+                          {shortenAddress(record.utxoAddress)}
+                        </a>
+                      </td>
+                      <td>
+                        <a
+                          className="underline font-bold text-gray-900 hover:text-blue-500"
+                          target="_blank"
+                          href={`https://explorer.harmony.one/address/${record.redeemedBy}`} rel="noreferrer">
+                          {shortenAddress(record.redeemedBy)}
+                        </a>
+                      </td>
                       <td>{bigNumberToFloat(record.amount).toFixed(3)}</td>
                       <td>{bigNumberToFloat(record.fee).toFixed(3)}</td>
                       <td>{bigNumberToFloat(record.amountInJewel).toFixed(3)}</td>

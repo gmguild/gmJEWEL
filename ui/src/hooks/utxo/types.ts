@@ -10,12 +10,13 @@ export type FullUTXO = UTXO & {
 };
 
 export type UTXORedemptionRecord =   {
-  "utxoAddress": string;
-  "redeemedBy": string;
-  "amount": string;
-  "fee": string;
-  "amountInJewel": string;
-  "totalCost": string;
-  "blockNumber": number;
-  "timestamp": string;
+  tx: string;
+  utxoAddress: string;
+  redeemedBy: string;
+  amount: string;
+  fee: string;
+  amountInJewel: string;
+  totalCost: string;
+  blockNumber: number;
+  timestamp: string;
 }
