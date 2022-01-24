@@ -613,22 +613,25 @@ class SqliteDictState(IEventScannerState):
                 "timestamp": block_when.isoformat(),
             }
         elif event["event"] == "UTXORedeemed":
-            last_utxo_redemption_index = (
-                self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
-            ) or "0"
-            next_utxo_redemption_index = int(last_utxo_redemption_index) + 1
-            self.state_utxo_redemptions[next_utxo_redemption_index] = {
-                "tx": txhash,
-                "utxoAddress": args["UTXOAddress"].lower(),
-                "redeemedBy": args["redeemooor"].lower(),
-                "amount": str(args["redeemedAmount"]),
-                "fee": str(args["feePaid"]),
-                "amountInJewel": str(args["feeRatio"]),
-                "totalCost": str(args["totalCost"]),
-                "blockNumber": block_number,
-                "timestamp": block_when.isoformat(),
-            }
-            self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
+            if not (txhash in self.state_utxo_redemptions and self.state_utxo_redemptions[txhash] is True):
+                last_utxo_redemption_index = (
+                    self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
+                ) or "0"
+                next_utxo_redemption_index = int(
+                    last_utxo_redemption_index) + 1
+                self.state_utxo_redemptions[next_utxo_redemption_index] = {
+                    "tx": txhash,
+                    "utxoAddress": args["UTXOAddress"].lower(),
+                    "redeemedBy": args["redeemooor"].lower(),
+                    "amount": str(args["redeemedAmount"]),
+                    "fee": str(args["feePaid"]),
+                    "amountInJewel": str(args["feeRatio"]),
+                    "totalCost": str(args["totalCost"]),
+                    "blockNumber": block_number,
+                    "timestamp": block_when.isoformat(),
+                }
+                self.state_utxo_redemptions[txhash] = True
+                self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
         else:
             logger.debug(args)
             logger.debug(event["event"])
