@@ -38,7 +38,7 @@ export default function Info() {
             <h3>Redeeming</h3>
             <p>
               For users wishing to buy locked JEWEL, they are able to purchase
-              the gmJEWEL which has been produced by other users. In order to
+              the gmJEWEL which has been minted by other users. In order to
               convert gmJEWEL back into the underlying locked JEWEL, users must
               identify a Jewel Stash of a similar size to the amount that they
               wish to redeem. Users have two options for redeeming locked from a
