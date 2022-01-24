@@ -165,7 +165,7 @@ class EventScanner:
             # minor chain reorganisation?
             return None
         last_time = block_info["timestamp"]
-        return datetime.datetime.utcfromtimestamp(last_time)
+        return datetime.datetime.fromtimestamp(last_time, datetime.timezone.utc)
 
     def get_suggested_scan_start_block(self):
         """Get where we should start to scan for new token events.
@@ -610,7 +610,7 @@ class SqliteDictState(IEventScannerState):
                 "utxoAddress": args["UTXOAddress"].lower(),
                 "newVal": str(args["newVal"]),
                 "blockNumber": block_number,
-                "timestamp": block_when.isoformat(),
+                "timestamp": block_when.timestamp() * 1000,  # milliseconds
             }
         elif event["event"] == "UTXORedeemed":
             if not (txhash in self.state_utxo_redemptions and self.state_utxo_redemptions[txhash] is True):
@@ -628,7 +628,7 @@ class SqliteDictState(IEventScannerState):
                     "amountInJewel": str(args["feeRatio"]),
                     "totalCost": str(args["totalCost"]),
                     "blockNumber": block_number,
-                    "timestamp": block_when.isoformat(),
+                    "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
                 self.state_utxo_redemptions[txhash] = True
                 self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index

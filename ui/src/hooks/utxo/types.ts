@@ -6,7 +6,7 @@ export type UTXO = {
 export type FullUTXO = UTXO & {
   blockNumber: number;
   newVal: string;
-  timestamp: Date;
+  timestamp: number;
 };
 
 export type UTXORedemptionRecord =   {
@@ -18,5 +18,5 @@ export type UTXORedemptionRecord =   {
   amountInJewel: string;
   totalCost: string;
   blockNumber: number;
-  timestamp: string;
+  timestamp: number;
 }
