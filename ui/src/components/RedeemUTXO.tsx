@@ -7,7 +7,7 @@ import { useGetAllUTXOs } from "../hooks/utxo/useGetAllUTXOs";
 import { useRedeemFromUTXO } from "../hooks/utxo/useRedeemFromUTXO";
 import { JewelStash } from "./JewelStash";
 import { classNames } from "../utils/classNames";
-import { bigNumberMin, bigNumberToFloat, shortenAddress, shortenTx } from "../utils/conversion";
+import { bigNumberMin, bigNumberToFloat, shortenAddress } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
 import { getFees } from "../utils/fees";
@@ -15,14 +15,11 @@ import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { addresses } from "../utils/env";
 import { useERC20 } from "../hooks/token/useERC20";
-import { useGetUTXORedemptionHistory } from "../hooks/utxo/useGetUTXORedemptionHistory";
-import { UpdatingTimestamp } from "./UpdatingTimestamp";
 
 export function RedeemUTXO() {
   const [advancedSectionOpen, setAdvancedSectionOpen] = useState(false);
 
   const [allUTXOs, loadingAllUTXOs, forceRefreshAllUTXOs] = useGetAllUTXOs();
-  const [utxoRedemptionHistory, loadingUtxoRedemptionHistory] = useGetUTXORedemptionHistory();
   const [{ unlockedBalance: jewelBalance }, loadingJewelBalance] = useJewelBalance();
   const [{ balance: gmBalance }, loadingGmJewelBalance] = useGmJewelBalance();
 
@@ -255,69 +252,7 @@ export function RedeemUTXO() {
           </div>
         </div>
       </div>
-
-      <article className="px-4 md:px-0 my-4 prose w-full mx-auto max-w-5xl font-lora">
-        <h4 className="italic text-center">Previous Redemptions (max 20)</h4>
-        <table className={classNames("mt-4 min-w-full table-auto")}>
-          <thead>
-            <tr>
-              <th>TX</th>
-              <th>Time</th>
-              <th>Stash</th>
-              <th>Redeemed By</th>
-              <th>Amount</th>
-              <th>Fee</th>
-              <th>JEWEL Paid</th>
-              <th>Total Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-              {loadingUtxoRedemptionHistory ? (
-                <>
-                  <tr>
-                    <td colSpan={8}>Loading...</td>
-                  </tr>
-                </>
-              ) : (
-                <>
-                  {utxoRedemptionHistory.map((record, i) => (
-                    <tr key={i}>
-                      <td>
-                        <a
-                          className="underline font-bold text-gray-900 hover:text-blue-500"
-                          target="_blank"
-                          href={`https://explorer.harmony.one/tx/${record.tx}`} rel="noreferrer">
-                          {shortenTx(record.tx)}
-                        </a>
-                      </td>
-                      <td><UpdatingTimestamp date={new Date(record.timestamp)} /></td>
-                      <td>
-                        <a
-                          className="underline font-bold text-gray-900 hover:text-blue-500"
-                          target="_blank"
-                          href={`https://explorer.harmony.one/address/${record.utxoAddress}`} rel="noreferrer">
-                          {shortenAddress(record.utxoAddress)}
-                        </a>
-                      </td>
-                      <td>
-                        <a
-                          className="underline font-bold text-gray-900 hover:text-blue-500"
-                          target="_blank"
-                          href={`https://explorer.harmony.one/address/${record.redeemedBy}`} rel="noreferrer">
-                          {shortenAddress(record.redeemedBy)}
-                        </a>
-                      </td>
-                      <td>{bigNumberToFloat(record.amount).toFixed(3)}</td>
-                      <td>{bigNumberToFloat(record.fee).toFixed(3)}</td>
-                      <td>{bigNumberToFloat(record.amountInJewel).toFixed(3)}</td>
-                      <td>{bigNumberToFloat(record.totalCost).toFixed(3)}</td>
-                    </tr>
-                  ))}
-                </>
-              )}
-          </tbody>
-        </table>
-      </article>
     </>
   );
 }
+
