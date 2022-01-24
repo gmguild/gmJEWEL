@@ -82,7 +82,7 @@ export function RedeemUTXO() {
   useEffect(() => {
     if(price) {
       const feeAmount = ethers.utils.parseEther((price * (fee || 0)).toFixed(18))
-      setSelectedJewelAmount(bigNumberMin(feeAmount, jewelBalance ?? BigNumber.from(0)));
+      setSelectedJewelAmount(feeAmount);
     } else {
       setSelectedJewelAmount(null);
     }
@@ -193,14 +193,13 @@ export function RedeemUTXO() {
               <div className={classNames(!advancedSectionOpen && "hidden", "mb-4")}>
 
                   <p className="text-sm">Adjust JEWEL Ratio</p>
-                {(costToBuy && jewelAmount && jewelBalance) ? (
+                {(costToBuy && jewelAmount && price && fee) ? (
                   <input
                     type="range"
-                    min={0}
-                    max={Math.min(bigNumberToFloat(jewelBalance), bigNumberToFloat(costToBuy))}
+                    min={bigNumberToFloat(ethers.utils.parseEther((price * (fee || 0)).toFixed(18)))}
+                    max={bigNumberToFloat(costToBuy)}
                     value={bigNumberToFloat(jewelAmount)}
                     onChange={(e) => setSelectedJewelAmount(ethers.utils.parseEther(e.target.value))}
-                    disabled={jewelBalance.lte(0)}
                   />
                 ) : (
                   <p>...loading...</p>
