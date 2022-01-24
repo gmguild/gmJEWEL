@@ -12,7 +12,7 @@ export default function Info() {
             <p>
               The Greedy Merchants Guild is a new community-run initiative
               designed for the greedy merchants of Defi Kingdoms. Our first
-              feature is a secondary liquid marketplace for locked Jewel. We
+              feature is a secondary liquid marketplace for locked JEWEL. We
               take inspiration from other liquid staking projects and utilise
               the power of DeFi composability in order to provide a number of
               features and additional incentives for users. Trades are
@@ -24,9 +24,9 @@ export default function Info() {
           <section>
             <h3>Minting</h3>
             <p>
-              In order to sell locked Jewel, users must create a &apos;Jewel
-              stash&apos; which is a custom-built smart contract which holds the
-              users locked Jewel. After locking their jewel within this smart
+              In order to sell locked JEWEL, users must create a &apos;Jewel
+              Stash&apos; which is a custom-built smart contract which holds the
+              users locked JEWEL. After locking their JEWEL within this smart
               contract, they are then able to mint &apos;gmJEWEL&apos;, an ERC20
               token which is completely fungible. This gmJEWEL can then be
               traded like any other ERC20 token, and could even be used with
@@ -37,28 +37,27 @@ export default function Info() {
           <section>
             <h3>Redeeming</h3>
             <p>
-              For users wishing to buy locked jewel, they are able to purchase
-              the gmJEWEL which has been produced by other users. In order to
-              convert gmJEWEL back into the underlying locked Jewel, users must
-              identify a Jewel stash of a similar size to the amount that they
+              For users wishing to buy locked JEWEL, they are able to purchase
+              the gmJEWEL which has been minted by other users. In order to
+              convert gmJEWEL back into the underlying locked JEWEL, users must
+              identify a Jewel Stash of a similar size to the amount that they
               wish to redeem. Users have two options for redeeming locked from a
-              jewel stash:
+              Jewel Stash:
             </p>
             <ol>
               <li>
-                They may redeem a jewel stash with a cost less than their
-                current balance of gmJEWEL (and burning that amount gmJEWEL)
+                They may redeem a Jewel Stash with a cost less than or equal to their current balance of gmJEWEL
               </li>
               <li>
-                They may redeem a jewel stash with a cost greater than their
+                They may redeem a Jewel Stash with a cost greater than their
                 current balance of gmJEWEL (and they must pay the difference in
-                unlocked Jewel)
+                unlocked JEWEL)
               </li>
             </ol>
             <p>
               There is a small fee associated with redeeming gmJEWEL (and can be
               thought of as the spread). The fee is dynamic, and decreases if
-              you redeem larger stashes.
+              you redeem larger stashes. This is paid for in unlocked JEWEL.
             </p>
             <div className="w-8/12 mx-auto">
               <table className={classNames("min-w-full table-auto")}>
