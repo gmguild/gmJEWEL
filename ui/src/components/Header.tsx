@@ -40,9 +40,9 @@ export const Header = () => {
             </h1>
 
             <div className="flex flex-row flex-wrap items-center justify-center text-sm space-x-2 my-2">
-              <p><span className="text-gray-500">$JEWEL</span> {loadingPrices ? '...' : prices.jewelPrice?.toFixed(3)} USDC</p>
-              <p><span className="text-gray-500">$gmJEWEL</span> {loadingPrices ? '...' : prices.gmJewelPriceInJewel?.toFixed(3)} JEWEL</p>
-              <p><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(5)} JEWEL</p>
+              <a className="block cursor-pointer" href="https://dexscreener.com/harmony/0xa1221a5bbea699f507cc00bdedea05b5d2e32eba" target="_blank" rel="noreferrer"><span className="text-gray-500">$JEWEL</span> {loadingPrices ? '...' : prices.jewelPrice?.toFixed(3)} USDC</a>
+              <a className="block cursor-pointer" href="https://dexscreener.com/harmony/0x8e6c2ee1f55ff482caea84e7cfedf34d259864d9" target="_blank" rel="noreferrer"><span className="text-gray-500">$gmJEWEL</span> {loadingPrices ? '...' : prices.gmJewelPriceInJewel?.toFixed(3)} JEWEL</a>
+              <a className="block cursor-pointer" href="https://preview.dexscreener.io/harmony/0x33af0e5bfa4552db2390c01e1f5646689037e04e" target="_blank" rel="noreferrer"><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(5)} JEWEL</a>
             </div>
           </div>
 
