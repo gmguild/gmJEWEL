@@ -1,5 +1,6 @@
 import React from "react";
 import { useAccount, useNetwork } from "wagmi";
+import { ChangeNetwork } from "../components/ChangeNetwork";
 import { RedeemUTXO } from "../components/RedeemUTXO";
 import { RedemptionHistoryTable } from "../components/RedemptionHistoryTable";
 
@@ -25,14 +26,7 @@ export default function Redeem() {
           {accountData?.address == undefined && (
             <p>Please connect your wallet in order to redeem gmJEWEL</p>
           )}
-          {accountNetwork.chain?.unsupported && switchNetwork && (
-            <p>
-              Please change your network to{" "}
-              <a href="#" onClick={() => switchNetwork(1666600000)}>
-                harmony
-              </a>
-            </p>
-          )}
+          {accountNetwork.chain?.unsupported && <ChangeNetwork />}
         </article>
       )}
     </div>

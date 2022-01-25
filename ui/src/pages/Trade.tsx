@@ -7,6 +7,7 @@ import { addresses } from "../utils/env";
 import DFKJewel from "../assets/DFKJewel.png";
 import DFKLockedJewel from "../assets/DFKLockedJewel.png";
 import SmallGMG from "../assets/SmallGMG.png";
+import { ChangeNetwork } from "../components/ChangeNetwork";
 
 function useAddTokenToWallet(): [
   (tokenAddress: string, symbol: string, image?: string) => Promise<void>,
@@ -199,14 +200,7 @@ export default function Trade() {
           {accountData?.address == undefined && (
             <p>Please connect your wallet in order to trade</p>
           )}
-          {accountNetwork.chain?.unsupported && switchNetwork && (
-            <p>
-              Please change your network to{" "}
-              <a href="#" onClick={() => switchNetwork(1666600000)}>
-                harmony
-              </a>
-            </p>
-          )}
+          {accountNetwork.chain?.unsupported && <ChangeNetwork />}
         </article>
       )}
     </article>

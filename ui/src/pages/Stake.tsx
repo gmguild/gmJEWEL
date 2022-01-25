@@ -1,5 +1,6 @@
 import React from "react";
 import { useAccount, useNetwork } from "wagmi";
+import { ChangeNetwork } from "../components/ChangeNetwork";
 import { StakedGMGUI, StakeMasterJewelerUI } from "../components/StakeUI";
 import { addresses } from "../utils/env";
 
@@ -61,14 +62,7 @@ export default function Stake() {
             {accountData?.address == undefined && (
               <p>Please connect your wallet in order to stake with GMG</p>
             )}
-            {accountNetwork.chain?.unsupported && switchNetwork && (
-              <p>
-                Please change your network to{" "}
-                <a href="#" onClick={() => switchNetwork(1666600000)}>
-                  harmony
-                </a>
-              </p>
-            )}
+            {accountNetwork.chain?.unsupported && <ChangeNetwork />}
           </article>
         )}
       </article>

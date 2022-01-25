@@ -2,10 +2,11 @@ import React from "react";
 import { useAccount } from "wagmi";
 import { CreateUTXO } from "../components/CreateUTXO";
 import { useNetwork } from "wagmi";
+import { ChangeNetwork } from "../components/ChangeNetwork";
 
 export default function Home() {
   const [{ data: accountData }] = useAccount();
-  const [{ data: accountNetwork }, switchNetwork] = useNetwork();
+  const [{ data: accountNetwork }] = useNetwork();
 
   const validChainConnected = React.useMemo(() => {
     if (!accountData?.address) return false;
@@ -22,14 +23,7 @@ export default function Home() {
           {accountData?.address == undefined && (
             <p>Please connect your wallet in order to mint gmJEWEL</p>
           )}
-          {accountNetwork.chain?.unsupported && switchNetwork && (
-            <p>
-              Please change your network to{" "}
-              <a href="#" onClick={() => switchNetwork(1666600000)}>
-                harmony
-              </a>
-            </p>
-          )}
+          {accountNetwork.chain?.unsupported && <ChangeNetwork />}
         </article>
       )}
     </div>
