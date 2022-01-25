@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccount } from "wagmi";
-import { RedeemUTXO } from "../components/RedeemUTXO";
+import { DisplayReadOnlyUTXO, RedeemUTXO } from "../components/RedeemUTXO";
 import { RedemptionHistoryTable } from "../components/RedemptionHistoryTable";
 
 export default function Redeem() {
@@ -15,7 +15,9 @@ export default function Redeem() {
         </>
       ) : (
         <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
-          <p>Please connect your wallet in order to redeem gmJEWEL</p>
+          <p>In order to redeem gmJEWEL, you must connect your wallet.</p>
+          <DisplayReadOnlyUTXO />
+          <RedemptionHistoryTable />
         </article>
       )}
     </div>
