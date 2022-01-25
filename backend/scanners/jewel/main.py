@@ -10,7 +10,6 @@ import os
 import sched
 from web3.providers.rpc import HTTPProvider
 import json
-import sys
 import datetime
 import time
 import logging
@@ -28,29 +27,33 @@ from eth_abi.codec import ABICodec
 # but we need it to construct eth_getLogs parameters
 from web3._utils.filters import construct_event_filter_params
 from web3._utils.events import get_event_data
+from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
-RUN_EVERY_X_SECONDS = 6
+RUN_EVERY_X_SECONDS = 4
 
-is_dev = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
+IS_DEV = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
 
-script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-deployment_rel_path = "../ui/deployment.json" if is_dev else "../ui/deployment-prod.json"
-pawn_shop_rel_path = "../build/contracts/PawnShop.json" if is_dev else "../prod-deployment/contracts/PawnShop.json"
+SCRIPT_DIR = os.path.dirname(__file__)  # <-- absolute dir the script is in
+DEPLOYMENT_REL_PATH = "../../../ui/deployment.json" if IS_DEV else "../../../ui/deployment-prod.json"
+PAWN_SHOP_REL_PATH = "../../../build/contracts/PawnShop.json" if IS_DEV else "../../../prod-deployment/contracts/PawnShop.json"
 
-addresses = json.load(
-    open(os.path.join(script_dir, deployment_rel_path)))
+ADDRESSES = json.load(
+    open(os.path.join(SCRIPT_DIR, DEPLOYMENT_REL_PATH)))
 
-CONTRACT_ADDRESS = addresses["PawnShop"]
+CONTRACT_ADDRESS = ADDRESSES["PawnShop"]
 CONTRACT_FILE = json.load(open(
-    os.path.join(script_dir, pawn_shop_rel_path), "r"))
+    os.path.join(SCRIPT_DIR, PAWN_SHOP_REL_PATH), "r"))
 CONTRACT_ABI = CONTRACT_FILE["abi"]
-FIRST_BLOCK_TO_SCAN = addresses["deploymentBlock"]
+FIRST_BLOCK_TO_SCAN = ADDRESSES["deploymentBlock"]
+
+DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, '../../db/jewel')
 
 
-class EventScannerState(ABC):
+class IEventScannerState(ABC):
     """Application state that remembers what blocks we have scanned in the case of crash."""
 
     @abstractmethod
@@ -113,7 +116,7 @@ class EventScanner:
         self,
         web3: Web3,
         contract: Contract,
-        state: EventScannerState,
+        state: IEventScannerState,
         events: List,
         filters: {},
         max_chunk_scan_size: int = 10000,
@@ -162,7 +165,7 @@ class EventScanner:
             # minor chain reorganisation?
             return None
         last_time = block_info["timestamp"]
-        return datetime.datetime.utcfromtimestamp(last_time)
+        return datetime.datetime.fromtimestamp(last_time, datetime.timezone.utc)
 
     def get_suggested_scan_start_block(self):
         """Get where we should start to scan for new token events.
@@ -476,7 +479,7 @@ def _fetch_events_for_all_contracts(
     return all_events
 
 
-class SqliteDictState(EventScannerState):
+class SqliteDictState(IEventScannerState):
     """Store the state of scanned blocks and all events.
 
     All state is a dict backed by sqlite, by using sqlitedict.
@@ -490,24 +493,34 @@ class SqliteDictState(EventScannerState):
         self.state_meta.clear()
         self.state_utxo.clear()
         self.state_utxos_by_user.clear()
+        self.state_utxo_redemptions.clear()
         self.state_meta["last_scanned_block"] = FIRST_BLOCK_TO_SCAN
+        self.state_meta["last_utxo_redemption_index"] = 0
         self.commit()
 
     def restore(self):
         self.state_meta = SqliteDict(
-            filename="./state_meta.sqlite",
+            filename=os.path.join(DB_FOLDER_PREFIX, "./state_meta.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxo = SqliteDict(
-            filename="./state_utxo.sqlite",
+            filename=os.path.join(DB_FOLDER_PREFIX, "./state_utxo.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxos_by_user = SqliteDict(
-            filename="./state_utxos_by_user.sqlite",
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxos_by_user.sqlite"),
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
+        self.state_utxo_redemptions = SqliteDict(
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxo_redemptions.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
@@ -518,6 +531,7 @@ class SqliteDictState(EventScannerState):
         self.state_meta.close()
         self.state_utxo.close()
         self.state_utxos_by_user.close()
+        self.state_utxo_redemptions.close()
         logger.debug("...STATE CLOSED...")
 
     def commit(self):
@@ -525,6 +539,7 @@ class SqliteDictState(EventScannerState):
         self.state_meta.commit(blocking=True)
         self.state_utxo.commit(blocking=True)
         self.state_utxos_by_user.commit(blocking=True)
+        self.state_utxo_redemptions.commit(blocking=True)
         logger.debug("...STATE COMMITED...")
 
     #
@@ -565,49 +580,75 @@ class SqliteDictState(EventScannerState):
         txhash = event.transactionHash.hex()  # Transaction hash
         block_number = event.blockNumber
 
+        utxoObject = None
+
         # Convert ERC-20 Transfer event to our internal format
         args = event["args"]
         if event["event"] == "UTXOCreated":
-            object = {
+            utxoObject = {
                 "utxoAddress": args["utxoAddress"].lower(),
                 "minter": args["minter"].lower(),
             }
 
             if (
-                object["minter"] in self.state_utxos_by_user
-                and self.state_utxos_by_user[object["minter"]] is not None
+                utxoObject["minter"] in self.state_utxos_by_user
+                and self.state_utxos_by_user[utxoObject["minter"]] is not None
             ):
-                list_for_minter = self.state_utxos_by_user[object["minter"]]
+                list_for_minter = self.state_utxos_by_user[utxoObject["minter"]]
                 if (
-                    object["utxoAddress"]
-                    not in self.state_utxos_by_user[object["minter"]]
+                    utxoObject["utxoAddress"]
+                    not in self.state_utxos_by_user[utxoObject["minter"]]
                 ):
-                    list_for_minter.append(object["utxoAddress"])
-                self.state_utxos_by_user[object["minter"]] = list_for_minter
+                    list_for_minter.append(utxoObject["utxoAddress"])
+                self.state_utxos_by_user[utxoObject["minter"]
+                                         ] = list_for_minter
             else:
-                self.state_utxos_by_user[object["minter"]] = [
-                    object["utxoAddress"]]
+                self.state_utxos_by_user[utxoObject["minter"]] = [
+                    utxoObject["utxoAddress"]]
         elif event["event"] == "UTXOValue":
-            object = {
+            utxoObject = {
                 "utxoAddress": args["UTXOAddress"].lower(),
                 "newVal": str(args["newVal"]),
                 "blockNumber": block_number,
-                "timestamp": block_when.isoformat(),
+                "timestamp": block_when.timestamp() * 1000,  # milliseconds
             }
+        elif event["event"] == "UTXORedeemed":
+            if not (txhash in self.state_utxo_redemptions and self.state_utxo_redemptions[txhash] is True):
+                last_utxo_redemption_index = (
+                    self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
+                ) or "0"
+                next_utxo_redemption_index = int(
+                    last_utxo_redemption_index) + 1
+                self.state_utxo_redemptions[next_utxo_redemption_index] = {
+                    "tx": txhash,
+                    "utxoAddress": args["UTXOAddress"].lower(),
+                    "redeemedBy": args["redeemooor"].lower(),
+                    "amount": str(args["redeemedAmount"]),
+                    "fee": str(args["feePaid"]),
+                    "amountInJewel": str(args["feeRatio"]),
+                    "totalCost": str(args["totalCost"]),
+                    "blockNumber": block_number,
+                    "timestamp": block_when.timestamp() * 1000,  # milliseconds
+                }
+                self.state_utxo_redemptions[txhash] = True
+                self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
         else:
             logger.debug(args)
             logger.debug(event["event"])
             raise AttributeError
 
-        if (
-            object["utxoAddress"] in self.state_utxo
-            and self.state_utxo[object["utxoAddress"]] is not None
+        if utxoObject is None:
+            # no update made to object
+            pass
+        elif (
+            utxoObject["utxoAddress"] in self.state_utxo
+            and self.state_utxo[utxoObject["utxoAddress"]] is not None
         ):
-            current_object = self.state_utxo[object["utxoAddress"]]
-            current_object.update(object)
-            self.state_utxo[object["utxoAddress"]] = current_object
+            current_object = self.state_utxo[utxoObject["utxoAddress"]]
+            current_object.update(utxoObject)
+            self.state_utxo[utxoObject["utxoAddress"]] = current_object
         else:
-            self.state_utxo[object["utxoAddress"]] = object
+            self.state_utxo[utxoObject["utxoAddress"]] = utxoObject
 
         self.commit()
 
@@ -615,11 +656,11 @@ class SqliteDictState(EventScannerState):
         return f"{block_number}-{txhash}-{log_index}"
 
 
-s = sched.scheduler(time.time, time.sleep)
+scheduler = sched.scheduler(time.time, time.sleep)
 
 
 def run(sc):
-    api_url = os.environ['RPC_URL'] if 'RPC_URL' in os.environ else "http://127.0.0.1:8545"
+    api_url = os.environ['HARMONY_RPC_URL'] if 'HARMONY_RPC_URL' in os.environ else "http://127.0.0.1:8545"
 
     # Enable logs to the stdout.
     # DEBUG is very verbose level
@@ -647,7 +688,8 @@ def run(sc):
         web3=web3,
         contract=CONTRACT,
         state=state,
-        events=[CONTRACT.events.UTXOValue, CONTRACT.events.UTXOCreated],
+        events=[CONTRACT.events.UTXOValue,
+                CONTRACT.events.UTXOCreated, CONTRACT.events.UTXORedeemed],
         filters={"address": CONTRACT_ADDRESS},
         # How many maximum blocks at the time we request from JSON-RPC
         # and we are unlikely to exceed the response size limit of the JSON-RPC server
@@ -697,8 +739,7 @@ def run(sc):
     logger.info(
         f"Scanned total {len(result)} events, in {duration} seconds, total {total_chunks_scanned} chunk scans performed"
     )
-    s.enter(RUN_EVERY_X_SECONDS, 1, run, (sc,))
+    scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (sc,))
 
 
-s.enter(RUN_EVERY_X_SECONDS, 1, run, (s,))
-s.run()
+scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (scheduler,))

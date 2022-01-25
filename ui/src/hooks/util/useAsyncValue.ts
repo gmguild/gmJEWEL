@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type LoadingOrErroredValue<T = any> = ({forceRefresh: () => void}) & ({ loading: true, value: null, error: null }
+export type LoadingOrErroredValue<T = any> = ({
+  forceRefresh: () => void,
+  refreshWithoutLoading: () => void,
+}) & ({ loading: true, value: null, error: null }
 | (
     {loading: false, value: T, error: null}
   | {loading: false, value: null, error: Error}
@@ -22,16 +25,23 @@ export function useAsyncValue<T = any>(
         .finally(() => setLoading(false));
     }, dependencies);
 
+    const refreshWithoutLoading = useCallback(() => {
+      factory()
+        .then(result => setValue(result))
+        .catch(() => {return;})
+        .finally(() => setLoading(false));
+    }, dependencies);
+
     useEffect(() => forceRefresh(), dependencies)
 
     // Just to meet return type strictness
     if(loading) {
-        return { forceRefresh, loading: true, error: null, value: null };
+        return { forceRefresh, refreshWithoutLoading, loading: true, error: null, value: null };
     }
 
     if(error) {
-        return { forceRefresh, loading: false, error, value: null }
+        return { forceRefresh, refreshWithoutLoading, loading: false, error, value: null }
     }
 
-    return { forceRefresh, loading: false, value: value!, error: null }
+    return { forceRefresh, refreshWithoutLoading, loading: false, value: value!, error: null }
 }
