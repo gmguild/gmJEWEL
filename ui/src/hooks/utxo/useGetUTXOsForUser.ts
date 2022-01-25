@@ -9,7 +9,7 @@ export function useGetUTXOsForUser(): [FullUTXO[], boolean, LoadingOrErroredValu
   const [{ data: accountData }] = useAccount();
 
   const val = useAsyncValue(
-    () => axios.get(`${serverUrl}/utxo/user`, {
+    () => axios.get(`${serverUrl}/jewel/utxo/user`, {
       params: { address: accountData?.address },
     }),
     [accountData?.address],

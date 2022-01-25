@@ -5,7 +5,7 @@ import type { FullUTXO } from "./types";
 
 
 export function useGetAllUTXOs(): [FullUTXO[], boolean, LoadingOrErroredValue['forceRefresh']] {
-  const val = useAsyncValue(() => axios.get(`${serverUrl}/utxo/minted`));
+  const val = useAsyncValue(() => axios.get(`${serverUrl}/jewel/utxo/minted`));
 
   if (val.value?.data) {
     return [val.value.data, !!val.loading, val.forceRefresh];
