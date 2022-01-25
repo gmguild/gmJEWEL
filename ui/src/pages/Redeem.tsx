@@ -6,7 +6,7 @@ import { RedemptionHistoryTable } from "../components/RedemptionHistoryTable";
 
 export default function Redeem() {
   const [{ data: accountData }] = useAccount();
-  const [{ data: accountNetwork }, switchNetwork] = useNetwork();
+  const [{ data: accountNetwork }] = useNetwork();
 
   const validChainConnected = React.useMemo(() => {
     if (!accountData?.address) return false;

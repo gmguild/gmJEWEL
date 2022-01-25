@@ -59,9 +59,7 @@ function useAddTokenToWallet(): [
 export default function Trade() {
   const [{ data: accountData }] = useAccount();
 
-  const [addTokenToWallet, addingTokenToWallet] = useAddTokenToWallet();
-
-  const [{ data: accountNetwork }, switchNetwork] = useNetwork();
+  const [{ data: accountNetwork }] = useNetwork();
 
   const validChainConnected = React.useMemo(() => {
     if (!accountData?.address) return false;
@@ -70,131 +68,11 @@ export default function Trade() {
   }, [accountData?.address, accountNetwork.chain]);
 
   return (
-    <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
+    <div className="max-w-5xl mx-auto pb-32">
       {validChainConnected ? (
-        <>
-          <p>
-            Please go to the marketplace on{" "}
-            <a
-              href="https://game.defikingdoms.com/#/marketplace"
-              target="_blank"
-              rel="noreferrer"
-            >
-              DefiKingdoms
-            </a>
-          </p>
-          <p>These are the token addresses:</p>
-          <div className="w-full mx-auto">
-            <table className={classNames("min-w-full table-auto")}>
-              <thead>
-                <tr>
-                  <th>Token</th>
-                  <th>Address</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    JEWEL
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(
-                          addresses.JewelToken,
-                          "JEWEL",
-                          DFKJewel
-                        )
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.JewelToken}</td>
-                </tr>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    gmJEWEL
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(
-                          addresses.gmJEWEL,
-                          "gmJEWEL",
-                          DFKLockedJewel
-                        )
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.gmJEWEL}</td>
-                </tr>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    GMG
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(addresses.GMGToken, "GMG", SmallGMG)
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.GMGToken}</td>
-                </tr>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    xGMG
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(addresses.xGMG, "xGMG", SmallGMG)
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.xGMG}</td>
-                </tr>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    JEWEL-gmJEWEL LP Token
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(addresses.JgmJLPToken, "JEWEL-LP")
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.JgmJLPToken}</td>
-                </tr>
-                <tr>
-                  <td className="flex flex-col items-enter">
-                    JEWEL-GMG LP Token
-                    <Button
-                      className="text-xs p-1 mr-auto"
-                      onClick={() =>
-                        addTokenToWallet(addresses.JGMGLPToken, "JEWEL-LP")
-                      }
-                      disabled={addingTokenToWallet}
-                    >
-                      Add to Wallet
-                    </Button>
-                  </td>
-                  <td className="my-auto">{addresses.JGMGLPToken}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </>
+        <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
+          <TradeComponent />
+        </article>
       ) : (
         <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
           {accountData?.address == undefined && (
@@ -203,6 +81,132 @@ export default function Trade() {
           {accountNetwork.chain?.unsupported && <ChangeNetwork />}
         </article>
       )}
-    </article>
+    </div>
   );
 }
+
+const TradeComponent = () => {
+  const [addTokenToWallet, addingTokenToWallet] = useAddTokenToWallet();
+
+  return (
+    <>
+      <p>
+        Please go to the marketplace on{" "}
+        <a
+          href="https://game.defikingdoms.com/#/marketplace"
+          target="_blank"
+          rel="noreferrer"
+        >
+          DefiKingdoms
+        </a>
+      </p>
+      <p>These are the token addresses:</p>
+      <div className="w-full mx-auto">
+        <table className={classNames("min-w-full table-auto")}>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="flex flex-col items-enter">
+                JEWEL
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(addresses.JewelToken, "JEWEL", DFKJewel)
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.JewelToken}</td>
+            </tr>
+            <tr>
+              <td className="flex flex-col items-enter">
+                gmJEWEL
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(
+                      addresses.gmJEWEL,
+                      "gmJEWEL",
+                      DFKLockedJewel
+                    )
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.gmJEWEL}</td>
+            </tr>
+            <tr>
+              <td className="flex flex-col items-enter">
+                GMG
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(addresses.GMGToken, "GMG", SmallGMG)
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.GMGToken}</td>
+            </tr>
+            <tr>
+              <td className="flex flex-col items-enter">
+                xGMG
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(addresses.xGMG, "xGMG", SmallGMG)
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.xGMG}</td>
+            </tr>
+            <tr>
+              <td className="flex flex-col items-enter">
+                JEWEL-gmJEWEL LP Token
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(addresses.JgmJLPToken, "JEWEL-LP")
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.JgmJLPToken}</td>
+            </tr>
+            <tr>
+              <td className="flex flex-col items-enter">
+                JEWEL-GMG LP Token
+                <Button
+                  className="text-xs p-1 mr-auto"
+                  onClick={() =>
+                    addTokenToWallet(addresses.JGMGLPToken, "JEWEL-LP")
+                  }
+                  disabled={addingTokenToWallet}
+                >
+                  Add to Wallet
+                </Button>
+              </td>
+              <td className="my-auto">{addresses.JGMGLPToken}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
