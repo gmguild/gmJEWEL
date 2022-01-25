@@ -315,6 +315,7 @@ export function DisplayReadOnlyUTXO() {
 
   return (
     <div className="max-w-5xl mx-auto font-lora p-4">
+      <p className="text-center">Available Stashes:</p> <br />
       <div className="w-full my-4 mt-0">
         <div
           className={classNames(

@@ -14,11 +14,13 @@ export default function Redeem() {
           <RedemptionHistoryTable />
         </>
       ) : (
-        <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
-          <p>In order to redeem gmJEWEL, you must connect your wallet.</p>
+        <>
+          <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
+            <p>In order to redeem gmJEWEL, you must connect your wallet.</p>
+          </article>
           <DisplayReadOnlyUTXO />
           <RedemptionHistoryTable />
-        </article>
+        </>
       )}
     </div>
   );
