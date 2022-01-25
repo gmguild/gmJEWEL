@@ -1,15 +1,22 @@
 import React from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { StakedGMGUI, StakeMasterJewelerUI } from "../components/StakeUI";
 import { addresses } from "../utils/env";
 
 export default function Stake() {
   const [{ data: accountData }] = useAccount();
+  const [{ data: accountNetwork }, switchNetwork] = useNetwork();
+
+  const validChainConnected = React.useMemo(() => {
+    if (!accountData?.address) return false;
+    if (!accountNetwork.chain) return false;
+    return !accountNetwork.chain.unsupported ?? false;
+  }, [accountData?.address, accountNetwork.chain]);
 
   return (
     <div className="max-w-5xl mx-auto">
       <article className="font-lora prose mx-auto pb-32">
-        {accountData?.address ? (
+        {validChainConnected ? (
           <div>
             <h4 className="text-center">
               There are multiple ways of obtaining yield with the Greedy
@@ -19,8 +26,8 @@ export default function Stake() {
             <section>
               <p>
                 Provide liquidity to the JEWEL - gmJEWEL pair on DefiKingdoms
-                exchange to receive rewards in $GMG. You will also receive trading
-                fees for every trade made against this pair.
+                exchange to receive rewards in $GMG. You will also receive
+                trading fees for every trade made against this pair.
               </p>
               <StakeMasterJewelerUI
                 poolId={0}
@@ -28,11 +35,11 @@ export default function Stake() {
                 tokenName="JEWEL-gmJEWEL LP token"
               />
             </section>
-              <hr />
+            <hr />
             <section>
               <p>
-                Provide liquidity to the JEWEL - GMG pair on DefiKingdoms exchange
-                to receive further rewards in $GMG.
+                Provide liquidity to the JEWEL - GMG pair on DefiKingdoms
+                exchange to receive further rewards in $GMG.
               </p>
               <StakeMasterJewelerUI
                 poolId={1}
@@ -51,7 +58,17 @@ export default function Stake() {
           </div>
         ) : (
           <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
-            <p>Please connect your wallet in order to stake</p>
+            {accountData?.address == undefined && (
+              <p>Please connect your wallet in order to stake with GMG</p>
+            )}
+            {accountNetwork.chain?.unsupported && switchNetwork && (
+              <p>
+                Please change your network to{" "}
+                <a href="#" onClick={() => switchNetwork(1666600000)}>
+                  harmony
+                </a>
+              </p>
+            )}
           </article>
         )}
       </article>
