@@ -19,7 +19,6 @@ export function RedemptionHistoryTable() {
             <th>Redeemed By</th>
             <th>Amount</th>
             <th>Fee</th>
-            <th>JEWEL Paid</th>
             <th>Total Cost</th>
           </tr>
         </thead>
@@ -27,7 +26,7 @@ export function RedemptionHistoryTable() {
           {loadingUtxoRedemptionHistory ? (
             <>
               <tr>
-                <td colSpan={8}>Loading...</td>
+                <td colSpan={7}>Loading...</td>
               </tr>
             </>
           ) : (
@@ -61,7 +60,6 @@ export function RedemptionHistoryTable() {
                   </td>
                   <td>{bigNumberToFloat(record.amount).toFixed(3)}</td>
                   <td>{bigNumberToFloat(record.fee).toFixed(3)}</td>
-                  <td>{bigNumberToFloat(record.amountInJewel).toFixed(3)}</td>
                   <td>{bigNumberToFloat(record.totalCost).toFixed(3)}</td>
                 </tr>
               ))}
