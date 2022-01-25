@@ -6,12 +6,15 @@ export function ChangeNetwork() {
 
   if (switchNetwork) {
     return (
-      <p>
-        Please change your network to{" "}
-        <a href="#" onClick={() => switchNetwork(1666600000)}>
-          harmony
-        </a>
-      </p>
+      <>
+        <p>You must connect your wallet to Harmony Network.</p>
+        <button
+          className="px-6 text-center py-2 bg-rune/25 hover:bg-rune/50 rounded-md"
+          onClick={() => switchNetwork(1666600000)}
+        >
+          Switch Network
+        </button>
+      </>
     );
   }
 
