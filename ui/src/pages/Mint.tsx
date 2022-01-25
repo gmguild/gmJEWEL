@@ -22,7 +22,9 @@ export default function Home() {
         <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
           {accountData?.address == undefined && (
             <>
-              <p>Please connect your wallet in order to mint gmJEWEL</p>
+              <p className="font-bold">
+                Please connect your wallet in order to mint gmJEWEL
+              </p>
               <MintUTXOInfo />
             </>
           )}
