@@ -5,6 +5,7 @@
     "build": "tsc",
     "build-web": "webpack --mode production -c ui/webpack.config.js",
     "dev-web": "webpack serve --mode development -c ui/webpack.config.js",
+    "live-web": "webpack serve --mode development -c ui/webpack.config.js --env LIVE_WEB=true",
     "generate-contract-types": "npx typechain --target=ethers-v5 --out-dir ui/src/contract-types build/{interfaces,contracts}/*.json",
     "prepare": "husky install"
   },
