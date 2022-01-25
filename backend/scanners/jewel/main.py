@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 FIRST_BLOCK_TO_SCAN = 21800000
 RUN_EVERY_X_SECONDS = 4
 
-IS_DEV = 'PRODUCTION' not in os.environ or os.environ['PRODUCTION'] != 'true'
+IS_DEV = "PRODUCTION" not in os.environ or os.environ["PRODUCTION"] != "true"
 
 SCRIPT_DIR = os.path.dirname(__file__)  # <-- absolute dir the script is in
 DEPLOYMENT_REL_PATH = "../../../ui/deployment.json" if IS_DEV else "../../../ui/deployment-prod.json"
@@ -50,7 +50,7 @@ CONTRACT_FILE = json.load(open(
 CONTRACT_ABI = CONTRACT_FILE["abi"]
 FIRST_BLOCK_TO_SCAN = ADDRESSES["deploymentBlock"]
 
-DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, '../../db/jewel')
+DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, "../../db/jewel")
 
 
 class IEventScannerState(ABC):
@@ -217,7 +217,6 @@ class EventScanner:
         all_processed = []
 
         for event_type in self.events:
-
             # Callable that takes care of the underlying web3 call
             def _fetch_events(_start_block, _end_block):
                 return _fetch_events_for_all_contracts(
@@ -394,7 +393,7 @@ def _retry_web3_call(func, start_block, end_block, retries, delay) -> Tuple[int,
         try:
             return end_block, func(start_block, end_block)
         except Exception as e:
-            # Assume this is HTTPConnectionPool(host='localhost', port=8545): Read timed out. (read timeout=10)
+            # Assume this is HTTPConnectionPool(host="localhost", port=8545): Read timed out. (read timeout=10)
             # from Go Ethereum. This translates to the error "context was cancelled" on the server side:
             # https://github.com/ethereum/go-ethereum/issues/20426
             if i < retries - 1:
@@ -525,6 +524,13 @@ class SqliteDictState(IEventScannerState):
             flag="c",
             journal_mode="WAL",
         )
+        self.state_aggregates = SqliteDict(
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_aggregates.sqlite"),
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
 
     def save(self):
         logger.debug("...CLOSING STATE...")
@@ -532,6 +538,7 @@ class SqliteDictState(IEventScannerState):
         self.state_utxo.close()
         self.state_utxos_by_user.close()
         self.state_utxo_redemptions.close()
+        self.state_aggregates.close()
         logger.debug("...STATE CLOSED...")
 
     def commit(self):
@@ -540,6 +547,7 @@ class SqliteDictState(IEventScannerState):
         self.state_utxo.commit(blocking=True)
         self.state_utxos_by_user.commit(blocking=True)
         self.state_utxo_redemptions.commit(blocking=True)
+        self.state_aggregates.commit(blocking=True)
         logger.debug("...STATE COMMITED...")
 
     #
@@ -584,6 +592,16 @@ class SqliteDictState(IEventScannerState):
 
         # Convert ERC-20 Transfer event to our internal format
         args = event["args"]
+
+        def is_event_seen(db):
+            key = f"{block_number}-{txhash}-{log_index}"
+            return txhash in db and db[txhash] is True
+
+        def mark_event_as_seen(db):
+            key = f"{block_number}-{txhash}-{log_index}"
+            db[key] = True
+
+        # TODO: refactor all this so it"s not just one big function
         if event["event"] == "UTXOCreated":
             utxoObject = {
                 "utxoAddress": args["utxoAddress"].lower(),
@@ -613,7 +631,7 @@ class SqliteDictState(IEventScannerState):
                 "timestamp": block_when.timestamp() * 1000,  # milliseconds
             }
         elif event["event"] == "UTXORedeemed":
-            if not (txhash in self.state_utxo_redemptions and self.state_utxo_redemptions[txhash] is True):
+            if not is_event_seen(self.state_utxo_redemptions):
                 last_utxo_redemption_index = (
                     self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
                 ) or "0"
@@ -630,12 +648,8 @@ class SqliteDictState(IEventScannerState):
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
-                self.state_utxo_redemptions[txhash] = True
+                mark_event_as_seen(self.state_utxo_redemptions)
                 self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
-        else:
-            logger.debug(args)
-            logger.debug(event["event"])
-            raise AttributeError
 
         if utxoObject is None:
             # no update made to object
@@ -650,6 +664,49 @@ class SqliteDictState(IEventScannerState):
         else:
             self.state_utxo[utxoObject["utxoAddress"]] = utxoObject
 
+        # AGGREGATES
+        if not is_event_seen(self.state_aggregates):
+            # large numbers are always stored as string because JSON cannot handle massive uint256
+            def get_agg(key): return int(
+                (self.state_aggregates[key] if key in self.state_aggregates else "0") or "0")
+
+            def get_agg_in_cur_bucket(key):
+                bucket_key = block_when.replace(
+                    minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
+                key_ = f"{key}-{bucket_key}"
+                return int((self.state_aggregates[key_] if key_ in self.state_aggregates else "0") or "0")
+
+            def update_agg(key, value, bucketValue=None):
+                self.state_aggregates[key] = str(value)
+                bucket_time = block_when.replace(
+                    minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
+                self.state_aggregates[f"{key}-{bucket_time}"] = str(
+                    bucketValue if bucketValue is not None else value)
+
+            current_total_stashes = get_agg("totalStashes")
+            current_locked_jewel_in_protocol = get_agg("lockedJewelTotal")
+            current_total_fees_paid = get_agg("totalFeesPaid")
+            current_total_fees_paid_in_jewel = get_agg("totalFeesPaidInJewel")
+            current_total_redemptions_volume = get_agg(
+                "totalRedemptionsVolume")
+
+            if event["event"] == "UTXOCreated":
+                update_agg("totalStashes", current_total_stashes + 1)
+            elif event["event"] == "MintedFromUTXO":
+                update_agg(
+                    "lockedJewelTotal", current_locked_jewel_in_protocol + int(args["mintedAmount"]))
+            elif event["event"] == "UTXORedeemed":
+                update_agg(
+                    "lockedJewelTotal", current_locked_jewel_in_protocol - int(args["redeemedAmount"]))
+                update_agg("totalFeesPaid",
+                           current_total_fees_paid + int(args["feePaid"]))
+                update_agg("totalFeesPaidInJewel",
+                           current_total_fees_paid_in_jewel + int(args["feeRatio"]))
+                update_agg("totalRedemptionsVolume",
+                           current_total_redemptions_volume + int(args["redeemedAmount"]))
+
+            mark_event_as_seen(self.state_aggregates)
+
         self.commit()
 
         # Return a pointer that allows us to look up this event later if needed
@@ -660,7 +717,7 @@ scheduler = sched.scheduler(time.time, time.sleep)
 
 
 def run(sc):
-    api_url = os.environ['HARMONY_RPC_URL'] if 'HARMONY_RPC_URL' in os.environ else "http://127.0.0.1:8545"
+    api_url = os.environ["HARMONY_RPC_URL"] if "HARMONY_RPC_URL" in os.environ else "http://127.0.0.1:8545"
 
     # Enable logs to the stdout.
     # DEBUG is very verbose level
@@ -688,8 +745,12 @@ def run(sc):
         web3=web3,
         contract=CONTRACT,
         state=state,
-        events=[CONTRACT.events.UTXOValue,
-                CONTRACT.events.UTXOCreated, CONTRACT.events.UTXORedeemed],
+        events=[
+            CONTRACT.events.UTXOValue,
+            CONTRACT.events.UTXOCreated,
+            CONTRACT.events.UTXORedeemed,
+            CONTRACT.events.MintedFromUTXO
+        ],
         filters={"address": CONTRACT_ADDRESS},
         # How many maximum blocks at the time we request from JSON-RPC
         # and we are unlikely to exceed the response size limit of the JSON-RPC server
