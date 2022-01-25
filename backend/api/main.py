@@ -1,7 +1,9 @@
+import os
 from fastapi import FastAPI
-import json
 from fastapi.middleware.cors import CORSMiddleware
 from sqlitedict import SqliteDict
+
+from routers.jewel import router as jewel
 
 app = FastAPI()
 
@@ -13,15 +15,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-state_utxo = SqliteDict(filename='./state_utxo.sqlite', autocommit=False,
+app.include_router(jewel, prefix="/jewel")
+
+
+###################
+#                 #
+#   LEGACY APIS   #
+#                 #
+###################
+
+
+SCRIPT_DIR = os.path.dirname(__file__)  # <-- absolute dir the script is in
+DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, '../db/jewel')
+
+
+state_utxo = SqliteDict(filename=os.path.join(DB_FOLDER_PREFIX, './state_utxo.sqlite'),
+                        autocommit=False,
                         flag="r", journal_mode="WAL")
-state_utxos_by_user = SqliteDict(filename='./state_utxos_by_user.sqlite', autocommit=False,
+
+state_utxos_by_user = SqliteDict(filename=os.path.join(DB_FOLDER_PREFIX, './state_utxos_by_user.sqlite'),
+                                 autocommit=False,
                                  flag="r", journal_mode="WAL")
-
-
-@app.get("/utxo/list")
-def get_all_utxos():
-    return [v for [_, v] in state_utxo.items()]
 
 
 def _sort_by_size(e):
@@ -30,7 +44,12 @@ def _sort_by_size(e):
     return int(e["newVal"])
 
 
-@app.get("/utxo/minted")
+@app.get("/utxo/list", deprecated=True)
+def get_all_utxos():
+    return [v for [_, v] in state_utxo.items()]
+
+
+@app.get("/utxo/minted", deprecated=True)
 def get_sorted_utxos():
     listed = [
         v for [_, v] in state_utxo.items()
@@ -40,7 +59,7 @@ def get_sorted_utxos():
     return listed
 
 
-@app.get("/utxo/user")
+@app.get("/utxo/user", deprecated=True)
 def get_utxos_for_user(address):
     result = []
     if address.lower() in state_utxos_by_user and state_utxos_by_user[address.lower()] is not None:
