@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 
 export function UpdatingTimestamp({date}: {date: Date}) {
   const [, forceStateUpdate] = useState(0);
@@ -14,5 +14,5 @@ export function UpdatingTimestamp({date}: {date: Date}) {
     }
   }, [])
 
-  return <>{formatDistanceToNow(date, {addSuffix: true})}</>
+  return <>{formatDistanceToNowStrict(date, {addSuffix: true})}</>
 }
