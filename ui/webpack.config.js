@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = function(_env, argv) {
-  const isProduction = argv.mode === "production";
+  const isProduction = argv.mode === "production" || _env.LIVE_WEB === 'true';
   const isDevelopment = !isProduction;
 
   return {
