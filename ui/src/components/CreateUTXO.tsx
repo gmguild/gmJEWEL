@@ -22,36 +22,7 @@ export function CreateUTXO() {
 
   return (
     <div className="max-w-4xl mx-auto font-lora p-4">
-      <article className={classNames("py-6 prose")}>
-        <p>
-          In order to mint <span>gmJEWEL</span>, there are three very important
-          steps you must take:
-        </p>
-        <ol>
-          <li>You must create a Jewel Stash</li>
-          <li>
-            You must transfer your locked Jewel to the Jewel Stash
-            <aside className="italic">
-              Please note the function that allows you to transfer locked Jewel
-              ALSO{" "}
-              <span className="underline">
-                transfers all the unlocked Jewel in your balance!
-              </span>{" "}
-              Please deposit any unlocked Jewel in the bank first.
-            </aside>
-          </li>
-          <li>
-            You will then be able to mint <span>gmJEWEL</span> at a 1:1 ratio
-            <aside className="italic">
-              Please also note that while you are the &quot;minter&quot; of
-              these stashes,{" "}
-              <span className="underline">
-                anybody can redeem them for the underlying Jewel!
-              </span>
-            </aside>
-          </li>
-        </ol>
-      </article>
+      <MintUTXOInfo />
       {userUTXOs.length > 0 && !loadingUserUTXOs ? (
         <p className="text-center">Your Jewel Stashes</p>
       ) : (
@@ -89,6 +60,41 @@ export function CreateUTXO() {
         <ActiveUTXO utxo={selectedUTXO} forceRefreshUTXOs={forceRefreshUTXOs} />
       )}
     </div>
+  );
+}
+
+export function MintUTXOInfo() {
+  return (
+    <article className={classNames("py-6 prose")}>
+      <p>
+        In order to mint <span>gmJEWEL</span>, there are three very important
+        steps you must take:
+      </p>
+      <ol>
+        <li>You must create a Jewel Stash</li>
+        <li>
+          You must transfer your locked Jewel to the Jewel Stash
+          <aside className="italic">
+            Please note the function that allows you to transfer locked Jewel
+            ALSO{" "}
+            <span className="underline">
+              transfers all the unlocked Jewel in your balance!
+            </span>{" "}
+            Please deposit any unlocked Jewel in the bank first.
+          </aside>
+        </li>
+        <li>
+          You will then be able to mint <span>gmJEWEL</span> at a 1:1 ratio
+          <aside className="italic">
+            Please also note that while you are the &quot;minter&quot; of these
+            stashes,{" "}
+            <span className="underline">
+              anybody can redeem them for the underlying Jewel!
+            </span>
+          </aside>
+        </li>
+      </ol>
+    </article>
   );
 }
 
@@ -141,10 +147,18 @@ function ActiveUTXO({
         <h3 className="text-center italic mb-2">Your Inventory</h3>
 
         <p className="flex flex-row">
-          <span className="text-gray-500">Locked Jewels</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedLockedJewel : '...loading...'}</span>
+          <span className="text-gray-500">Locked Jewels</span>{" "}
+          <span className="ml-2 text-gray-900 flex flex-row items-center">
+            <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+            {!loadingInformation ? formattedLockedJewel : "...loading..."}
+          </span>
         </p>
         <p className="flex flex-row">
-          <span className="text-gray-500">Unlocked Jewels</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedUnlockedJewel : '...loading...'}</span>
+          <span className="text-gray-500">Unlocked Jewels</span>{" "}
+          <span className="ml-2 text-gray-900 flex flex-row items-center">
+            <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+            {!loadingInformation ? formattedUnlockedJewel : "...loading..."}
+          </span>
         </p>
 
         <Button
@@ -160,10 +174,18 @@ function ActiveUTXO({
         <h3 className="text-center italic mb-2">Jewel Stash</h3>
 
         <p className="flex flex-row">
-          <span className="text-gray-500">Stash Value</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedUTXOValue : '...loading...'}</span>
+          <span className="text-gray-500">Stash Value</span>{" "}
+          <span className="ml-2 text-gray-900 flex flex-row items-center">
+            <div className="jewel-icon h-4 w-4 mr-1" />{" "}
+            {!loadingInformation ? formattedUTXOValue : "...loading..."}
+          </span>
         </p>
         <p className="flex flex-row">
-          <span className="text-gray-500">gmJEWEL Minted</span> <span className="ml-2 text-gray-900 flex flex-row items-center"><div className="locked-jewel-icon h-4 w-4 mr-1" /> {!loadingInformation ? formattedMintedAmount : '...loading...'}</span>
+          <span className="text-gray-500">gmJEWEL Minted</span>{" "}
+          <span className="ml-2 text-gray-900 flex flex-row items-center">
+            <div className="locked-jewel-icon h-4 w-4 mr-1" />{" "}
+            {!loadingInformation ? formattedMintedAmount : "...loading..."}
+          </span>
         </p>
 
         <Button
