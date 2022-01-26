@@ -36,6 +36,27 @@ body {
   background-repeat: no-repeat;
 }
 
+.twitter-icon {
+  background-image: url('./assets/twitter.svg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.github-icon {
+  background-image: url('./assets/github.svg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.discord-icon {
+  background-image: url('./assets/discord.svg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .font-lora {
   font-family: 'Lora', serif;
 }
