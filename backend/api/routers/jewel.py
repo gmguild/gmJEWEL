@@ -30,6 +30,11 @@ def _sort_by_size(e):
     return int(e["newVal"])
 
 
+@router.get("/last-scanned-block")
+def get_last_scanned_block():
+    return state_meta["last_scanned_block"]
+
+
 @router.get("/utxo/list")
 def get_all_utxos():
     return [v for [_, v] in state_utxo.items()]
