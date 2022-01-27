@@ -1,9 +1,13 @@
 import React from "react";
+import { useGetAggSummary } from "../hooks/agg/useGetAggSummary";
+import { classNames } from "../utils/classNames";
+import { bigNumberToFloat } from "../utils/conversion";
 
 export default function Home() {
   return (
     <div className="max-w-5xl mx-auto">
-      <article className="prose font-lora mx-auto mt-4 p-4 pb-32">
+      <AggregateDataSummary />
+      <article className="prose font-lora mx-auto p-4 pb-32">
         <h2>About The Greedy Merchants Guild</h2>
         <p>
           Greedy Merchants Guild creates a market for heroes to trade their
@@ -35,4 +39,48 @@ export default function Home() {
       </article>
     </div>
   );
+}
+
+function AggregateDataSummary() {
+  const [aggSummary, loading] = useGetAggSummary();
+
+  return (
+    <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 justify-center py-8 gap-4">
+      <div className="flex flex-col justify-center items-center p-4 bg-white shadow-md rounded-md">
+        <p className="italic text-gray-500 text-center mx-auto text-xs md:text-sm">
+          Total Stashes
+        </p>
+        <p className={classNames("text-center", loading ? "text-sm" : "text-base")}>
+          {loading ? 'loading' : aggSummary.totalStashes === null ? '-' : aggSummary.totalStashes}
+        </p>
+      </div>
+      <div className="flex flex-col justify-center items-center p-4 bg-white shadow-md rounded-md col-span-2">
+        <p className="italic text-gray-500 text-center mx-auto text-xs md:text-sm">
+          Total Locked JEWEL
+        </p>
+        <p className={classNames("text-center", loading ? "text-sm" : "text-base")}>
+          {loading ? 'loading' : aggSummary.lockedJewelTotal === null ? '-' : bigNumberToFloat(aggSummary.lockedJewelTotal).toLocaleString()}
+          {!loading && ' JEWEL'}
+        </p>
+      </div>
+      <div className="flex flex-col justify-center items-center p-4 bg-white shadow-md rounded-md col-span-2">
+        <p className="italic text-gray-500 text-center mx-auto text-xs md:text-sm">
+          Total Redemption Volume
+        </p>
+        <p className={classNames("text-center", loading ? "text-sm" : "text-base")}>
+          {loading ? 'loading' : aggSummary.totalRedemptionsVolume === null ? '-' : bigNumberToFloat(aggSummary.totalRedemptionsVolume).toLocaleString()}
+          {!loading && ' JEWEL'}
+        </p>
+      </div>
+      <div className="flex flex-col justify-center items-center p-4 bg-white shadow-md rounded-md">
+        <p className="italic text-gray-500 text-center mx-auto text-xs md:text-sm">
+          Total Fees Paid
+        </p>
+        <p className={classNames("text-center", loading ? "text-sm" : "text-base")}>
+          {loading ? 'loading' : aggSummary.totalFeesPaid === null ? '-' : bigNumberToFloat(aggSummary.totalFeesPaid).toLocaleString()}
+          {!loading && ' JEWEL'}
+        </p>
+      </div>
+    </div>
+  )
 }

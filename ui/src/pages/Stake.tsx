@@ -23,7 +23,9 @@ export default function Stake() {
       ) : (
         <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
           {accountData?.address == undefined && (
-            <p>Please connect your wallet in order to stake with GMG</p>
+            <p className="font-bold">
+              Please connect your wallet in order to stake with GMG
+            </p>
           )}
           {accountNetwork.chain?.unsupported && <ChangeNetwork />}
         </article>

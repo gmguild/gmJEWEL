@@ -1,4 +1,6 @@
+import datetime
 import os
+from pprint import pprint
 from fastapi import APIRouter, Query
 from sqlitedict import SqliteDict
 
@@ -23,11 +25,20 @@ state_utxo_redemptions = SqliteDict(filename=os.path.join(DB_FOLDER_PREFIX, './s
                                     autocommit=False,
                                     flag="r", journal_mode="WAL")
 
+state_aggregates = SqliteDict(filename=os.path.join(DB_FOLDER_PREFIX, './state_aggregates.sqlite'),
+                              autocommit=False,
+                              flag="r", journal_mode="WAL")
+
 
 def _sort_by_size(e):
     if not "newVal" in e:
         return 0
     return int(e["newVal"])
+
+
+@router.get("/last-scanned-block")
+def get_last_scanned_block():
+    return state_meta["last_scanned_block"]
 
 
 @router.get("/utxo/list")
@@ -71,3 +82,40 @@ def get_utxo_redemption_history(limit: int = Query(default=10, gt=0, le=100)):
             result.append(state_utxo_redemptions[i])
 
     return result
+
+
+# AGGREGATES
+
+def _get_agg(key: str):
+    return (state_aggregates[key] if key in state_aggregates else None)
+
+
+def _get_agg_bucket(key: str, hoursAgo: int):
+    bucket_key = (datetime.datetime.utcnow().replace(
+        minute=0, second=0, microsecond=0, tzinfo=datetime.timezone.utc) - datetime.timedelta(hours=hoursAgo)).isoformat(timespec="seconds")
+    key_ = f"{key}-{bucket_key}"
+    return (state_aggregates[key_] if key_ in state_aggregates else None)
+
+
+@router.get("/agg/summary")
+def get_agg_summary():
+    return {
+        "totalStashes": _get_agg("totalStashes"),
+        "lockedJewelTotal": _get_agg("lockedJewelTotal"),
+        "totalFeesPaid": _get_agg("totalFeesPaid"),
+        "totalFeesPaidInJewel": _get_agg("totalFeesPaidInJewel"),
+        "totalRedemptionsVolume": _get_agg("totalRedemptionsVolume"),
+    }
+
+
+@router.get("/agg/redemption-volume")
+def get_redemption_volume(hours: int = Query(default=24, ge=0, le=168)):
+    history = []
+
+    for hour in range(hours, 0, -1):
+        history.append(_get_agg_bucket("totalRedemptionsVolume", hour))
+
+    return {
+        "total": _get_agg("totalRedemptionsVolume"),
+        "history": history,
+    }
