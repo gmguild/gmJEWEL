@@ -595,7 +595,7 @@ class SqliteDictState(IEventScannerState):
 
         def is_event_seen(db):
             key = f"{block_number}-{txhash}-{log_index}"
-            return txhash in db and db[txhash] is True
+            return key in db and db[key] is True
 
         def mark_event_as_seen(db):
             key = f"{block_number}-{txhash}-{log_index}"
