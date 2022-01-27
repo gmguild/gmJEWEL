@@ -510,6 +510,13 @@ class SqliteDictState(IEventScannerState):
             flag="c",
             journal_mode="WAL",
         )
+        self.state_utxo_seen_events = SqliteDict(
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxo_seen_events.sqlite"),
+            autocommit=False,
+            flag="c",
+            journal_mode="WAL",
+        )
         self.state_utxos_by_user = SqliteDict(
             filename=os.path.join(
                 DB_FOLDER_PREFIX, "./state_utxos_by_user.sqlite"),
@@ -536,6 +543,7 @@ class SqliteDictState(IEventScannerState):
         logger.debug("...CLOSING STATE...")
         self.state_meta.close()
         self.state_utxo.close()
+        self.state_utxo_seen_events.close()
         self.state_utxos_by_user.close()
         self.state_utxo_redemptions.close()
         self.state_aggregates.close()
@@ -545,6 +553,7 @@ class SqliteDictState(IEventScannerState):
         logger.debug("...COMITTING STATE...")
         self.state_meta.commit(blocking=True)
         self.state_utxo.commit(blocking=True)
+        self.state_utxo_seen_events.commit(blocking=True)
         self.state_utxos_by_user.commit(blocking=True)
         self.state_utxo_redemptions.commit(blocking=True)
         self.state_aggregates.commit(blocking=True)
@@ -603,7 +612,7 @@ class SqliteDictState(IEventScannerState):
 
         # TODO: refactor all this so it"s not just one big function
         if event["event"] == "UTXOCreated":
-            if not is_event_seen(self.state_utxo):
+            if not is_event_seen(self.state_utxo_seen_events):
                 utxoObject = {
                     "utxoAddress": args["utxoAddress"].lower(),
                     "minter": args["minter"].lower(),
@@ -624,16 +633,16 @@ class SqliteDictState(IEventScannerState):
                 else:
                     self.state_utxos_by_user[utxoObject["minter"]] = [
                         utxoObject["utxoAddress"]]
-                mark_event_as_seen(self.state_utxo)
+                mark_event_as_seen(self.state_utxo_seen_events)
         elif event["event"] == "UTXOValue":
-            if not is_event_seen(self.state_utxo):
+            if not is_event_seen(self.state_utxo_seen_events):
                 utxoObject = {
                     "utxoAddress": args["UTXOAddress"].lower(),
                     "newVal": str(args["newVal"]),
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
-                mark_event_as_seen(self.state_utxo)
+                mark_event_as_seen(self.state_utxo_seen_events)
         elif event["event"] == "UTXORedeemed":
             if not is_event_seen(self.state_utxo_redemptions):
                 last_utxo_redemption_index = (
