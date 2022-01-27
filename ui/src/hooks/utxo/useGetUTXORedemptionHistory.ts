@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 
 export function useGetUTXORedemptionHistory(): [UTXORedemptionRecord[], boolean, LoadingOrErroredValue['forceRefresh']] {
-  const [{data: blockNumber}] = useBlockNumber();
+  const [{data: blockNumber}] = useBlockNumber({ watch: true });
   const val = useAsyncValue(
     () => axios.get(`${serverUrl}/jewel/utxo/redemption-history`, {
       params: { limit: 20 },

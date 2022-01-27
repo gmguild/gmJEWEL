@@ -1,13 +1,17 @@
 import React from "react";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useBlockNumber, useConnect } from "wagmi";
 import { classNames } from "../utils/classNames";
 import { shortenAddress } from "../utils/conversion";
-import logo from "../assets/GMG.png";
 import { Link, useLocation } from "react-router-dom";
 import { MarketSounds } from "./MarketSounds";
 import { usePrices } from "../hooks/token/usePrices";
+import { useGetLastScannedBlock } from "../hooks/util/useGetLastScannedBlock";
 
 export const Header = () => {
+  const [lastScannedBlock] = useGetLastScannedBlock();
+  const [{ data: currentBlockNumber }] = useBlockNumber({ watch: true });
+  const indexerIsBehind = lastScannedBlock && currentBlockNumber && currentBlockNumber - lastScannedBlock > 30; // 1 minute of blocks
+
   const [{ data: connectData, error: connectError }, connect] = useConnect();
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
@@ -44,6 +48,12 @@ export const Header = () => {
               <a className="block cursor-pointer" href="https://dexscreener.com/harmony/0x8e6c2ee1f55ff482caea84e7cfedf34d259864d9" target="_blank" rel="noreferrer"><span className="text-gray-500">$gmJEWEL</span> {loadingPrices ? '...' : prices.gmJewelPriceInJewel?.toFixed(3)} JEWEL</a>
               <a className="block cursor-pointer" href="https://preview.dexscreener.io/harmony/0x33af0e5bfa4552db2390c01e1f5646689037e04e" target="_blank" rel="noreferrer"><span className="text-gray-500">$GMG</span> {loadingPrices ? '...' : prices.gmgPriceInJewel?.toFixed(5)} JEWEL</a>
             </div>
+
+            {indexerIsBehind && (
+              <div className="px-4 py-2 mt-1 mb-3 bg-red-200 border border-red-400 text-red-800 rounded-lg text-sm text-center">
+                <p>The GMG API is having problems indexing the chain - data may be outdated.</p>
+              </div>
+            )}
           </div>
 
           <div className={classNames("my-auto flex flex-col items-center font-lora")}>
