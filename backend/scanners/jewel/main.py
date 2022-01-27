@@ -596,6 +596,7 @@ class SqliteDictState(IEventScannerState):
         # transaction_index = event.transactionIndex  # Transaction index within the block
         txhash = event.transactionHash.hex()  # Transaction hash
         block_number = event.blockNumber
+        event_type = event["event"]
 
         utxoObject = None
 
@@ -603,15 +604,15 @@ class SqliteDictState(IEventScannerState):
         args = event["args"]
 
         def is_event_seen(db):
-            key = f"{block_number}-{txhash}-{log_index}"
+            key = f"{block_number}-{txhash}-{log_index}-{event_type}"
             return key in db and db[key] is True
 
         def mark_event_as_seen(db):
-            key = f"{block_number}-{txhash}-{log_index}"
+            key = f"{block_number}-{txhash}-{log_index}-{event_type}"
             db[key] = True
 
         # TODO: refactor all this so it"s not just one big function
-        if event["event"] == "UTXOCreated":
+        if event_type == "UTXOCreated":
             if not is_event_seen(self.state_utxo_seen_events):
                 utxoObject = {
                     "utxoAddress": args["utxoAddress"].lower(),
@@ -634,7 +635,10 @@ class SqliteDictState(IEventScannerState):
                     self.state_utxos_by_user[utxoObject["minter"]] = [
                         utxoObject["utxoAddress"]]
                 mark_event_as_seen(self.state_utxo_seen_events)
-        elif event["event"] == "UTXOValue":
+            else:
+                logger.warn(
+                    f"Already seen UTXOCreated event {block_number}-{txhash}-{log_index}")
+        elif event_type == "UTXOValue":
             if not is_event_seen(self.state_utxo_seen_events):
                 utxoObject = {
                     "utxoAddress": args["UTXOAddress"].lower(),
@@ -643,7 +647,10 @@ class SqliteDictState(IEventScannerState):
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
                 mark_event_as_seen(self.state_utxo_seen_events)
-        elif event["event"] == "UTXORedeemed":
+            else:
+                logger.warn(
+                    f"Already seen UTXOValue event {block_number}-{txhash}-{log_index}")
+        elif event_type == "UTXORedeemed":
             if not is_event_seen(self.state_utxo_redemptions):
                 last_utxo_redemption_index = (
                     self.state_meta["last_utxo_redemption_index"] if "last_utxo_redemption_index" in self.state_meta else "0"
@@ -663,6 +670,9 @@ class SqliteDictState(IEventScannerState):
                 }
                 mark_event_as_seen(self.state_utxo_redemptions)
                 self.state_meta["last_utxo_redemption_index"] = next_utxo_redemption_index
+            else:
+                logger.warn(
+                    f"Already seen UTXORedeemed event {block_number}-{txhash}-{log_index}")
 
         if utxoObject is None:
             # no update made to object
@@ -703,12 +713,12 @@ class SqliteDictState(IEventScannerState):
             current_total_redemptions_volume = get_agg(
                 "totalRedemptionsVolume")
 
-            if event["event"] == "UTXOCreated":
+            if event_type == "UTXOCreated":
                 update_agg("totalStashes", current_total_stashes + 1)
-            elif event["event"] == "MintedFromUTXO":
+            elif event_type == "MintedFromUTXO":
                 update_agg(
                     "lockedJewelTotal", current_locked_jewel_in_protocol + int(args["mintedAmount"]))
-            elif event["event"] == "UTXORedeemed":
+            elif event_type == "UTXORedeemed":
                 update_agg(
                     "lockedJewelTotal", current_locked_jewel_in_protocol - int(args["redeemedAmount"]))
                 update_agg("totalFeesPaid",
