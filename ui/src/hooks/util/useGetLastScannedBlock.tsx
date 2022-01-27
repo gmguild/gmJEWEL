@@ -5,7 +5,7 @@ import { serverUrl } from "../../utils/env";
 import { LoadingOrErroredValue, useAsyncValue } from "./useAsyncValue";
 
 export function useGetLastScannedBlock(): [number | null, boolean, LoadingOrErroredValue['forceRefresh']] {
-  const [{data: blockNumber}] = useBlockNumber();
+  const [{data: blockNumber}] = useBlockNumber({ watch: true });
   const val = useAsyncValue(() => axios.get(`${serverUrl}/jewel/last-scanned-block`));
 
   useEffect(() => {
