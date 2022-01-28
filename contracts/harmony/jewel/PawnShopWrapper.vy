@@ -40,10 +40,11 @@ def wrappedFullRedeem(_utxo: address, _jewelAmount: uint256):
     # User must approve this contract first with gmjewel
 
     # Do checks
-    assert PawnShop(self.pawn_shop).isValidUTXO(_utxo) # pawnshop also enforces this
+    assert PawnShop(self.pawn_shop).isValidUTXO(_utxo) # dev: invalid UTXO
+    # pawnshop also enforces above
     utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue
-    assert utxoValue > 0 # empty stash
-    assert _jewelAmount < utxoValue # cannot overpay for stash
+    assert utxoValue > 0 # dev: empty stash
+    assert _jewelAmount < utxoValue # dev: cannot overpay for stash
 
 
     feeBps: uint256 = PawnShop(self.pawn_shop).getFeeTier(utxoValue)
