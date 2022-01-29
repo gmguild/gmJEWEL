@@ -42,7 +42,7 @@ def wrappedFullRedeem(_utxo: address, _jewelAmount: uint256):
     # Do checks
     assert PawnShop(self.pawn_shop).isValidUTXO(_utxo) # dev: invalid UTXO
     # pawnshop also enforces above
-    utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue
+    utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue()
     assert utxoValue > 0 # dev: empty stash
     assert _jewelAmount < utxoValue # dev: cannot overpay for stash
 
