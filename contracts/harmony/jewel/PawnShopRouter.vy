@@ -19,7 +19,7 @@ interface PawnShop:
     def getFeeTier(_amount: uint256) -> uint256: view
 
 interface UTXO:
-    def nominalCombinedValue() -> uint256: view
+    def forceRedeemUTXO() -> uint256: view
 
 interface ERC20:
     def transferFrom(_from : address, _to : address, _value : uint256) -> bool: nonpayable
@@ -42,7 +42,7 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
     # Do checks
     assert PawnShop(self.pawn_shop).isValidUTXO(_utxo) # dev: invalid UTXO
     # pawnshop also enforces above
-    utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue()
+    utxoValue: uint256 = UTXO(_utxo).forceRedeemUTXO()
     assert utxoValue > 0 # dev: empty stash
     assert _jewelAmount < utxoValue # dev: cannot overpay for stash
 
