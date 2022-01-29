@@ -1,7 +1,7 @@
 """
 There is a bad UX when using the PawnShop contract directly
 
-The function 'redeemUTXOForFullCombinedValue' takes a single parameter which 
+The function 'forceRedeemUTXO' takes a single parameter which 
 represents the amount of fee to be paid in JEWEL (rather than gmJEWEL)
 It is possible for a user to accidentally overpay this fee by redeeming a stash
 which has already been redeemed.
@@ -14,12 +14,12 @@ jewel: public(address)
 gmJewel: public(address)
 
 interface PawnShop:
-    def redeemUTXOForFullCombinedValue(_utxo: address, _jewelAmount: uint256): nonpayable
+    def forceRedeemUTXO(_utxo: address, _jewelAmount: uint256): nonpayable
     def isValidUTXO(_utxo: address) -> bool: view
     def getFeeTier(_amount: uint256) -> uint256: view
 
 interface UTXO:
-    def forceRedeemUTXO() -> uint256: view
+    def nominalCombinedValue() -> uint256: view
 
 interface ERC20:
     def transferFrom(_from : address, _to : address, _value : uint256) -> bool: nonpayable
@@ -42,7 +42,7 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
     # Do checks
     assert PawnShop(self.pawn_shop).isValidUTXO(_utxo) # dev: invalid UTXO
     # pawnshop also enforces above
-    utxoValue: uint256 = UTXO(_utxo).forceRedeemUTXO()
+    utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue()
     assert utxoValue > 0 # dev: empty stash
     assert _jewelAmount < utxoValue # dev: cannot overpay for stash
 
@@ -60,6 +60,6 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
 
     ERC20(self.jewel).approve(self.pawn_shop, _jewelAmount)
 
-    PawnShop(self.pawn_shop).redeemUTXOForFullCombinedValue(_utxo,_jewelAmount)
+    PawnShop(self.pawn_shop).forceRedeemUTXO(_utxo,_jewelAmount)
 
     JewelToken(self.jewel).transferAll(msg.sender)
