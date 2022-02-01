@@ -3,6 +3,7 @@ import pytest
 from tests.helpers import (
     anti_whale_transfer_value,
     get_random_name,
+    max_uint256,
     users_with_locked_jewel,
 )
 from brownie.test import given, strategy
@@ -11,7 +12,7 @@ import brownie
 
 @given(
     id=strategy("uint", max_value=len(users_with_locked_jewel) - 1),
-    bips_unlocked=strategy("uint", max_value=100),
+    pct_unlocked=strategy("uint", max_value=100),
 )
 def test_full_redeem(
     jewel_token,
@@ -23,7 +24,7 @@ def test_full_redeem(
     alice,
     bob,
     id,
-    bips_unlocked,
+    pct_unlocked,
     deployer,
 ):
     users = users_with_locked_jewel
@@ -60,20 +61,20 @@ def test_full_redeem(
 
     # Alice now needs fees to redeem
     fee_bips = pawn_shop.getFeeTier(utxo_val)
-    total_fee = utxo_val * fee_bips // 10000
+    total_fee = utxo_val * fee_bips / 10_000
 
-    fee_in_jewel = bips_unlocked * total_fee
+    fee_in_jewel = pct_unlocked * total_fee / 100
     fee_in_gmjewel = total_fee - fee_in_jewel
     jewel_token.transfer(alice, fee_in_jewel, {"from": dfk_bank_account})
     gm_jewel.mint(alice, fee_in_gmjewel, {"from": deployer})
 
     # Now we can redeem
 
-    jewel_token.approve(pawn_shop_router, fee_in_jewel, {"from": alice})
-    gm_jewel.approve(pawn_shop_router, utxo_val + fee_in_gmjewel, {"from": alice})
+    jewel_token.approve(pawn_shop_router, max_uint256, {"from": alice})
+    gm_jewel.approve(pawn_shop_router, max_uint256, {"from": alice})
 
     alice_total_before = jewel_token.totalBalanceOf(alice)
     pawn_shop_router.fullRedeem(created_utxo, fee_in_jewel, {"from": alice})
     alice_total_after = jewel_token.totalBalanceOf(alice)
 
-    assert alice_total_after == alice_total_before + utxo_val
+    assert alice_total_after + fee_in_jewel == alice_total_before + utxo_val

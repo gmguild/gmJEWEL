@@ -3,7 +3,6 @@ import pytest
 from tests.helpers import (
     anti_whale_transfer_value,
     get_random_name,
-    max_uint256,
     users_with_locked_jewel,
 )
 from brownie.test import given, strategy

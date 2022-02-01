@@ -26,6 +26,7 @@ interface UTXO:
 interface ERC20:
     def transferFrom(_from : address, _to : address, _value : uint256) -> bool: nonpayable
     def approve(_spender : address, _amount : uint256) -> bool: nonpayable
+    def allowance(_owner: address, _spender: address) -> uint256: view
 
 interface JewelToken:
     def transferAll(_to: address): nonpayable
@@ -50,14 +51,15 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
 
 
     feeBps: uint256 = PawnShop(self.pawn_shop).getFeeTier(utxoValue)
-    feeToPay: uint256 = utxoValue + feeBps / 10_000
+    feeToPay: uint256 = utxoValue * feeBps / 10_000
 
     # This function will make the contract the redeemer
     # Therefore we should transfer token to this contract
     # And then transfer unlocked/locked jewel to user
 
-    feeInGmJewel: uint256 = feeToPay - _jewelAmount
-    ERC20(self.gmJewel).transferFrom(msg.sender, self, feeInGmJewel)
+    costInGmJewel: uint256 = utxoValue + feeToPay - _jewelAmount
+
+    ERC20(self.gmJewel).transferFrom(msg.sender, self, costInGmJewel)
     ERC20(self.jewel).transferFrom(msg.sender, self, _jewelAmount)
 
     ERC20(self.jewel).approve(self.pawn_shop, _jewelAmount)
