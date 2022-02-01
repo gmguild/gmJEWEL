@@ -2,10 +2,16 @@
 on:
   push:
     branches: [ dev, main ]
+    paths:
+      - contracts/**
+      - tests/**
   pull_request:
     branches: [ dev, main ]
+    paths:
+      - contracts/**
+      - tests/**
 
-name: Main workflow
+name: Contract tests
 
 env:
   # ETHERSCAN_TOKEN:
