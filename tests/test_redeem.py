@@ -10,11 +10,11 @@ from brownie.test import given, strategy
 import brownie
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_redeem_from_minted_utxo_combined(
     jewel_token, pawn_shop, gm_jewel, UTXO, bob, id, deployer
 ):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     whale = users[id]
 
     # create UTXO
@@ -61,11 +61,11 @@ def test_redeem_from_minted_utxo_combined(
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
     jewel_token, pawn_shop, gm_jewel, UTXO, bob, id, deployer, dfk_bank_account
 ):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     whale = users[id]
 
     # create UTXO
@@ -105,19 +105,18 @@ def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
     jewel_token.approve(pawn_shop, bal, {"from": whale})
     gm_jewel.approve(pawn_shop, bal, {"from": whale})
 
-    pawn_shop.redeemUTXOForFullCombinedValue(
-        created_utxo, bal // 100, {"from": whale})
+    pawn_shop.redeemUTXOForFullCombinedValue(created_utxo, bal // 100, {"from": whale})
     post_locked = jewel_token.lockOf(whale)
     post_unlocked = jewel_token.balanceOf(whale)
     assert post_locked == initial_locked + utxo_locked
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_redeem_from_minted_utxo_unlocked(
     jewel_token, pawn_shop, gm_jewel, UTXO, bob, id, deployer
 ):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     whale = users[id]
 
     # create UTXO
@@ -163,11 +162,11 @@ def test_redeem_from_minted_utxo_unlocked(
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_redeem_from_minted_utxo_unlocked_with_partial_jewel_payment(
     jewel_token, pawn_shop, gm_jewel, UTXO, bob, id, deployer, dfk_bank_account
 ):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     whale = users[id]
 
     # create UTXO
@@ -202,13 +201,13 @@ def test_redeem_from_minted_utxo_unlocked_with_partial_jewel_payment(
     initial_unlocked = jewel_token.balanceOf(whale)
     utxo_unlocked = jewel_token.balanceOf(created_utxo)
 
-    jewel_token.transfer(whale, utxo_unlocked // 100,
-                         {"from": dfk_bank_account})
+    jewel_token.transfer(whale, utxo_unlocked // 100, {"from": dfk_bank_account})
     jewel_token.approve(pawn_shop, utxo_unlocked, {"from": whale})
     gm_jewel.approve(pawn_shop, utxo_unlocked, {"from": whale})
 
     pawn_shop.redeemUTXOForUnlockedValue(
-        created_utxo, utxo_unlocked // 100, {"from": whale})
+        created_utxo, utxo_unlocked // 100, {"from": whale}
+    )
     post_locked = jewel_token.lockOf(whale)
     post_unlocked = jewel_token.balanceOf(whale)
 

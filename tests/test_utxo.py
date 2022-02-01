@@ -17,7 +17,7 @@ def test_cant_create_utxo_when_paused(pawn_shop, deployer):
     pawn_shop.pause({"from": deployer})
     assert pawn_shop.isPaused() == True
 
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     user = users[0]
     name = get_random_name()
 
@@ -42,7 +42,7 @@ def test_create_utxo_separately(pawn_shop, profiles, bob, UTXO):
     assert profiles.nameTaken(name)
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_send_to_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     name = get_random_name()
     _utxo = pawn_shop.createUTXOWithProfile(
@@ -50,7 +50,7 @@ def test_send_to_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     ).return_value
     utxo = UTXO.at(_utxo)
 
-    whale = users_with_locked_jewel()[id]
+    whale = users_with_locked_jewel[id]
     locked_bal = jewel_token.lockOf(whale)
     unlocked_bal = jewel_token.balanceOf(whale)
 
@@ -64,7 +64,7 @@ def test_send_to_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     assert utxo.nominalCombinedValue() == locked_bal + unlocked_bal
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     name = get_random_name()
     _utxo = pawn_shop.createUTXOWithProfile(
@@ -72,7 +72,7 @@ def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     ).return_value
     utxo = UTXO.at(_utxo)
 
-    whale = users_with_locked_jewel()[id]
+    whale = users_with_locked_jewel[id]
     whale_bal = jewel_token.balanceOf(whale)
     if whale_bal > anti_whale_transfer_value():
         return
@@ -92,7 +92,7 @@ def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     assert jewel_token.balanceOf(bob) == amount_to_transfer
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     name = get_random_name()
     _utxo = pawn_shop.createUTXOWithProfile(
@@ -100,7 +100,7 @@ def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, jewel_token, id):
     ).return_value
     utxo = UTXO.at(_utxo)
 
-    whale = users_with_locked_jewel()[id]
+    whale = users_with_locked_jewel[id]
 
     whale_bal = jewel_token.balanceOf(whale)
     if whale_bal > anti_whale_transfer_value():

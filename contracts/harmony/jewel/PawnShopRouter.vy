@@ -17,6 +17,8 @@ interface PawnShop:
     def forceRedeemUTXO(_utxo: address, _jewelAmount: uint256): nonpayable
     def isValidUTXO(_utxo: address) -> bool: view
     def getFeeTier(_amount: uint256) -> uint256: view
+    def mintedFromUTXO(_utxo: address) -> uint256: view
+    def redeemUTXOForFullCombinedValue(_utxo: address, _amount: uint256): nonpayable
 
 interface UTXO:
     def nominalCombinedValue() -> uint256: view
@@ -60,6 +62,10 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
 
     ERC20(self.jewel).approve(self.pawn_shop, _jewelAmount)
 
-    PawnShop(self.pawn_shop).forceRedeemUTXO(_utxo,_jewelAmount)
+    amountToMint: uint256 = utxoValue - PawnShop(self.pawn_shop).mintedFromUTXO(_utxo)
+    if amountToMint > 0:
+        PawnShop(self.pawn_shop).forceRedeemUTXO(_utxo,_jewelAmount)
+    else:
+        PawnShop(self.pawn_shop).redeemUTXOForFullCombinedValue(_utxo, _jewelAmount)
 
     JewelToken(self.jewel).transferAll(msg.sender)

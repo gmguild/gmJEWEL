@@ -68,6 +68,17 @@ def pawn_shop(deployer, utxo_template, gm_jewel, central_bank, PawnShop):
 
 
 @pytest.fixture(scope="module", autouse=True)
+def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_jewel):
+    contract = deployer.deploy(
+        PawnShopRouter,
+        pawn_shop,
+        gm_jewel,
+        jewel_address,
+    )
+    yield contract
+
+
+@pytest.fixture(scope="module", autouse=True)
 def central_bank(deployer, jewel_token, gm_jewel, CentralBank):
     contract = deployer.deploy(CentralBank, gm_jewel, jewel_token)
     gm_jewel.addMinter(contract.address, {"from": deployer})
@@ -91,8 +102,7 @@ def uniswap_pool1(deployer, gm_jewel, jewel_token):
     pool_addr = contract.getPair(gm_jewel, jewel_token)
     pool = interface.IUniswapV2Pair(pool_addr)
     jewel_token.transfer(
-        pool, 5_000_000 *
-        1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+        pool, 5_000_000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
     gm_jewel.mint(pool, 10_000_000 * 1e18, {"from": deployer})
     pool.mint(deployer, {"from": deployer})
@@ -106,8 +116,7 @@ def uniswap_pool2(deployer, gmg_token, jewel_token):
     pool_addr = contract.getPair(gmg_token, jewel_token)
     pool = interface.IUniswapV2Pair(pool_addr)
     jewel_token.transfer(
-        pool, 5_000_000 *
-        1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+        pool, 5_000_000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
     gmg_token.mint(pool, 10_000_000 * 1e18, {"from": deployer})
     pool.mint(deployer, {"from": deployer})
