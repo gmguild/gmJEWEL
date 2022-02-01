@@ -47,19 +47,20 @@ def main():
     print(
         f"Ready to commence buyback of {str(amount_to_buyback.to('ether'))} JEWEL to GMG")
 
-    min_amount_out = router.getAmountOut(xgmg_balance, pair.getReserves()[
-                                         0], pair.getReserves()[1]) // 1.01
+    min_amount_out = Wei(router.getAmountOut(amount_to_buyback, pair.getReserves()[
+        0], pair.getReserves()[1]) // 1.015)
+
     print("Estimated min amount out is " + str(min_amount_out.to("ether")))
     print("Estimated new ratio is " + str(calculate_ratio(min_amount_out)))
 
-    if input("Go ahead? (y/n)") != "y":
+    if input("Go ahead? (y/n) ") != "y":
         return
 
     print("Loading account...")
-    deployer = accounts.load("gmg-deployer")
+    keeper_account = accounts.load(input("Enter account name: "))
 
-    xgmg.swap([jewel, gmg], amount_to_buyback, min_amount_out,
-              pair.getReserves()[0], pair.getReserves()[1], {'from': deployer})
+    xgmg.swap([jewel, gmg], amount_to_buyback,
+              min_amount_out, {'from': keeper_account})
 
     post_buyback_ratio = calculate_ratio()
 
