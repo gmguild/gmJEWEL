@@ -23,14 +23,10 @@ interface PawnShop:
 interface UTXO:
     def nominalCombinedValue() -> uint256: view
 
-interface ERC20:
-    def transferFrom(_from : address, _to : address, _value : uint256) -> bool: nonpayable
-    def approve(_spender : address, _amount : uint256) -> bool: nonpayable
-    def allowance(_owner: address, _spender: address) -> uint256: view
-
 interface JewelToken:
     def transferAll(_to: address): nonpayable
 
+from vyper.interfaces import ERC20
 
 @external
 def __init__(_pawnshop: address, _gmJewel: address, _jewel: address):
@@ -71,3 +67,12 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
         PawnShop(self.pawn_shop).redeemUTXOForFullCombinedValue(_utxo, _jewelAmount)
 
     JewelToken(self.jewel).transferAll(msg.sender)
+
+
+@external
+@view
+def utxoValues(_utxo: address) -> uint256[3]:
+    utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue()
+    mintedAmount: uint256 = PawnShop(self.pawn_shop).mintedFromUTXO(_utxo)
+    amountToMint: uint256 = utxoValue - mintedAmount
+    return [amountToMint, utxoValue, mintedAmount]
