@@ -74,5 +74,6 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
 def utxoValues(_utxo: address) -> uint256[3]:
     utxoValue: uint256 = UTXO(_utxo).nominalCombinedValue()
     mintedAmount: uint256 = PawnShop(self.pawn_shop).mintedFromUTXO(_utxo)
-    amountToMint: uint256 = utxoValue - mintedAmount
-    return [amountToMint, utxoValue, mintedAmount]
+    feeBps: uint256 = PawnShop(self.pawn_shop).getFeeTier(utxoValue)
+    feeToPay: uint256 = utxoValue * feeBps / 10_000
+    return [feeToPay, utxoValue, mintedAmount]
