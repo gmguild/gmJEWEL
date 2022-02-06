@@ -34,6 +34,9 @@ def __init__(_pawnshop: address, _gmJewel: address, _jewel: address):
     self.gmJewel = _gmJewel
     self.jewel = _jewel
 
+event Console:
+    var: uint256
+
 @external
 def fullRedeem(_utxo: address, _jewelAmount: uint256):
     # User must approve this contract first with gmjewel
@@ -61,6 +64,7 @@ def fullRedeem(_utxo: address, _jewelAmount: uint256):
     ERC20(self.jewel).approve(self.pawn_shop, _jewelAmount)
 
     amountToMint: uint256 = utxoValue - PawnShop(self.pawn_shop).mintedFromUTXO(_utxo)
+    log Console(amountToMint)
     if amountToMint > 0:
         PawnShop(self.pawn_shop).forceRedeemUTXO(_utxo,_jewelAmount)
     else:
