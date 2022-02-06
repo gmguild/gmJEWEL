@@ -118,13 +118,7 @@ def test_full_redeem_via_force_redeem(
     utxo_val = created_utxo.nominalCombinedValue()
     minted_from = pawn_shop.mintedFromUTXO(created_utxo)
 
-    # Now add additional jewel to contract after minting
-    jewel_token.transfer(created_utxo.address, 100 * 1e18, {"from": dfk_bank_account})
-    utxo_val2 = created_utxo.nominalCombinedValue()
-
-    assert utxo_val2 > utxo_val
-
-    amount_to_mint = utxo_val2 - minted_from
+    amount_to_mint = utxo_val - minted_from
 
     if amount_to_mint == 0:
         return
@@ -132,6 +126,12 @@ def test_full_redeem_via_force_redeem(
     pawn_shop.mintFromUTXO(created_utxo, {"from": whale})
     bal = gm_jewel.balanceOf(whale)
     assert bal > 0
+
+    # Now add additional jewel to contract after minting
+    jewel_token.transfer(created_utxo.address, 100 * 1e18, {"from": dfk_bank_account})
+    utxo_val2 = created_utxo.nominalCombinedValue()
+
+    assert utxo_val2 > utxo_val
 
     # Whale has made a UTXO
 
@@ -144,7 +144,7 @@ def test_full_redeem_via_force_redeem(
     fee_in_jewel = pct_unlocked * total_fee / 100
     fee_in_gmjewel = total_fee - fee_in_jewel
     jewel_token.transfer(alice, fee_in_jewel, {"from": dfk_bank_account})
-    gm_jewel.mint(alice, fee_in_gmjewel, {"from": deployer})
+    gm_jewel.mint(alice, 2 * fee_in_gmjewel, {"from": deployer})
 
     # Now we can redeem
 
