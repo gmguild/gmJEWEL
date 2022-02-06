@@ -63,7 +63,7 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
 
   const formattedAPY = useMemo(() => {
     if (!APY) return <span className="italic">..loading...</span>;
-    return APY.toFixed(1) + "%";
+    return APY.toLocaleString() + "%";
   }, [APY]);
 
   const loadingInformation = loadingLpToken;
