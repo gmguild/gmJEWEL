@@ -35,17 +35,17 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
 
   const formattedBalance = useMemo(() => {
     if (!balance) return "?.??";
-    return bigNumberToFloat(balance).toFixed(2);
+    return bigNumberToFloat(balance).toLocaleString();
   }, [balance]);
 
   const formattedStakedBalance = useMemo(() => {
     if (!stakedBalance) return "?.??";
-    return bigNumberToFloat(stakedBalance).toFixed(2);
+    return bigNumberToFloat(stakedBalance).toLocaleString();
   }, [stakedBalance]);
 
   const formattedPendingRewards = useMemo(() => {
     if (!pendingReward) return "?.??";
-    return bigNumberToFloat(pendingReward).toFixed(2);
+    return bigNumberToFloat(pendingReward).toLocaleString();
   }, [pendingReward]);
 
   const [approve, approving] = useERC20Approve(
