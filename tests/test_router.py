@@ -119,10 +119,12 @@ def test_full_redeem_via_force_redeem(
     minted_from = pawn_shop.mintedFromUTXO(created_utxo)
 
     # Now add additional jewel to contract after minting
-    jewel_token.transfer(created_utxo, 10 * 1e18, {"from": dfk_bank_account})
-    utxo_val = created_utxo.nominalCombinedValue()
+    jewel_token.transfer(created_utxo.address, 100 * 1e18, {"from": dfk_bank_account})
+    utxo_val2 = created_utxo.nominalCombinedValue()
 
-    amount_to_mint = utxo_val - minted_from
+    assert utxo_val2 > utxo_val
+
+    amount_to_mint = utxo_val2 - minted_from
 
     if amount_to_mint == 0:
         return
@@ -136,8 +138,8 @@ def test_full_redeem_via_force_redeem(
     gm_jewel.transfer(alice, bal, {"from": whale})
 
     # Alice now needs fees to redeem
-    fee_bips = pawn_shop.getFeeTier(utxo_val)
-    total_fee = utxo_val * fee_bips / 10_000
+    fee_bips = pawn_shop.getFeeTier(utxo_val2)
+    total_fee = utxo_val2 * fee_bips / 10_000
 
     fee_in_jewel = pct_unlocked * total_fee / 100
     fee_in_gmjewel = total_fee - fee_in_jewel
@@ -153,5 +155,4 @@ def test_full_redeem_via_force_redeem(
     pawn_shop_router.fullRedeem(created_utxo, fee_in_jewel, {"from": alice})
     alice_total_after = jewel_token.totalBalanceOf(alice)
 
-    assert alice_total_after + fee_in_jewel == alice_total_before + utxo_val
-    assert 1 == 2
+    assert alice_total_after + fee_in_jewel == alice_total_before + utxo_val2
