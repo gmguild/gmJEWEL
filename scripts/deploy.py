@@ -1,5 +1,5 @@
 from brownie import interface, accounts, chain, network, web3
-from brownie import UTXO, gmJEWEL, PawnShop, CentralBank
+from brownie import UTXO, gmJEWEL, PawnShop, CentralBank, PawnShopRouter
 from brownie import GMGToken, MasterJeweler, StakedGMG
 import json
 import os
@@ -130,6 +130,9 @@ def seed_gm_jewel_pool(deployer, gm_jewel, accounts, is_dev):
     return pool_addr
 
 
+def deploy_pawn_shop_router(deployer, pawn_shop, gm_jewel, jewel):
+    return deployer.deploy(PawnShopRouter, pawn_shop, gm_jewel, jewel)
+
 def main():
     deployer = get_deployer()
     net = network.show_active()
@@ -160,6 +163,8 @@ def main():
 
     GMG_token.transferOwnership(master_jeweler, {"from": deployer})
 
+    pawn_shop_router = deploy_pawn_shop_router(deployer, pawn_shop, gm_jewel, jewel_address)
+
     with open(
         "ui/deployment.json" if is_dev else "ui/deployment-prod.json", "w"
     ) as outfile:
@@ -175,6 +180,7 @@ def main():
                 "deploymentBlock": blocknumber,
                 "JGMGLPToken": gmg_pair,
                 "JgmJLPToken": gm_jewel_pair,
+                "PawnShopRouter": pawn_shop_router.address
             },
             outfile,
         )

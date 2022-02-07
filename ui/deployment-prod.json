@@ -12,5 +12,6 @@
   "JewelToken": "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F",
   "Profiles": "0xabD4741948374b1f5DD5Dd7599AC1f85A34cAcDD",
   "UniswapRouter": "0x24ad62502d1C652Cc7684081169D04896aC20f30",
-  "UniswapFactory": "0x9014b937069918bd319f80e8b3bb4a2cf6faa5f7"
+  "UniswapFactory": "0x9014b937069918bd319f80e8b3bb4a2cf6faa5f7",
+  "PawnShopRouter": "0x6D8D6fcb789B599556263C1dC754b0723d62f6e7"
 }
