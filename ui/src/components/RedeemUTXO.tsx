@@ -43,72 +43,84 @@ export function RedeemUTXO() {
     jewelAmount ?? BigNumber.from(0)
   );
 
-  const formattedJewelBalance = useFormattedBigNumber(jewelBalance);
-  const formattedGmBalance = useFormattedBigNumber(gmBalance);
-  const formattedSelectedUTXOValue = useFormattedBigNumber(
-    selectedUTXO?.newVal
-  );
-
-  const { costToBuy, price, fee } = useMemo(() => {
-    if (!selectedUTXO) return {};
-    if (selectedUTXO.newVal == "") return {};
-    const price = bigNumberToFloat(BigNumber.from(selectedUTXO.newVal));
-    // todo: don't hardcode fee tiers
-    const fee = getFees(price);
-    const costToBuy = ethers.utils.parseEther((price * (1 + fee)).toString());
-    return { costToBuy, price, fee };
-  }, [selectedUTXO]);
-
   const [{ feeToPay, utxoValue, mintedAmount }] = useUTXOValues(
     selectedUTXO?.utxoAddress ?? "0x"
   );
 
-  const { formattedCostToBuy, formattedJewelCost, formattedGmJewelCost } =
-    useMemo(() => {
-      if (!costToBuy?._isBigNumber) return {};
-      if (!gmBalance?._isBigNumber) return {};
-      if (!jewelAmount?._isBigNumber) return {};
-      if (!jewelBalance?._isBigNumber) return {};
+  const formattedJewelBalance = useFormattedBigNumber(jewelBalance);
+  const formattedGmBalance = useFormattedBigNumber(gmBalance);
+  const formattedSelectedUTXOValue = useFormattedBigNumber(utxoValue);
 
-      const totalCostColour = costToBuy.lte(gmBalance.add(jewelBalance))
-        ? "text-green-500"
-        : "text-red-500";
-      const jewelCostColour = jewelAmount.lte(jewelBalance)
-        ? "text-green-500"
-        : "text-red-500";
-      const gmJewelCostColour = costToBuy.sub(jewelAmount).lte(gmBalance)
-        ? "text-green-500"
-        : "text-red-500";
+  const { costToBuy, price, fee } = useMemo(() => {
+    if (!utxoValue?._isBigNumber) return {};
+    if (!feeToPay?._isBigNumber) return {};
+    const price = bigNumberToFloat(utxoValue);
+    const fee = bigNumberToFloat(feeToPay);
+    const costToBuy = utxoValue.add(feeToPay);
+    return { costToBuy, price, fee };
+  }, [utxoValue, feeToPay]);
 
-      return {
-        formattedCostToBuy: (
-          <span className={classNames(totalCostColour)}>
-            {bigNumberToFloat(costToBuy).toFixed(3)}
+  const {
+    formattedCostToBuy,
+    formattedJewelCost,
+    formattedGmJewelCost,
+    formattedMintWarning,
+  } = useMemo(() => {
+    if (!costToBuy?._isBigNumber) return {};
+    if (!gmBalance?._isBigNumber) return {};
+    if (!jewelAmount?._isBigNumber) return {};
+    if (!jewelBalance?._isBigNumber) return {};
+    if (!utxoValue?._isBigNumber) return {};
+    if (!mintedAmount?._isBigNumber) return {};
+
+    const displayWarning = !utxoValue.eq(mintedAmount);
+
+    const totalCostColour = costToBuy.lte(gmBalance.add(jewelBalance))
+      ? "text-green-500"
+      : "text-red-500";
+    const jewelCostColour = jewelAmount.lte(jewelBalance)
+      ? "text-green-500"
+      : "text-red-500";
+    const gmJewelCostColour = costToBuy.sub(jewelAmount).lte(gmBalance)
+      ? "text-green-500"
+      : "text-red-500";
+
+    return {
+      formattedCostToBuy: (
+        <span className={classNames(totalCostColour)}>
+          {bigNumberToFloat(costToBuy).toFixed(3)}
+        </span>
+      ),
+      formattedJewelCost: (
+        <span className={classNames(jewelCostColour)}>
+          {bigNumberToFloat(jewelAmount).toFixed(3)}
+        </span>
+      ),
+      formattedGmJewelCost: (
+        <span className={classNames(gmJewelCostColour)}>
+          {bigNumberToFloat(costToBuy.sub(jewelAmount)).toFixed(3)}
+        </span>
+      ),
+      formattedMintWarning: displayWarning && (
+        <p className="mb-4">
+          <span>
+            Attention! This stash actually contains{" "}
+            {bigNumberToFloat(utxoValue).toFixed(3)} JEWEL
           </span>
-        ),
-        formattedJewelCost: (
-          <span className={classNames(jewelCostColour)}>
-            {bigNumberToFloat(jewelAmount).toFixed(3)}
-          </span>
-        ),
-        formattedGmJewelCost: (
-          <span className={classNames(gmJewelCostColour)}>
-            {bigNumberToFloat(costToBuy.sub(jewelAmount)).toFixed(3)}
-          </span>
-        ),
-      };
-    }, [costToBuy, price, fee, jewelAmount, gmBalance]);
+        </p>
+      ),
+    };
+  }, [costToBuy, price, jewelAmount, gmBalance, utxoValue, mintedAmount]);
 
   useEffect(() => {
     if (price) {
-      const feeAmount = ethers.utils.parseEther(
-        (price * (fee || 0)).toFixed(18)
-      );
-      setSelectedJewelAmount(feeAmount);
+      if (feeToPay) {
+        setSelectedJewelAmount(feeToPay);
+      }
     } else {
       setSelectedJewelAmount(null);
     }
-  }, [price, fee]);
+  }, [price, feeToPay]);
 
   const loadingInformation =
     loadingAllUTXOs ||
@@ -188,6 +200,7 @@ export function RedeemUTXO() {
                     {shortenAddress(selectedUTXO.utxoAddress)}
                   </a>
                 </p>
+                {formattedMintWarning}
 
                 <p className="flex flex-row mb-2">
                   <span className="text-gray-500">Value</span>{" "}
