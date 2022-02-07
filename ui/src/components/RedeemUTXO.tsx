@@ -7,11 +7,7 @@ import { useGetAllUTXOs } from "../hooks/utxo/useGetAllUTXOs";
 import { useRedeemFromUTXO } from "../hooks/utxo/useRedeemFromUTXO";
 import { JewelStash } from "./JewelStash";
 import { classNames } from "../utils/classNames";
-import {
-  bigNumberMin,
-  bigNumberToFloat,
-  shortenAddress,
-} from "../utils/conversion";
+import { bigNumberToFloat, shortenAddress } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
 import { getFees } from "../utils/fees";
@@ -19,6 +15,7 @@ import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { addresses } from "../utils/env";
 import { useERC20 } from "../hooks/token/useERC20";
+import { useUTXOValues } from "../hooks/utxo/useUTXOValue";
 
 export function RedeemUTXO() {
   const [advancedSectionOpen, setAdvancedSectionOpen] = useState(false);
@@ -61,6 +58,10 @@ export function RedeemUTXO() {
     const costToBuy = ethers.utils.parseEther((price * (1 + fee)).toString());
     return { costToBuy, price, fee };
   }, [selectedUTXO]);
+
+  const [{ feeToPay, utxoValue, mintedAmount }] = useUTXOValues(
+    selectedUTXO?.utxoAddress ?? "0x"
+  );
 
   const { formattedCostToBuy, formattedJewelCost, formattedGmJewelCost } =
     useMemo(() => {

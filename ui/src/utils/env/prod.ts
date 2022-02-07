@@ -9,6 +9,7 @@ import ERC20 from "../../abi/ERC20.json";
 import xGMG from "../../../../prod-deployment/contracts/StakedGMG.json";
 import Addresses from "../../../deployment-prod.json";
 import UniswapV2Pair from "../../abi/UniswapV2Pair.json";
+import PawnShopRouter from "../../../../prod-deployment/contracts/PawnShopRouter.json";
 
 export const abis = {
   PawnShop: PawnShop.abi,
@@ -21,6 +22,7 @@ export const abis = {
   ERC20: ERC20,
   xGMG: xGMG.abi,
   UniswapV2Pair: UniswapV2Pair,
+  PawnShopRouter: PawnShopRouter.abi,
 };
 
 export const addresses = {
@@ -32,4 +34,5 @@ export const addresses = {
   JGMGLPToken: Addresses["JGMGLPToken"],
   JgmJLPToken: Addresses["JgmJLPToken"],
   xGMG: Addresses["StakedGMG"],
+  PawnShopRouter: Addresses["PawnShopRouter"],
 };
