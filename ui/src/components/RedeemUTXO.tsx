@@ -10,7 +10,6 @@ import { classNames } from "../utils/classNames";
 import { bigNumberToFloat, shortenAddress } from "../utils/conversion";
 import { Button } from "./Button";
 import { ethers } from "@usedapp/core/node_modules/ethers";
-import { getFees } from "../utils/fees";
 import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";
 import { addresses } from "../utils/env";
@@ -25,13 +24,18 @@ export function RedeemUTXO() {
     useJewelBalance();
   const [{ balance: gmBalance }, loadingGmJewelBalance] = useGmJewelBalance();
 
-  const [{ allowance: jewelAllowanceAtPawnShop }, loadingJewelToken] = useERC20(
+  const [{ allowance: jewelAllowanceAtPawnShopRouter }, loadingJewelToken] =
+    useERC20(addresses.JewelToken, addresses.PawnShopRouter);
+  const [approveJewelAtPawnShopRouter, approvingJewel] = useERC20Approve(
     addresses.JewelToken,
-    addresses.PawnShop
+    addresses.PawnShopRouter
   );
-  const [approveJewelAtPawnShop, approvingJewel] = useERC20Approve(
-    addresses.JewelToken,
-    addresses.PawnShop
+
+  const [{ allowance: gmJewelAllowanceAtPawnShopRouter }, loadingGmJewelToken] =
+    useERC20(addresses.gmJEWEL, addresses.PawnShopRouter);
+  const [approveGmJewelAtPawnShopRouter, approvingGmJewel] = useERC20Approve(
+    addresses.gmJEWEL,
+    addresses.PawnShopRouter
   );
 
   const [selectedUTXO, setSelectedUTXO] = React.useState<FullUTXO | null>(null);
@@ -43,9 +47,8 @@ export function RedeemUTXO() {
     jewelAmount ?? BigNumber.from(0)
   );
 
-  const [{ feeToPay, utxoValue, mintedAmount }] = useUTXOValues(
-    selectedUTXO?.utxoAddress ?? "0x"
-  );
+  const [{ feeToPay, utxoValue, mintedAmount }, loadingUtxoValues] =
+    useUTXOValues(selectedUTXO?.utxoAddress ?? "0x");
 
   const formattedJewelBalance = useFormattedBigNumber(jewelBalance);
   const formattedGmBalance = useFormattedBigNumber(gmBalance);
@@ -110,7 +113,14 @@ export function RedeemUTXO() {
         </p>
       ),
     };
-  }, [costToBuy, price, jewelAmount, gmBalance, utxoValue, mintedAmount]);
+  }, [
+    costToBuy,
+    jewelAmount,
+    jewelBalance,
+    gmBalance,
+    utxoValue,
+    mintedAmount,
+  ]);
 
   useEffect(() => {
     if (price) {
@@ -126,8 +136,11 @@ export function RedeemUTXO() {
     loadingAllUTXOs ||
     loadingGmJewelBalance ||
     loadingJewelBalance ||
-    loadingJewelToken;
-  const doing = loadingInformation || redeemingUTXO || approvingJewel;
+    loadingJewelToken ||
+    loadingUtxoValues ||
+    loadingGmJewelToken;
+  const doing =
+    loadingInformation || redeemingUTXO || approvingJewel || approvingGmJewel;
 
   const redeemStash = () =>
     redeemUTXO().then((success) => {
@@ -139,22 +152,30 @@ export function RedeemUTXO() {
 
   const pawnShopAllowanceTooLow =
     jewelAmount?._isBigNumber &&
-    jewelAllowanceAtPawnShop?._isBigNumber &&
-    jewelAllowanceAtPawnShop.lt(jewelAmount);
+    jewelAllowanceAtPawnShopRouter?._isBigNumber &&
+    jewelAllowanceAtPawnShopRouter.lt(jewelAmount);
+  const pawnShopGmAllowanceTooLow =
+    jewelAmount?._isBigNumber &&
+    costToBuy?._isBigNumber &&
+    gmJewelAllowanceAtPawnShopRouter?._isBigNumber &&
+    gmJewelAllowanceAtPawnShopRouter.lt(costToBuy.sub(jewelAmount));
+
+  const notEoughJewel =
+    jewelBalance?._isBigNumber &&
+    jewelAmount?._isBigNumber &&
+    jewelBalance.lt(jewelAmount);
+  const notEoughGmJewel =
+    gmBalance?._isBigNumber &&
+    costToBuy?._isBigNumber &&
+    jewelAmount?._isBigNumber &&
+    gmBalance.lt(costToBuy.sub(jewelAmount));
+
   const redeemDisabled =
     doing ||
-    (gmBalance?._isBigNumber &&
-      costToBuy?._isBigNumber &&
-      BigNumber.from(gmBalance.add(jewelBalance ?? BigNumber.from(0))).lt(
-        costToBuy
-      )) ||
-    (jewelAmount?._isBigNumber &&
-      jewelBalance?._isBigNumber &&
-      jewelBalance.lt(jewelAmount)) ||
-    (jewelAmount?._isBigNumber &&
-      gmBalance?._isBigNumber &&
-      costToBuy?._isBigNumber &&
-      gmBalance.lt(costToBuy.sub(jewelAmount)));
+    notEoughJewel ||
+    notEoughGmJewel ||
+    pawnShopAllowanceTooLow ||
+    pawnShopGmAllowanceTooLow;
 
   return (
     <>
@@ -200,7 +221,7 @@ export function RedeemUTXO() {
                     {shortenAddress(selectedUTXO.utxoAddress)}
                   </a>
                 </p>
-                {formattedMintWarning}
+                {!loadingUtxoValues && formattedMintWarning}
 
                 <p className="flex flex-row mb-2">
                   <span className="text-gray-500">Value</span>{" "}
@@ -275,15 +296,26 @@ export function RedeemUTXO() {
 
                 <div className="flex flex-row justify-center gap-2 flex-wrap">
                   {jewelBalance?.gt(0) && (
-                    <Button
-                      className="mx-auto"
-                      disabled={
-                        doing || redeemDisabled || !pawnShopAllowanceTooLow
-                      }
-                      onClick={() => approveJewelAtPawnShop()}
-                    >
-                      Approve JEWEL
-                    </Button>
+                    <>
+                      <Button
+                        className="mx-auto"
+                        disabled={
+                          doing || !pawnShopAllowanceTooLow || notEoughJewel
+                        }
+                        onClick={() => approveJewelAtPawnShopRouter()}
+                      >
+                        Approve JEWEL
+                      </Button>
+                      <Button
+                        className="mx-auto"
+                        disabled={
+                          doing || !pawnShopGmAllowanceTooLow || notEoughGmJewel
+                        }
+                        onClick={() => approveGmJewelAtPawnShopRouter()}
+                      >
+                        Approve gmJEWEL
+                      </Button>
+                    </>
                   )}
 
                   <Button
