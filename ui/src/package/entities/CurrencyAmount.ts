@@ -7,8 +7,6 @@ import { Rounding } from "../enums";
 import { Token } from "./Token";
 import _Big from "big.js";
 import invariant from "tiny-invariant";
-// eslint-disable-next-line
-// @ts-ignore
 import toFormat from "toformat";
 
 const Big = toFormat(_Big);
@@ -98,7 +96,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
   }
 
   public toSignificant(
-    significantDigits: number = 6,
+    significantDigits = 6,
     format?: object,
     rounding: Rounding = Rounding.ROUND_DOWN
   ): string {
