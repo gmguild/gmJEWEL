@@ -3,6 +3,7 @@ import JSBI from "jsbi";
 
 export * from "./numbers";
 export * from "./addresses";
+export * from "./tokens";
 
 export const INIT_CODE_HASH: { [chainId: number]: string } = {
   [ChainId.MAINNET]:
