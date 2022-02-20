@@ -1,6 +1,10 @@
 import React, { useCallback, useMemo } from "react";
 import { Field } from "../state/swap/actions";
-import { useSwapActionHandlers, useSwapState } from "../state/swap/hooks";
+import {
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState,
+} from "../state/swap/hooks";
 import { Button } from "./Button";
 import { SwapAsset } from "./SwapAsset";
 
@@ -47,7 +51,7 @@ export const TradeContainer = () => {
     [independentField]: typedValue,
     [dependentField]: showWrap
       ? parsedAmounts[independentField]?.toExact() ?? ""
-      : parsedAmounts[dependentField]?.toSignficant(6) ?? "",
+      : parsedAmounts[dependentField]?.toSignificant(6) ?? "",
   };
 
   return (
