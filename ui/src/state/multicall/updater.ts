@@ -2,11 +2,18 @@ import { Contract } from "ethers";
 import { useEffect, useMemo, useRef } from "react";
 import { useNetwork } from "wagmi";
 import { AppState } from "..";
-import { RetryableError } from "../../functions/retry";
+import { chunkArray } from "../../functions/array";
+import { retry, RetryableError } from "../../functions/retry";
 import { useMulticall2Contract } from "../../hooks/contract/useContract";
 import useDebounce from "../../hooks/util/useDebounce";
+import { useBlockNumber } from "../application/hooks";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { Call } from "./utils";
+import {
+  errorFetchingMulticallResults,
+  fetchingMulticallResults,
+  updateMulticallResults,
+} from "./actions";
+import { Call, parseCallKey } from "./utils";
 
 const DEFAULT_GAS_REQUIRED = 1_000_000;
 

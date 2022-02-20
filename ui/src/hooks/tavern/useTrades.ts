@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { BETTER_TRADE_LESS_HOPS_THRESHOLD } from "../../constants";
+import { isTradeBetter } from "../../functions/trade";
 import {
   Currency,
   CurrencyAmount,
@@ -7,6 +9,7 @@ import {
   TradeType,
 } from "../../package";
 import { useAllCurrencyCombinations } from "./useAllCurrencyCombinations";
+import { PairState, usePairs } from "./usePairs";
 
 const MAX_HOPS = 2;
 
