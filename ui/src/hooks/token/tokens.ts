@@ -1,7 +1,12 @@
-import { isAddress } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
 import { Currency, Token } from "../../package";
+import {
+  TokenAddressMap,
+  useCombinedActiveList,
+} from "../../state/lists/hooks";
+import { useUserAddedTokens } from "../../state/user/hooks";
+import { isAddress } from "../../utils/conversion";
 
 function useTokensFromMap(
   tokenMap: TokenAddressMap,
@@ -54,7 +59,7 @@ export function useToken(
   const chainId = data.chain?.id;
   const tokens = useAllTokens();
 
-  const address = isAddress(tokenAddress);
+  const address = isAddress(tokenAddress ?? "");
 
   const tokenContract = useTokenContract(address ? address : undefined, false);
   const tokenContractBytes32 = useBytes32TokenContract(

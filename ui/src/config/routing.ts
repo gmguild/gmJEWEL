@@ -22,3 +22,12 @@ export const ADDITIONAL_BASES: {
 export const CUSTOM_BASES: {
   [chainId: number]: { [tokenAddress: string]: Token[] };
 } = {};
+
+export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
+  ...WRAPPED_NATIVE_ONLY,
+  [ChainId.HARMONY]: [...WRAPPED_NATIVE_ONLY[ChainId.HARMONY], HARMONY.GMG],
+};
+
+export const PINNED_PAIRS: {
+  readonly [chainId in ChainId]?: [Token, Token][];
+} = {};
