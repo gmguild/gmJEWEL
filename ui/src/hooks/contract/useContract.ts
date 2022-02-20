@@ -6,7 +6,7 @@ import { useActiveWeb3React } from "../../services/web3/hooks/useActiveWeb3React
 import { AddressZero } from "@ethersproject/constants";
 import ERC20_ABI from "../../constants/abi/erc20.json";
 import { ERC20_BYTES32_ABI } from "../../constants/abi/erc20";
-import MULTICALL2_ABI from "../../constants/abi/multicall.json";
+import MULTICALL2_ABI from "../../constants/abi/multicall2.json";
 import { getContract } from "../../functions/contract";
 
 export function useContract(

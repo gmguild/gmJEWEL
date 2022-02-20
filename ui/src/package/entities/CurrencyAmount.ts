@@ -7,6 +7,8 @@ import { Rounding } from "../enums";
 import { Token } from "./Token";
 import _Big from "big.js";
 import invariant from "tiny-invariant";
+// eslint-disable-next-line
+// @ts-ignore
 import toFormat from "toformat";
 
 const Big = toFormat(_Big);

@@ -6,13 +6,8 @@ import { useAppSelector } from "../hooks";
 import { TokenList } from "./types";
 import { WrappedTokenInfo } from "./wrappedTokenInfo";
 
-const DEFAULT_TOKEN_LIST = {
-  name: "Greedy Merchants Guild",
-  timestamp: "",
-  version: { major: 1, minor: 1, patch: 0 },
-  tokens: [],
-};
-const UNSUPPORTED_TOKEN_LIST = {};
+import DEFAULT_TOKEN_LIST from "../../constants/token-lists/default.tokenlist.json";
+import UNSUPPORTED_TOKEN_LIST from "../../constants/token-lists/unsupported.tokenlist.json";
 
 export type TokenAddressMap = Readonly<{
   [chainId: number]: Readonly<{
