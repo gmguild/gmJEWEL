@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { filterTokens } from "../../functions/filtering";
 import {
   useAllTokens,
   useIsUserAddedToken,
+  useSearchInactiveTokenLists,
   useToken,
 } from "../../hooks/token/tokens";
 import useDebounce from "../../hooks/util/useDebounce";
@@ -10,6 +12,7 @@ import { useActiveWeb3React } from "../../services/web3";
 import { isAddress } from "../../utils/conversion";
 import CurrencyModalView from "./CurrencyModalView";
 import { useCurrencyModalContext } from "./CurrencySearchModal";
+import { useTokenComparator } from "./sorting";
 
 interface CurrencySearchProps {
   otherSelectedCurrency?: Currency | null;
@@ -43,7 +46,8 @@ export function CurrencySearch({
 
   if (currencyList) {
     allTokens = Object.keys(allTokens).reduce((obj, key) => {
-      // @ts-ignore TYPE NEEDS FIXING
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       if (currencyList.includes(key)) obj[key] = allTokens[key];
       return obj;
     }, {});
@@ -91,6 +95,8 @@ export function CurrencySearch({
   }, []);
 
   const handleEnter = useCallback(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //   @ts-ignore
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         const s = debouncedQuery.toLowerCase().trim();

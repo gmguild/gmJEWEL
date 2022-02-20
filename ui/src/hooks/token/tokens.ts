@@ -1,11 +1,16 @@
 import { arrayify, parseBytes32String } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
+import { createTokenFilterFunction } from "../../functions/filtering";
 import { Currency, NATIVE, Token, WNATIVE } from "../../package";
+import { useActiveWeb3React } from "../../services/web3";
 import {
   TokenAddressMap,
+  useAllLists,
   useCombinedActiveList,
+  useInactiveListUrls,
 } from "../../state/lists/hooks";
+import { WrappedTokenInfo } from "../../state/lists/wrappedTokenInfo";
 import { NEVER_RELOAD, useSingleCallResult } from "../../state/multicall/hooks";
 import { useUserAddedTokens } from "../../state/user/hooks";
 import { isAddress } from "../../utils/conversion";
@@ -13,6 +18,42 @@ import {
   useBytes32TokenContract,
   useTokenContract,
 } from "../contract/useContract";
+
+export function useSearchInactiveTokenLists(
+  search: string | undefined,
+  minResults = 10
+): WrappedTokenInfo[] {
+  const lists = useAllLists();
+  const inactiveUrls = useInactiveListUrls();
+  const { chainId } = useActiveWeb3React();
+  const activeTokens = useAllTokens();
+  return useMemo(() => {
+    if (!search || search.trim().length === 0) return [];
+    const tokenFilter = createTokenFilterFunction(search);
+    const result: WrappedTokenInfo[] = [];
+    const addressSet: { [address: string]: true } = {};
+    for (const url of inactiveUrls) {
+      const list = lists[url].current;
+      if (!list) continue;
+      for (const tokenInfo of list.tokens) {
+        if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore TYPE NEEDS FIXING
+          const wrapped = new WrappedTokenInfo(tokenInfo, list);
+          if (
+            !(wrapped.address in activeTokens) &&
+            !addressSet[wrapped.address]
+          ) {
+            addressSet[wrapped.address] = true;
+            result.push(wrapped);
+            if (result.length >= minResults) return result;
+          }
+        }
+      }
+    }
+    return result;
+  }, [activeTokens, chainId, inactiveUrls, lists, minResults, search]);
+}
 
 export function useIsUserAddedToken(
   currency: Currency | undefined | null

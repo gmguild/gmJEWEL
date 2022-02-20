@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, Token } from "../../package";
+import { useAllTokenBalances } from "../../state/wallet/hooks";
 
 // compare two token amounts with highest one coming first
 function balanceComparator(
