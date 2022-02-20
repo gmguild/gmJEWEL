@@ -62,6 +62,13 @@ export const TradeContainer = () => {
     [onCurrencySelection]
   );
 
+  const handleOutputSelect = useCallback(
+    (outputCurrency) => {
+      onCurrencySelection(Field.OUTPUT, outputCurrency);
+    },
+    [onCurrencySelection]
+  );
+
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
@@ -79,10 +86,12 @@ export const TradeContainer = () => {
         <SwapAsset
           value={formattedAmounts[Field.INPUT]}
           onChange={handleTypeInput}
+          onSelect={handleInputSelect}
         />
         <SwapAsset
           value={formattedAmounts[Field.OUTPUT]}
           onChange={handleTypeOutput}
+          onSelect={handleOutputSelect}
         />
         <Button>Swap</Button>
       </div>

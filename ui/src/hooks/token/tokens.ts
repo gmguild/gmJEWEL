@@ -14,6 +14,18 @@ import {
   useTokenContract,
 } from "../contract/useContract";
 
+export function useIsUserAddedToken(
+  currency: Currency | undefined | null
+): boolean {
+  const userAddedTokens = useUserAddedTokens();
+
+  if (!currency) {
+    return false;
+  }
+
+  return !!userAddedTokens.find((token) => currency.equals(token));
+}
+
 function useTokensFromMap(
   tokenMap: TokenAddressMap,
   includeUserAdded: boolean
