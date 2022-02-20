@@ -1,7 +1,7 @@
 import { DEFAULT_LIST_OF_LISTS } from "../config/token-lists";
 import { TokenList, Version } from "../state/lists/types";
 import Ajv from "ajv";
-import schema from "../config/token-lists/tokenlist.schema.json";
+import schema from "../constants/token-lists/tokenlist.schema.json";
 import { parseENSAddress } from "./ens";
 import { contenthashToUri, uriToHttp } from "./convert";
 
