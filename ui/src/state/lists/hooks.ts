@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { AppState } from "..";
 import { UNSUPPORTED_LIST_URLS } from "../../config/token-lists";
+import { sortByListPriority } from "../../functions/list";
 import { useAppSelector } from "../hooks";
 import { TokenList } from "./types";
 import { WrappedTokenInfo } from "./wrappedTokenInfo";
