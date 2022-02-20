@@ -13,12 +13,41 @@ import {
   TradeType,
 } from "../../package";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { Field, typeInput } from "./actions";
+import {
+  Field,
+  selectCurrency,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from "./actions";
 
 export function useSwapActionHandlers(): {
+  onCurrencySelection: (field: Field, currency: Currency) => void;
+  onSwitchTokens: () => void;
   onUserInput: (field: Field, typedValue: string) => void;
+  onChangeRecipient: (recipient?: string) => void;
 } {
   const dispatch = useAppDispatch();
+
+  const onCurrencySelection = useCallback(
+    (field: Field, currency: Currency) => {
+      dispatch(
+        selectCurrency({
+          field,
+          currencyId: currency.isToken
+            ? currency.address
+            : currency.isNative
+            ? "ETH"
+            : "",
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const onSwitchTokens = useCallback(() => {
+    dispatch(switchCurrencies());
+  }, [dispatch]);
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
@@ -27,7 +56,19 @@ export function useSwapActionHandlers(): {
     [dispatch]
   );
 
-  return { onUserInput };
+  const onChangeRecipient = useCallback(
+    (recipient?: string) => {
+      dispatch(setRecipient(recipient));
+    },
+    [dispatch]
+  );
+
+  return {
+    onSwitchTokens,
+    onChangeRecipient,
+    onCurrencySelection,
+    onUserInput,
+  };
 }
 
 export function useSwapState(): AppState["swap"] {
