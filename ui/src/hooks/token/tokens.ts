@@ -1,7 +1,7 @@
 import { arrayify, parseBytes32String } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
-import { Currency, Token, WNATIVE } from "../../package";
+import { Currency, NATIVE, Token, WNATIVE } from "../../package";
 import {
   TokenAddressMap,
   useCombinedActiveList,
@@ -173,8 +173,6 @@ export function useCurrency(
 
   const { native, wnative } = useMemo(
     () => ({
-      //eslint-disable-next-line
-      // @ts-ignore TYPE NEEDS FIXING
       native: chainId && chainId in NATIVE ? NATIVE[chainId] : undefined,
       wnative: chainId && chainId in WNATIVE ? WNATIVE[chainId] : undefined,
     }),
