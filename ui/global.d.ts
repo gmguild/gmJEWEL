@@ -17,3 +17,8 @@ declare module "GmgDeployment" {
   const value: Record<string, string>;
   export = value;
 }
+
+declare module "toformat" {
+  const value: any;
+  export = value;
+}

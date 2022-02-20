@@ -5,7 +5,7 @@ import { computePairAddress } from "../../package/functions";
 import { useMultipleContractSingleData } from "../../state/multicall/hooks";
 import IUniswapV2PairAbi from "../../constants/abi/UniswapPair.json";
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairAbi);
+const PAIR_INTERFACE = new Interface(IUniswapV2PairAbi.abi);
 
 export enum PairState {
   LOADING,

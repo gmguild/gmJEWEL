@@ -42,7 +42,6 @@
       "description": "The unique identifier of a tag",
       "minLength": 1,
       "maxLength": 10,
-      "pattern": "^[\\w]+$",
       "examples": ["compound", "stablecoin"]
     },
     "ExtensionIdentifier": {
@@ -50,7 +49,6 @@
       "description": "The name of a token extension property",
       "minLength": 1,
       "maxLength": 30,
-      "pattern": "^[\\w]+$",
       "examples": ["color", "is_fee_on_transfer", "aliases"]
     },
     "ExtensionValue": {
@@ -82,14 +80,12 @@
         "name": {
           "type": "string",
           "description": "The name of the tag",
-          "pattern": "^[ \\w]+$",
           "minLength": 1,
           "maxLength": 20
         },
         "description": {
           "type": "string",
           "description": "A user-friendly description of the tag",
-          "pattern": "^[ \\w\\.,]+$",
           "minLength": 1,
           "maxLength": 200
         }
@@ -116,7 +112,6 @@
         "address": {
           "type": "string",
           "description": "The checksummed address of the token on the specified chain ID",
-          "pattern": "^0x[a-fA-F0-9]{40}$",
           "examples": ["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"]
         },
         "decimals": {
@@ -131,13 +126,11 @@
           "description": "The name of the token",
           "minLength": 1,
           "maxLength": 40,
-          "pattern": "^[ \\w.'+\\-%/À-ÖØ-öø-ÿ\\:]+$",
           "examples": ["USD Coin"]
         },
         "symbol": {
           "type": "string",
           "description": "The symbol for the token; must be alphanumeric",
-          "pattern": "^[a-zA-Z0-9+\\-%/\\$]+$",
           "minLength": 1,
           "maxLength": 20,
           "examples": ["USDC"]
@@ -145,7 +138,6 @@
         "logoURI": {
           "type": "string",
           "description": "A URI to the token logo asset; if not set, interface will attempt to find a logo based on the token address; suggest SVG or PNG of size 64x64",
-          "format": "uri",
           "examples": ["ipfs://QmXfzKRvjZz3u5JRgC4v5mGVbm9ahrUiB4DgzHBsnWbTMM"]
         },
         "tags": {
@@ -186,12 +178,10 @@
       "description": "The name of the token list",
       "minLength": 1,
       "maxLength": 20,
-      "pattern": "^[\\w ]+$",
       "examples": ["My Token List"]
     },
     "timestamp": {
       "type": "string",
-      "format": "date-time",
       "description": "The timestamp of this list version; i.e. when this immutable version of the list was created"
     },
     "version": {
@@ -214,7 +204,6 @@
         "description": "A keyword to describe the contents of the list",
         "minLength": 1,
         "maxLength": 20,
-        "pattern": "^[\\w ]+$",
         "examples": ["compound", "lending", "personal tokens"]
       },
       "maxItems": 20,
@@ -242,7 +231,6 @@
     "logoURI": {
       "type": "string",
       "description": "A URI for the logo of the token list; prefer SVG or PNG of size 256x256",
-      "format": "uri",
       "examples": ["ipfs://QmXfzKRvjZz3u5JRgC4v5mGVbm9ahrUiB4DgzHBsnWbTMM"]
     }
   },

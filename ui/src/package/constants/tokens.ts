@@ -1,13 +1,6 @@
-import { WNATIVE_ADDRESS } from ".";
-import { ChainId, Token } from "..";
+import { Token } from "../entities";
+import { ChainId } from "../enums";
 import { TokenMap } from "../types/TokenMap";
+import { WNATIVE_ADDRESS } from "./addresses";
 
-export const WNATIVE: TokenMap = {
-  [ChainId.HARMONY]: new Token(
-    ChainId.HARMONY,
-    WNATIVE_ADDRESS[ChainId.HARMONY],
-    18,
-    "WONE",
-    "Wrapped ONE"
-  ),
-};
+export const WNATIVE: TokenMap = {};

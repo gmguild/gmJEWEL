@@ -6,5 +6,5 @@ export * from "./Pair";
 export * from "./Percent";
 export * from "./Price";
 export * from "./Route";
-export * from "./Token";
 export * from "./Trade";
+export * from "./Token";

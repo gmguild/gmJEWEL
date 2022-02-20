@@ -14,6 +14,10 @@ import Redeem from "../pages/Redeem";
 import Stake from "../pages/Stake";
 import store, { persistor } from "../state";
 import Trade from "../pages/Trade";
+import { Web3ReactProvider } from "@web3-react/core";
+import { Web3ReactManager } from "./Web3ReactManager";
+import Web3ProviderNetwork from "./Web3ProviderNetwork";
+import getLibrary from "../functions/getLibrary";
 
 const chains: Chain[] = [
   {
@@ -41,22 +45,28 @@ const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 export function App() {
   return (
     <Provider autoConnect connectors={connectors} provider={provider}>
-      <ReduxProvider store={store}>
-        <PersistGate persistor={persistor}>
-          <BrowserRouter>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/mint" element={<Mint />} />
-              <Route path="/redeem" element={<Redeem />} />
-              <Route path="/trade" element={<Trade />} />
-              <Route path="/stake" element={<Stake />} />
-              <Route path="/info" element={<Info />} />
-            </Routes>
-          </BrowserRouter>
-        </PersistGate>
-      </ReduxProvider>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3ProviderNetwork getLibrary={getLibrary}>
+          <Web3ReactManager>
+            <ReduxProvider store={store}>
+              <PersistGate persistor={persistor}>
+                <BrowserRouter>
+                  <Header />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/mint" element={<Mint />} />
+                    <Route path="/redeem" element={<Redeem />} />
+                    <Route path="/trade" element={<Trade />} />
+                    <Route path="/stake" element={<Stake />} />
+                    <Route path="/info" element={<Info />} />
+                  </Routes>
+                </BrowserRouter>
+              </PersistGate>
+            </ReduxProvider>
+          </Web3ReactManager>
+        </Web3ProviderNetwork>
+      </Web3ReactProvider>
     </Provider>
   );
 }
