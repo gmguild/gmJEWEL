@@ -1,12 +1,18 @@
+import { arrayify, parseBytes32String } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
-import { Currency, Token } from "../../package";
+import { Currency, Token, WNATIVE } from "../../package";
 import {
   TokenAddressMap,
   useCombinedActiveList,
 } from "../../state/lists/hooks";
+import { NEVER_RELOAD, useSingleCallResult } from "../../state/multicall/hooks";
 import { useUserAddedTokens } from "../../state/user/hooks";
 import { isAddress } from "../../utils/conversion";
+import {
+  useBytes32TokenContract,
+  useTokenContract,
+} from "../contract/useContract";
 
 function useTokensFromMap(
   tokenMap: TokenAddressMap,

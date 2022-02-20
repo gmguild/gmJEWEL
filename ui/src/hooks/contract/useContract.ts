@@ -4,7 +4,8 @@ import { useNetwork } from "wagmi";
 import { MULTICALL2_ADDRESS } from "../../package";
 import { useActiveWeb3React } from "../../services/web3/hooks/useActiveWeb3React";
 import { AddressZero } from "@ethersproject/constants";
-
+import ERC20_ABI from "../../constants/abi/erc20.json";
+import { ERC20_BYTES32_ABI } from "../../constants/abi/erc20";
 import MULTICALL2_ABI from "../../constants/abi/multicall.json";
 import { getContract } from "../../functions/contract";
 
@@ -38,4 +39,18 @@ export function useMulticall2Contract() {
     MULTICALL2_ABI,
     false
   );
+}
+
+export function useTokenContract(
+  tokenAddress?: string,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible);
+}
+
+export function useBytes32TokenContract(
+  tokenAddress?: string,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible);
 }
