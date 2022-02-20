@@ -1,5 +1,9 @@
 import { DEFAULT_LIST_OF_LISTS } from "../config/token-lists";
 import { TokenList, Version } from "../state/lists/types";
+import Ajv from "ajv";
+import schema from "../config/token-lists/tokenlist.schema.json";
+import { parseENSAddress } from "./ens";
+import { contenthashToUri, uriToHttp } from "./convert";
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema);
 
@@ -56,12 +60,14 @@ export async function getTokenList(
     if (!tokenListValidator(json)) {
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {
+          // eslint-disable-next-line
+          // @ts-ignore
           const add = `${error.dataPath} ${error.message ?? ""}`;
           return memo.length > 0 ? `${memo}; ${add}` : `${add}`;
         }, "") ?? "unknown error";
       throw new Error(`Token list failed validation: ${validationErrors}`);
     }
-    return json;
+    return json as TokenList;
   }
   throw new Error("Unrecognized list URL protocol.");
 }

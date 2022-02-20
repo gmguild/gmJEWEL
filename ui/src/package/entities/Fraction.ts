@@ -5,6 +5,8 @@ import JSBI from "jsbi";
 import { Rounding } from "../enums";
 import _Decimal from "decimal.js-light";
 import invariant from "tiny-invariant";
+// eslint-disable-next-line
+// @ts-ignore
 import toFormat from "toformat";
 
 const Decimal = toFormat(_Decimal);
