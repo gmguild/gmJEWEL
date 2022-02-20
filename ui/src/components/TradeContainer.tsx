@@ -9,13 +9,20 @@ import { Button } from "./Button";
 import { SwapAsset } from "./SwapAsset";
 
 export const TradeContainer = () => {
-  const { onUserInput } = useSwapActionHandlers();
+  const { onUserInput, onCurrencySelection } = useSwapActionHandlers();
   const { independentField, typedValue } = useSwapState();
   const { parsedAmount, v2Trade } = useDerivedSwapInfo();
 
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value);
+    },
+    [onUserInput]
+  );
+
+  const handleTypeOutput = useCallback(
+    (value: string) => {
+      onUserInput(Field.OUTPUT, value);
     },
     [onUserInput]
   );
@@ -47,6 +54,14 @@ export const TradeContainer = () => {
     [independentField, parsedAmount, showWrap, trade]
   );
 
+  const handleInputSelect = useCallback(
+    (inputCurrency) => {
+      // setApprovalSubmitted(false)
+      onCurrencySelection(Field.INPUT, inputCurrency);
+    },
+    [onCurrencySelection]
+  );
+
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
@@ -65,7 +80,10 @@ export const TradeContainer = () => {
           value={formattedAmounts[Field.INPUT]}
           onChange={handleTypeInput}
         />
-        <SwapAsset onChange={() => {}} />
+        <SwapAsset
+          value={formattedAmounts[Field.OUTPUT]}
+          onChange={handleTypeOutput}
+        />
         <Button>Swap</Button>
       </div>
     </div>
