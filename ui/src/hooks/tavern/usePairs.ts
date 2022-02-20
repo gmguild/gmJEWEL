@@ -1,6 +1,11 @@
+import { Interface } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { Currency, CurrencyAmount, FACTORY_ADDRESS, Pair } from "../../package";
 import { computePairAddress } from "../../package/functions";
+import { useMultipleContractSingleData } from "../../state/multicall/hooks";
+import IUniswapV2PairAbi from "../../constants/abi/UniswapPair.json";
+
+const PAIR_INTERFACE = new Interface(IUniswapV2PairAbi);
 
 export enum PairState {
   LOADING,
