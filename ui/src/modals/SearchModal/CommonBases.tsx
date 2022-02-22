@@ -1,7 +1,11 @@
 import React from "react";
 import { FC } from "react";
+import Button from "../../components/Button";
+import { CurrencyLogo } from "../../components/CurrencyLogo";
+import QuestionHelper from "../../components/QuestionHelper";
 import Typography from "../../components/Typography";
 import { COMMON_BASES } from "../../config/routing";
+import { currencyId } from "../../functions/currencyId";
 import { Currency } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { useCurrencyModalContext } from "./CurrencySearchModal";
