@@ -1,12 +1,6 @@
 import { ethers } from "ethers";
 import React, { useCallback, useState } from "react";
 import { useAccount, useProvider } from "wagmi";
-import { Button } from "../components/Button";
-import { classNames } from "../utils/classNames";
-import { addresses } from "../utils/env";
-import DFKJewel from "../assets/DFKJewel.png";
-import DFKLockedJewel from "../assets/DFKLockedJewel.png";
-import SmallGMG from "../assets/SmallGMG.png";
 import { TradeContainer } from "../components/TradeContainer";
 
 function useAddTokenToWallet(): [

@@ -5,7 +5,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from "../state/swap/hooks";
-import { Button } from "./Button";
+import { Button } from "./OldButton";
 import { SwapAsset } from "./SwapAsset";
 
 export const TradeContainer = () => {
