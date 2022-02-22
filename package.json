@@ -66,6 +66,7 @@
     "js-cookie": "^3.0.1",
     "jsbi": "^4.1.0",
     "lodash": "^4.17.21",
+    "lottie-react": "^2.2.1",
     "react": "^17.0.2",
     "react-device-detect": "^2.1.2",
     "react-dom": "^17.0.2",

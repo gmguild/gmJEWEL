@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { classNames } from "../../utils/classNames";
+import Typography from "../Typography";
 
 export interface ModalActionErrorProps {
   className?: string;

@@ -11,6 +11,10 @@ import { classNames } from "../../utils/classNames";
 import { useCurrencyModalContext } from "./CurrencySearchModal";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
+import { MouseoverTooltip } from "../../components/Tooltip";
+import Chip from "../../components/Chip";
+import { isTokenOnList } from "../../functions/validate";
+import Loader from "../../components/Loader";
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : "ETHER";

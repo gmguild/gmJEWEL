@@ -1,10 +1,15 @@
+import Lottie from "lottie-react";
 import React, { FC, ReactElement } from "react";
+import { getExplorerLink } from "../../functions/explorer";
 import { useActiveWeb3React } from "../../services/web3";
 import { useAppSelector } from "../../state/hooks";
+import { selectTxStatus } from "../../state/transactions/selectors";
 import Typography from "../Typography";
 import { ModalActionProps } from "./Action";
 import { ModalHeaderProps } from "./Header";
 import HeadlessUiModal from "./HeadlessUIModal";
+import loadingCircle from "../../animation/loading-circle.json";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/outline";
 
 export interface SubmittedModalContentProps extends ModalHeaderProps {
   // eslint-disable-next-line @typescript-eslint/ban-types
