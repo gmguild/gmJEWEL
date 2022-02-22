@@ -109,3 +109,6 @@ const SubmittedModalContent: FC<SubmittedModalContentProps> = ({
 };
 
 export default SubmittedModalContent;
+function shortenString(arg0: string, arg1: number): React.ReactNode {
+  throw new Error("Function not implemented.");
+}

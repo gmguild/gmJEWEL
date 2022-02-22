@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
 import { FunctionComponent, useMemo } from "react";
+import useHttpLocations from "../../hooks/useHttpLocations";
 import { ChainId, Currency, WNATIVE } from "../../package";
 import { WrappedTokenInfo } from "../../state/lists/wrappedTokenInfo";
-import Logo from "../Logo";
+import Logo, { UNKNOWN_ICON } from "../Logo";
 
 const BLOCKCHAIN = {
   [ChainId.MAINNET]: "ethereum",

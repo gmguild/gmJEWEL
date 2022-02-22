@@ -3,6 +3,7 @@
 /* eslint-disable react/display-name */
 import React, { FC, ReactNode } from "react";
 import { classNames } from "../../utils/classNames";
+import Dots from "../Dots";
 import Loader from "../Loader";
 
 export type ButtonColor =
