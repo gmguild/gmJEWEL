@@ -5,6 +5,7 @@ import swap from "./swap/reducer";
 import application from "./application/reducer";
 import lists from "./lists/reducer";
 import user from "./user/reducer";
+import transactions from "./transactions/reducer";
 
 const reducer = combineReducers({
   multicall,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   lists,
   application,
   user,
+  transactions,
 });
 
 export default reducer;
