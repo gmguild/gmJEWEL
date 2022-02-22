@@ -50,6 +50,7 @@
   "dependencies": {
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
+    "@popperjs/core": "^2.11.2",
     "@reduxjs/toolkit": "^1.7.2",
     "@usedapp/core": "^0.7.3",
     "@web3-react/walletconnect-connector": "^6.2.10",
@@ -66,6 +67,7 @@
     "react": "^17.0.2",
     "react-device-detect": "^2.1.2",
     "react-dom": "^17.0.2",
+    "react-popper": "^2.2.5",
     "react-redux": "^7.2.6",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",

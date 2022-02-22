@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { filterTokens } from "../../functions/filtering";
+import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
+import Typography from "../../components/Typography";
+import {
+  filterTokens,
+  useSortedTokensByQuery,
+} from "../../functions/filtering";
 import {
   useAllTokens,
   useIsUserAddedToken,
@@ -65,6 +70,7 @@ export function CurrencySearch({
     sortedTokens,
     debouncedQuery
   );
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore TYPE NEEDS FIXING
   const ether = useMemo(
     () => chainId && ![ChainId.CELO].includes(chainId) && NATIVE[chainId],

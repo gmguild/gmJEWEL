@@ -10,6 +10,8 @@ const WRAPPED_NATIVE_ONLY: ChainTokenList = {
   [ChainId.HARMONY]: [WNATIVE[ChainId.HARMONY]],
 };
 
+export const COMMON_BASES: ChainTokenList = {};
+
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
   [ChainId.HARMONY]: [...WRAPPED_NATIVE_ONLY[ChainId.HARMONY], HARMONY.GMG],
