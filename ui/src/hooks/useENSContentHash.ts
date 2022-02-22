@@ -1,6 +1,11 @@
 import { namehash } from "ethers/lib/utils";
 import { useMemo } from "react";
+import { isZero } from "../functions/validate";
 import { useSingleCallResult } from "../state/multicall/hooks";
+import {
+  useENSRegistrarContract,
+  useENSResolverContract,
+} from "./contract/useContract";
 
 export default function useENSContentHash(ensName?: string | null): {
   loading: boolean;

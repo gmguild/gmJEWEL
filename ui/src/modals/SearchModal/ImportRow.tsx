@@ -1,4 +1,6 @@
 import React, { FC } from "react";
+import Chip from "../../components/Chip";
+import { CurrencyLogo } from "../../components/CurrencyLogo";
 import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
 import Typography from "../../components/Typography";
 import { Token } from "../../package";
