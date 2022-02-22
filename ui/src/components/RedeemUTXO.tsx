@@ -8,7 +8,7 @@ import { useRedeemFromUTXO } from "../hooks/utxo/useRedeemFromUTXO";
 import { JewelStash } from "./JewelStash";
 import { classNames } from "../utils/classNames";
 import { bigNumberToFloat, shortenAddress } from "../utils/conversion";
-import { Button } from "./Button";
+import { Button } from "./OldButton";
 import { ethers } from "@usedapp/core/node_modules/ethers";
 import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { useERC20Approve } from "../hooks/token/useERC20Approve";

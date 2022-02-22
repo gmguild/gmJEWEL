@@ -11,7 +11,7 @@ import { useERC20 } from "../hooks/token/useERC20";
 import { useStakeGMG } from "../hooks/staking/useStakeGMG";
 import { useUnstakeGMG } from "../hooks/staking/useUnstakeGMG";
 import { TextFieldWithMax } from "./TextFieldWithMax";
-import { Button } from "./Button";
+import { Button } from "./OldButton";
 import { usexGMGToken } from "../hooks/staking/usexGMGToken";
 import { B_0 } from "../utils/constants";
 import { useStakingAPY } from "../hooks/staking/useStakingAPY";
@@ -172,7 +172,12 @@ export function StakedGMGUI() {
   const formattedBalance = useFormattedBigNumber(balance, " GMG");
   const formattedStakedBalance = useFormattedBigNumber(stakedBalance, " xGMG");
   const formattedRatio = useFormattedBigNumber(ratio);
-  const formattedStakedAfterRatioBalance = (stakedBalance && ratio) ? (bigNumberToFloat(stakedBalance) * bigNumberToFloat(ratio)).toLocaleString() : '0'
+  const formattedStakedAfterRatioBalance =
+    stakedBalance && ratio
+      ? (
+          bigNumberToFloat(stakedBalance) * bigNumberToFloat(ratio)
+        ).toLocaleString()
+      : "0";
   const [depositValue, setDepositValue] = React.useState<BigNumber>(
     BigNumber.from(0)
   );
@@ -204,7 +209,9 @@ export function StakedGMGUI() {
       <p className="text-gray-300/50 my-1">
         You have{" "}
         <span className="text-gray-100">
-          {loadingInformation ? "...loading..." : formattedStakedAfterRatioBalance}
+          {loadingInformation
+            ? "...loading..."
+            : formattedStakedAfterRatioBalance}
         </span>
         {""} GMG staked
       </p>
