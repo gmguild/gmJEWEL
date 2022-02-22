@@ -1,3 +1,7 @@
+import React from "react";
+import { FC } from "react";
+import Button, { ButtonProps } from "../Button";
+
 export interface ModalActionProps extends ButtonProps {
   main?: boolean;
 }
