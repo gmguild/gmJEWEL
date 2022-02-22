@@ -1,9 +1,11 @@
 import { Contract } from "ethers";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
-import { MULTICALL2_ADDRESS } from "../../package";
+import { ENS_REGISTRAR_ADDRESS, MULTICALL2_ADDRESS } from "../../package";
 import { useActiveWeb3React } from "../../services/web3/hooks/useActiveWeb3React";
 import { AddressZero } from "@ethersproject/constants";
+import ENS_ABI from "../../constants/abi/ens-registrar.json";
+import ENS_PUBLIC_RESOLVER_ABI from "../../constants/abi/ens-public-resolver.json";
 import ERC20_ABI from "../../constants/abi/erc20.json";
 import { ERC20_BYTES32_ABI } from "../../constants/abi/erc20";
 import MULTICALL2_ABI from "../../constants/abi/multicall2.json";
@@ -53,4 +55,22 @@ export function useBytes32TokenContract(
   withSignerIfPossible?: boolean
 ): Contract | null {
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible);
+}
+
+export function useENSRegistrarContract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
+  return useContract(
+    chainId ? ENS_REGISTRAR_ADDRESS[chainId] : undefined,
+    ENS_ABI,
+    withSignerIfPossible
+  );
+}
+
+export function useENSResolverContract(
+  address: string | undefined,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible);
 }

@@ -15,8 +15,11 @@ import useDebounce from "../../hooks/util/useDebounce";
 import { ChainId, Currency, NATIVE, Token } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { isAddress } from "../../utils/conversion";
+import CommonBases from "./CommonBases";
+import CurrencyList from "./CurrencyList";
 import CurrencyModalView from "./CurrencyModalView";
 import { useCurrencyModalContext } from "./CurrencySearchModal";
+import ImportRow from "./ImportRow";
 import { useTokenComparator } from "./sorting";
 
 interface CurrencySearchProps {
