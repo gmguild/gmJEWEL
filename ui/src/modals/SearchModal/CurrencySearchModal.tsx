@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, {
   createContext,
   FC,
@@ -5,9 +7,14 @@ import React, {
   useCallback,
   useContext,
   useState,
+  useMemo,
 } from "react";
+import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
+import usePrevious from "../../hooks/usePrevious";
 import { Currency, Token } from "../../package";
 import { TokenList } from "../../state/lists/types";
+import CurrencyModalView from "./CurrencyModalView";
+import { CurrencySearch } from "./CurrencySearch";
 
 interface CurrencyModalContext {
   view: CurrencyModalView;
@@ -151,14 +158,18 @@ interface CurrencySearchModalProps extends Omit<ComponentProps, "onDismiss"> {
 }
 
 const CurrencySearchModal: CurrencySearchModal<CurrencySearchModalProps> = ({
+  // eslint-disable-next-line react/prop-types
   trigger,
   ...props
 }) => {
   return (
     <HeadlessUiModal trigger={trigger}>
-      {({ setOpen }) => {
-        return <Component {...props} onDismiss={() => setOpen(false)} />;
-      }}
+      {
+        //@ts-ignore
+        ({ setOpen }) => {
+          return <Component {...props} onDismiss={() => setOpen(false)} />;
+        }
+      }
     </HeadlessUiModal>
   );
 };
