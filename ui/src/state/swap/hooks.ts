@@ -8,6 +8,7 @@ import {
   useV2TradeExactOut as useTradeExactOut,
 } from "../../hooks/tavern/useTrades";
 import { useCurrency } from "../../hooks/token/tokens";
+import useSwapSlippageTolerance from "../../hooks/useSwapSlippageTolerance";
 import {
   Trade as V2Trade,
   Currency,
@@ -190,7 +191,7 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  // @ts-ignore TYPE NEEDS FIXING
+  // @ts-ignore
   const allowedSlippage = useSwapSlippageTolerance(v2Trade);
 
   // compare input balance to max input based on version

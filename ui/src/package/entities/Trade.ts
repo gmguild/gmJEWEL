@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ONE, ZERO } from "../constants";
 
 import { Currency } from "./Currency";
@@ -8,7 +9,7 @@ import { Percent } from "./Percent";
 import { Price } from "./Price";
 import { Route } from "./Route";
 import { Token } from "./Token";
-import { TradeType } from "../enums";
+import { TradeType } from "../enums/TradeType";
 import { computePriceImpact } from "../functions/computePriceImpact";
 import invariant from "tiny-invariant";
 import { sortedInsert } from "../functions/sortedInsert";
@@ -295,7 +296,6 @@ export class Trade<
         [amountOut] = pair.getOutputAmount(amountIn);
       } catch (error) {
         // input too low
-        // eslint-disable-next-line
         // @ts-ignore
         if (error.isInsufficientInputAmountError) {
           continue;
@@ -409,7 +409,6 @@ export class Trade<
         [amountIn] = pair.getInputAmount(amountOut);
       } catch (error) {
         // not enough liquidity in this pair
-        // eslint-disable-next-line
         // @ts-ignore
         if (error.isInsufficientReservesError) {
           continue;
