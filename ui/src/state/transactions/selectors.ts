@@ -1,5 +1,9 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "..";
+import {
+  selectWeb3Context,
+  Web3ReactContext,
+} from "../global/web3ContextSlice";
 import { TransactionState } from "./reducer";
 
 type TransactionStatus = "PENDING" | "SUCCESS" | "CANCELLED" | "FAILED";
