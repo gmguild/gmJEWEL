@@ -3,6 +3,7 @@ import { FC } from "react";
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
 import { CurrencyLogo } from "../../components/CurrencyLogo";
+import ExternalLink from "../../components/ExternalLink";
 import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
 import Typography from "../../components/Typography";
 import { getExplorerLink } from "../../functions/explorer";

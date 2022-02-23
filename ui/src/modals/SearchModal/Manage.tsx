@@ -5,6 +5,8 @@ import Typography from "../../components/Typography";
 import { classNames } from "../../utils/classNames";
 import CurrencyModalView from "./CurrencyModalView";
 import { useCurrencyModalContext } from "./CurrencySearchModal";
+import ManageLists from "./ManageLists";
+import ManageTokens from "./ManageTokens";
 
 const Manage: FC = () => {
   const { setView, onDismiss } = useCurrencyModalContext();
