@@ -8,8 +8,12 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
+import { Settings } from "react-feather";
+import CloseIcon from "../../components/CloseIcon";
+import ListLogo from "../../components/ListLogo";
 import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
 import Popover from "../../components/Popover";
+import Switch from "../../components/Switch";
 import Typography from "../../components/Typography";
 import { UNSUPPORTED_LIST_URLS } from "../../config/token-lists";
 import { uriToHttp } from "../../functions/convert";
