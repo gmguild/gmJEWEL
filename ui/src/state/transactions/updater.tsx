@@ -78,8 +78,6 @@ export default function Updater(): null {
     [chainId, library]
   );
 
-  const routeInfo = useRecoilValue(routingInfo);
-
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return;
 
@@ -162,7 +160,6 @@ export default function Updater(): null {
     dispatch,
     addPopup,
     getReceipt,
-    routeInfo,
   ]);
 
   return null;
