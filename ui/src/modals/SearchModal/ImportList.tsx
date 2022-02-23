@@ -1,6 +1,8 @@
 import React from "react";
 import { FC, useCallback, useState } from "react";
 import Button from "../../components/Button";
+import Checkbox from "../../components/Checkbox";
+import ListLogo from "../../components/ListLogo";
 import HeadlessUiModal from "../../components/Modal/HeadlessUIModal";
 import Typography from "../../components/Typography";
 import { listVersionLabel } from "../../functions/list";
