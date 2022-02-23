@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import React, { useCallback, useState } from "react";
 import { useAccount, useProvider } from "wagmi";
-import { TradeContainer } from "../components/TradeContainer";
+import TradePage from "./TradePage";
 
 function useAddTokenToWallet(): [
   (tokenAddress: string, symbol: string, image?: string) => Promise<void>,
@@ -55,7 +55,7 @@ function useAddTokenToWallet(): [
 export default function Trade() {
   return (
     <article className="font-lora prose lg:prose-xl mx-auto py-6 pb-32">
-      <TradeContainer />
+      <TradePage />
     </article>
   );
 }
