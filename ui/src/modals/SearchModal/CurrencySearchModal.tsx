@@ -15,6 +15,9 @@ import { Currency, Token } from "../../package";
 import { TokenList } from "../../state/lists/types";
 import CurrencyModalView from "./CurrencyModalView";
 import { CurrencySearch } from "./CurrencySearch";
+import ImportList from "./ImportList";
+import ImportToken from "./ImportToken";
+import Manage from "./Manage";
 
 interface CurrencyModalContext {
   view: CurrencyModalView;

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ChainId } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { useAppDispatch, useAppSelector } from "../hooks";
