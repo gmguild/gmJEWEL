@@ -8,6 +8,8 @@ import React, {
   useState,
 } from "react";
 import { tryParseAmount } from "../../functions/parse";
+import { warningSeverity } from "../../functions/prices";
+import { useUSDCValue } from "../../hooks/useUSDCPrice";
 import CurrencySearchModal from "../../modals/SearchModal/CurrencySearchModal";
 import { Currency, Percent, ZERO } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
@@ -16,6 +18,10 @@ import Button from "../Button";
 import { CurrencyLogo } from "../CurrencyLogo";
 import QuestionHelper from "../QuestionHelper";
 import Typography from "../Typography";
+import NumericalInput from "../../components/Input/Numeric";
+import { formatNumber } from "../../functions/format";
+import { useCurrencyBalance } from "../../state/wallet/hooks";
+import { maxAmountSpend } from "../../functions/currency";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 interface SwapAssetPanel {
@@ -204,11 +210,7 @@ const BalancePanel: FC<
   Pick<SwapAssetPanel, "disabled" | "currency" | "onChange" | "spendFromWallet">
 > = ({ disabled, currency, onChange, spendFromWallet }) => {
   const { account } = useActiveWeb3React();
-  const balance = useBentoOrWalletBalance(
-    account ? account : undefined,
-    currency,
-    spendFromWallet
-  );
+  const balance = useCurrencyBalance(account ? account : undefined, currency);
 
   const handleClick = useCallback(() => {
     if (disabled || !balance || !onChange) return;

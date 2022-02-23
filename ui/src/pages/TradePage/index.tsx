@@ -23,6 +23,91 @@ import {
 } from "../../state/swap/hooks";
 import { useUserSingleHopOnly } from "../../state/user/hooks";
 
+const TradePage = () => {
+  const { independentField, typedValue, recipient } = useSwapState();
+  const showWrap = false;
+  const {
+    v2Trade,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError,
+    allowedSlippage,
+    to,
+  } = useDerivedSwapInfo();
+
+  const trade = showWrap ? undefined : v2Trade;
+
+  const { onSwitchTokens, onCurrencySelection, onUserInput } =
+    useSwapActionHandlers();
+
+  const dependentField: Field =
+    independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT;
+
+  const parsedAmounts = useMemo(
+    () =>
+      showWrap
+        ? {
+            [Field.INPUT]: parsedAmount,
+            [Field.OUTPUT]: parsedAmount,
+          }
+        : {
+            [Field.INPUT]:
+              independentField === Field.INPUT
+                ? parsedAmount
+                : trade?.inputAmount,
+            [Field.OUTPUT]:
+              independentField === Field.OUTPUT
+                ? parsedAmount
+                : trade?.outputAmount,
+          },
+    [independentField, parsedAmount, showWrap, trade]
+  );
+
+  const formattedAmounts = {
+    [independentField]: typedValue,
+    [dependentField]: showWrap
+      ? parsedAmounts[independentField]?.toExact() ?? ""
+      : parsedAmounts[dependentField]?.toSignificant(6) ?? "",
+  };
+
+  const handleTypeInput = useCallback(
+    (value: string) => {
+      onUserInput(Field.INPUT, value);
+    },
+    [onUserInput]
+  );
+
+  const handleInputSelect = useCallback(
+    (inputCurrency) => {
+      onCurrencySelection(Field.INPUT, inputCurrency);
+    },
+    [onCurrencySelection]
+  );
+
+  return (
+    <SwapAssetPanel
+      spendFromWallet={true}
+      header={(props) => (
+        <SwapAssetPanel.Header
+          {...props}
+          label={
+            independentField === Field.OUTPUT && !showWrap
+              ? `Swap from (est.):`
+              : `Swap from:`
+          }
+        />
+      )}
+      currency={currencies[Field.INPUT]}
+      value={formattedAmounts[Field.INPUT]}
+      onChange={handleTypeInput}
+      onSelect={handleInputSelect}
+    />
+  );
+};
+
+export default TradePage;
+
+/*
 const Swap = () => {
   const loadedUrlParams = useDefaultsFromURLSearch();
   const { account } = useActiveWeb3React();
@@ -144,13 +229,12 @@ const Swap = () => {
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
-      ? /* @ts-ignore TYPE NEEDS FIXING */
+      ? 
         parsedAmounts[independentField]?.toExact() ?? ""
       : parsedAmounts[dependentField]?.toSignificant(6) ?? "",
   };
 
   const userHasSpecifiedInputOutput = Boolean(
-    /* @ts-ignore TYPE NEEDS FIXING */
     currencies[Field.INPUT] &&
       currencies[Field.OUTPUT] &&
       parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
@@ -199,7 +283,6 @@ const Swap = () => {
     allowedSlippage,
     to,
     signatureData,
-    /* @ts-ignore TYPE NEEDS FIXING */
     null
   );
 
@@ -564,3 +647,4 @@ const Swap = () => {
 };
 
 export default Swap;
+*/
