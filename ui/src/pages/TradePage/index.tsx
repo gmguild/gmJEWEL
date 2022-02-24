@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "../../components/Button";
 import HeaderNew from "../../components/Swap/HeaderNew";
 import SwapAssetPanel from "../../components/Swap/SwapAssetPanel";
+import SwapDetails from "../../components/Swap/SwapDetails";
 import Typography from "../../components/Typography";
 import confirmPriceImpactWithoutFee, {
   warningSeverity,
@@ -406,12 +407,12 @@ const TradePage = () => {
             <></> // <RecipientField recipient={recipient} action={setRecipient} />
           )}
           {Boolean(trade) && (
-            <></> // <SwapDetails
-            //   inputCurrency={currencies[Field.INPUT]}
-            //   outputCurrency={currencies[Field.OUTPUT]}
-            //   trade={trade}
-            //   recipient={recipient ?? undefined}
-            // />
+            <SwapDetails
+              inputCurrency={currencies[Field.INPUT]}
+              outputCurrency={currencies[Field.OUTPUT]}
+              trade={trade}
+              recipient={recipient ?? undefined}
+            />
           )}
 
           {trade && routeNotFound && userHasSpecifiedInputOutput && (
