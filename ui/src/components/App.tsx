@@ -18,6 +18,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "./Web3ReactManager";
 import Web3ProviderNetwork from "./Web3ProviderNetwork";
 import getLibrary from "../functions/getLibrary";
+import Updaters from "../state/updaters";
 
 const chains: Chain[] = [
   {
@@ -52,6 +53,7 @@ export function App() {
               <PersistGate persistor={persistor}>
                 <BrowserRouter>
                   <Header />
+                  <Updaters />
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
