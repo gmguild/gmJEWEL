@@ -42,7 +42,8 @@ export const INIT_CODE_HASH: { [chainId: number]: string } = {
   [ChainId.HECO_TESTNET]:
     "0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303",
   [ChainId.HARMONY]:
-    "0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303",
+    // DFK HASH
+    "0xf1c21a825f13eff153022ddea53156462dd79972b6f88adf06f79ca8b042c3c1",
   [ChainId.HARMONY_TESTNET]:
     "0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303",
   [ChainId.OKEX]:

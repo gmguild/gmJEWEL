@@ -41,7 +41,6 @@ export function usePairs(
                 tokenB,
               })
             : undefined;
-
         acc.push(address && !acc.includes(address) ? address : undefined);
         return acc;
       }, []),
