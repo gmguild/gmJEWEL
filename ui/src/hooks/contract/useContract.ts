@@ -4,6 +4,7 @@ import { useNetwork } from "wagmi";
 import {
   ENS_REGISTRAR_ADDRESS,
   MULTICALL2_ADDRESS,
+  ROUTER_ADDRESS,
   WNATIVE_ADDRESS,
 } from "../../package";
 import { useActiveWeb3React } from "../../services/web3/hooks/useActiveWeb3React";
@@ -15,6 +16,7 @@ import { ERC20_BYTES32_ABI } from "../../constants/abi/erc20";
 import MULTICALL2_ABI from "../../constants/abi/multicall2.json";
 import { getContract } from "../../functions/contract";
 import WETH9_ABI from "../../constants/abi/weth9.json";
+import ROUTER_ABI from "../../constants/abi/router.json";
 
 export function useContract(
   address: string | undefined,
@@ -89,4 +91,13 @@ export function useENSResolverContract(
   withSignerIfPossible?: boolean
 ): Contract | null {
   return useContract(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible);
+}
+
+export function useRouterContract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return useContract(ROUTER_ADDRESS[chainId], ROUTER_ABI, withSignerIfPossible);
 }

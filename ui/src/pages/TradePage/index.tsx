@@ -5,8 +5,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "../../components/Button";
 import SwapAssetPanel from "../../components/Swap/SwapAssetPanel";
 import Typography from "../../components/Typography";
+import confirmPriceImpactWithoutFee, {
+  warningSeverity,
+} from "../../functions/prices";
 import { computeFiatValuePriceImpact } from "../../functions/trade";
 import { useAllTokens, useCurrency } from "../../hooks/token/tokens";
+import { ApprovalState } from "../../hooks/useApproveCallback";
+import useENSAddress from "../../hooks/useENSAddress";
+import { useSwapCallback } from "../../hooks/useSwapCallback";
+import { useUSDCValue } from "../../hooks/useUSDCPrice";
+import useWrapCallback, { WrapType } from "../../hooks/useWrapCallback";
 import {
   Trade as V2Trade,
   Currency,
@@ -547,7 +555,7 @@ const TradePage = () => {
                 ? `Price Impact Too High`
                 : priceImpactSeverity > 2
                 ? `Swap Anyway`
-                : t`Swap`}
+                : `Swap`}
             </Button>
           )}
           {isExpertMode && swapErrorMessage ? (

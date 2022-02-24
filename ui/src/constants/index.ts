@@ -1,4 +1,4 @@
-import { JSBI, Percent } from "../package";
+import { ChainId, JSBI, Percent } from "../package";
 
 export const NetworkContextName = "NETWORK";
 export const ZERO_PERCENT = new Percent("0");
@@ -39,3 +39,10 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
   JSBI.BigInt(1500),
   BIPS_BASE
 ); // 15%
+
+export const EIP_1559_ACTIVATION_BLOCK: { [chainId in ChainId]?: number } = {
+  [ChainId.MAINNET]: 12965000,
+  [ChainId.ROPSTEN]: 10499401,
+  [ChainId.GÖRLI]: 5062605,
+  [ChainId.RINKEBY]: 8897988,
+};
