@@ -2,5 +2,33 @@
   "name": "Greedy Merchants Guild",
   "timestamp": "2022-02-20T13:24:22+00:00",
   "version": { "major": 1, "minor": 0, "patch": 0 },
-  "tokens": []
+  "tokens": [
+    {
+      "chainId": 1666600000,
+      "address": "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F",
+      "name": "JEWEL",
+      "decimals": 18,
+      "symbol": "JEWEL",
+      "logoURI": "https://raw.githubusercontent.com/gmguild/gmJEWEL/dev/ui/src/assets/DFKJewel.png",
+      "tags": ["gmg"]
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x3eC03857197159B68Ac60dfD765ede48F25a9F8B",
+      "name": "Greedy Merchant Jewel",
+      "decimals": 18,
+      "symbol": "gmJEWEL",
+      "logoURI": "https://raw.githubusercontent.com/gmguild/gmJEWEL/dev/ui/src/assets/DFKLockedJewel.png",
+      "tags": ["gmg"]
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x8d175DC448b1d3D0277AB87388a5362921eE1fEF",
+      "name": "Greedy Merchant Guild",
+      "decimals": 18,
+      "symbol": "GMG",
+      "logoURI": "https://raw.githubusercontent.com/gmguild/gmJEWEL/dev/ui/src/assets/SmallGMG.png",
+      "tags": ["gmg"]
+    }
+  ]
 }
