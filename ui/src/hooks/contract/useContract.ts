@@ -1,7 +1,11 @@
 import { Contract } from "ethers";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
-import { ENS_REGISTRAR_ADDRESS, MULTICALL2_ADDRESS } from "../../package";
+import {
+  ENS_REGISTRAR_ADDRESS,
+  MULTICALL2_ADDRESS,
+  WNATIVE_ADDRESS,
+} from "../../package";
 import { useActiveWeb3React } from "../../services/web3/hooks/useActiveWeb3React";
 import { AddressZero } from "@ethersproject/constants";
 import ENS_ABI from "../../constants/abi/ens-registrar.json";
@@ -10,6 +14,7 @@ import ERC20_ABI from "../../constants/abi/erc20.json";
 import { ERC20_BYTES32_ABI } from "../../constants/abi/erc20";
 import MULTICALL2_ABI from "../../constants/abi/multicall2.json";
 import { getContract } from "../../functions/contract";
+import WETH9_ABI from "../../constants/abi/weth9.json";
 
 export function useContract(
   address: string | undefined,
@@ -64,6 +69,17 @@ export function useENSRegistrarContract(
   return useContract(
     chainId ? ENS_REGISTRAR_ADDRESS[chainId] : undefined,
     ENS_ABI,
+    withSignerIfPossible
+  );
+}
+
+export function useWETH9Contract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
+  return useContract(
+    chainId ? WNATIVE_ADDRESS[chainId] : undefined,
+    WETH9_ABI,
     withSignerIfPossible
   );
 }

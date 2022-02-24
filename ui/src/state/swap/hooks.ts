@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useCallback } from "react";
+import { ParsedQs } from "qs";
+import { useCallback, useState, useEffect } from "react";
 import { AppState } from "..";
 import { tryParseAmount } from "../../functions/parse";
 import { isAddress } from "../../functions/validate";
@@ -8,6 +9,7 @@ import {
   useV2TradeExactOut as useTradeExactOut,
 } from "../../hooks/tavern/useTrades";
 import { useCurrency } from "../../hooks/token/tokens";
+import useParsedQueryString from "../../hooks/useParsedQueryString";
 import useSwapSlippageTolerance from "../../hooks/useSwapSlippageTolerance";
 import {
   Trade as V2Trade,
@@ -15,18 +17,23 @@ import {
   CurrencyAmount,
   TradeType,
   Percent,
+  ChainId,
+  SUSHI_ADDRESS,
+  WNATIVE_ADDRESS,
 } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { useUserSingleHopOnly } from "../user/hooks";
+import { useExpertModeManager, useUserSingleHopOnly } from "../user/hooks";
 import { useCurrencyBalances } from "../wallet/hooks";
 import {
   Field,
+  replaceSwapState,
   selectCurrency,
   setRecipient,
   switchCurrencies,
   typeInput,
 } from "./actions";
+import { SwapState } from "./reducer";
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void;
@@ -96,6 +103,16 @@ function involvesAddress(
       : false)
   );
 }
+
+// TODO: Swtich for ours...
+const BAD_RECIPIENT_ADDRESSES: {
+  [chainId: string]: { [address: string]: true };
+} = {
+  [ChainId.MAINNET]: {
+    "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac": true, // v2 factory
+    "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F": true, // v2 router 02
+  },
+};
 
 export function useDerivedSwapInfo(): {
   to?: string;
@@ -213,4 +230,111 @@ export function useDerivedSwapInfo(): {
     v2Trade: v2Trade ?? undefined,
     allowedSlippage,
   };
+}
+
+function parseCurrencyFromURLParameter(urlParam: any): string {
+  if (typeof urlParam === "string") {
+    const valid = isAddress(urlParam);
+    if (valid) return valid;
+    if (urlParam.toUpperCase() === "ETH") return "ETH";
+  }
+  return "";
+}
+
+function parseTokenAmountURLParameter(urlParam: any): string {
+  return typeof urlParam === "string" && !isNaN(parseFloat(urlParam))
+    ? urlParam
+    : "";
+}
+
+function parseIndependentFieldURLParameter(urlParam: any): Field {
+  return typeof urlParam === "string" && urlParam.toLowerCase() === "output"
+    ? Field.OUTPUT
+    : Field.INPUT;
+}
+const ENS_NAME_REGEX =
+  /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/;
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
+function validatedRecipient(recipient: any): string | undefined {
+  if (typeof recipient !== "string") return undefined;
+  const address = isAddress(recipient);
+  if (address) return address;
+  if (ENS_NAME_REGEX.test(recipient)) return recipient;
+  if (ADDRESS_REGEX.test(recipient)) return recipient;
+  return undefined;
+}
+
+export function queryParametersToSwapState(
+  parsedQs: ParsedQs,
+  chainId: ChainId = ChainId.MAINNET
+): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency);
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency);
+  const eth = chainId === ChainId.CELO ? WNATIVE_ADDRESS[chainId] : "ETH";
+  const sushi = SUSHI_ADDRESS[chainId];
+  if (inputCurrency === "" && outputCurrency === "") {
+    inputCurrency = eth;
+    outputCurrency = sushi;
+  } else if (inputCurrency === "") {
+    inputCurrency = outputCurrency === eth ? sushi : eth;
+  } else if (outputCurrency === "" || inputCurrency === outputCurrency) {
+    outputCurrency = inputCurrency === eth ? sushi : eth;
+  }
+
+  const recipient = validatedRecipient(parsedQs.recipient);
+
+  return {
+    [Field.INPUT]: {
+      currencyId: inputCurrency,
+    },
+    [Field.OUTPUT]: {
+      currencyId: outputCurrency,
+    },
+    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    recipient,
+  };
+}
+
+// updates the swap state to use the defaults for a given network
+export function useDefaultsFromURLSearch():
+  | {
+      inputCurrencyId: string | undefined;
+      outputCurrencyId: string | undefined;
+    }
+  | undefined {
+  const { chainId } = useActiveWeb3React();
+  const dispatch = useAppDispatch();
+  const parsedQs = useParsedQueryString();
+  const [expertMode] = useExpertModeManager();
+  const [result, setResult] = useState<
+    | {
+        inputCurrencyId: string | undefined;
+        outputCurrencyId: string | undefined;
+      }
+    | undefined
+  >();
+
+  useEffect(() => {
+    if (!chainId) return;
+    const parsed = queryParametersToSwapState(parsedQs, chainId);
+
+    dispatch(
+      replaceSwapState({
+        typedValue: parsed.typedValue,
+        field: parsed.independentField,
+        inputCurrencyId: parsed[Field.INPUT].currencyId,
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        recipient: expertMode ? parsed.recipient : undefined,
+      })
+    );
+
+    setResult({
+      inputCurrencyId: parsed[Field.INPUT].currencyId,
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, chainId]);
+
+  return result;
 }
