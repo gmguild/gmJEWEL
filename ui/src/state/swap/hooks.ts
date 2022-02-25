@@ -18,8 +18,8 @@ import {
   TradeType,
   Percent,
   ChainId,
-  SUSHI_ADDRESS,
   WNATIVE_ADDRESS,
+  GMG_ADDRESS,
 } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -271,14 +271,14 @@ export function queryParametersToSwapState(
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency);
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency);
   const eth = chainId === ChainId.CELO ? WNATIVE_ADDRESS[chainId] : "ETH";
-  const sushi = SUSHI_ADDRESS[chainId];
+  const GMG = GMG_ADDRESS[chainId];
   if (inputCurrency === "" && outputCurrency === "") {
     inputCurrency = eth;
-    outputCurrency = sushi;
+    outputCurrency = GMG;
   } else if (inputCurrency === "") {
-    inputCurrency = outputCurrency === eth ? sushi : eth;
+    inputCurrency = outputCurrency === eth ? GMG : eth;
   } else if (outputCurrency === "" || inputCurrency === outputCurrency) {
-    outputCurrency = inputCurrency === eth ? sushi : eth;
+    outputCurrency = inputCurrency === eth ? GMG : eth;
   }
 
   const recipient = validatedRecipient(parsedQs.recipient);
