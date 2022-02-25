@@ -19,6 +19,7 @@ import { Web3ReactManager } from "./Web3ReactManager";
 import Web3ProviderNetwork from "./Web3ProviderNetwork";
 import getLibrary from "../functions/getLibrary";
 import Updaters from "../state/updaters";
+import Portals from "./Portals";
 
 const chains: Chain[] = [
   {
@@ -63,6 +64,7 @@ export function App() {
                     <Route path="/stake" element={<Stake />} />
                     <Route path="/info" element={<Info />} />
                   </Routes>
+                  <Portals />
                 </BrowserRouter>
               </PersistGate>
             </ReduxProvider>

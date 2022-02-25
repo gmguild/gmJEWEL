@@ -3,6 +3,7 @@ import React from "react";
 import { FC } from "react";
 import { Currency } from "../../package";
 import NavLink from "../NavLink";
+import Settings from "../Settings";
 import Typography from "../Typography";
 
 const getQuery = (input?: Currency, output?: Currency) => {
@@ -48,6 +49,9 @@ const HeaderNew: FC<HeaderNewProps> = ({ inputCurrency, outputCurrency }) => {
             {`Pool`}
           </Typography>
         </NavLink>
+      </div>
+      <div className="flex gap-4">
+        <Settings className="!w-6 !h-6" />
       </div>
     </div>
   );
