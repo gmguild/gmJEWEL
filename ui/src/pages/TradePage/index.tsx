@@ -3,6 +3,7 @@ import { ArrowDownIcon } from "@heroicons/react/outline";
 import React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "../../components/Button";
+import ConfirmSwapModal from "../../components/Swap/ConfirmSwapModal";
 import HeaderNew from "../../components/Swap/HeaderNew";
 import SwapAssetPanel from "../../components/Swap/SwapAssetPanel";
 import SwapDetails from "../../components/Swap/SwapDetails";
@@ -324,25 +325,27 @@ const TradePage = () => {
 
   return (
     <>
-      {/* <ConfirmSwapModal
-        isOpen={showConfirm}
-        trade={trade}
-        originalTrade={tradeToConfirm}
-        onAcceptChanges={handleAcceptChanges}
-        attemptingTxn={attemptingTxn}
-        txHash={txHash}
-        // @ts-ignore TYPE NEEDS FIXING
-        recipient={recipient}
-        allowedSlippage={allowedSlippage}
-        onConfirm={handleSwap}
-        swapErrorMessage={swapErrorMessage}
-        onDismiss={handleConfirmDismiss}
-      />
+      {
+        <ConfirmSwapModal
+          isOpen={showConfirm}
+          trade={trade}
+          originalTrade={tradeToConfirm}
+          onAcceptChanges={handleAcceptChanges}
+          attemptingTxn={attemptingTxn}
+          txHash={txHash}
+          // @ts-ignore TYPE NEEDS FIXING
+          recipient={recipient}
+          allowedSlippage={allowedSlippage}
+          onConfirm={handleSwap}
+          swapErrorMessage={swapErrorMessage}
+          onDismiss={handleConfirmDismiss}
+        /> /*
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokens={importTokensNotInDefault}
         onConfirm={handleConfirmTokenWarning}
-      /> */}
+      /> */
+      }
 
       <SwapLayoutCard>
         <div className="px-2">
