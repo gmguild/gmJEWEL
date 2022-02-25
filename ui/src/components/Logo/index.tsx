@@ -35,7 +35,6 @@ const Logo: FC<LogoProps> = ({
         width={width}
         height={height}
         alt={alt}
-        layout="fixed"
         className={classNames("rounded-full", className)}
       />
     </div>

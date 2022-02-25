@@ -10,13 +10,7 @@ interface ImageProps {
 const Image: FC<ImageProps> = ({ src, width, height, ...rest }) => {
   return (
     <div>
-      <img
-        src={src}
-        width={width}
-        height={height}
-        placeholder="empty"
-        {...rest}
-      />
+      <img src={src} width={width} height={height} {...rest} />
     </div>
   );
 };
