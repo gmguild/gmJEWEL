@@ -8,6 +8,7 @@ import HeaderNew from "../../components/Swap/HeaderNew";
 import SwapAssetPanel from "../../components/Swap/SwapAssetPanel";
 import SwapDetails from "../../components/Swap/SwapDetails";
 import Typography from "../../components/Typography";
+import Web3Connect from "../../components/Web3Connect";
 import confirmPriceImpactWithoutFee, {
   warningSeverity,
 } from "../../functions/prices";
@@ -426,13 +427,13 @@ const TradePage = () => {
           )}
 
           {!account ? (
-            <></> // <Web3Connect
-          ) : //   color="blue"
-          //   variant="filled"
-          //   fullWidth
-          //   className="rounded-2xl md:rounded"
-          // />
-          showWrap ? (
+            <Web3Connect
+              color="blue"
+              variant="filled"
+              fullWidth
+              className="rounded-2xl md:rounded"
+            />
+          ) : showWrap ? (
             <Button
               fullWidth
               color="blue"
