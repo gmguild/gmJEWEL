@@ -25,6 +25,10 @@ export const SUSHI_ADDRESS: AddressMap = {
   [ChainId.FUSE]: "0x90708b20ccC1eb95a4FA7C8b18Fd2C22a0Ff9E78",
 };
 
+export const GMG_ADDRESS: AddressMap = {
+  [ChainId.HARMONY]: "0x8d175DC448b1d3D0277AB87388a5362921eE1fEF",
+};
+
 export const USDC_ADDRESS: AddressMap = {
   [ChainId.MAINNET]: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   [ChainId.ROPSTEN]: "0x0D9C8723B343A8368BebE0B5E89273fF8D712e3C",
