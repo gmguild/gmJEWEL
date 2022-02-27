@@ -8,8 +8,6 @@ const Popups: FC = () => {
   const activePopups = useActivePopups();
   const urlWarningActive = useURLWarningVisible();
 
-  console.log(activePopups);
-
   if (activePopups.length === 0) return <span />;
 
   return (
