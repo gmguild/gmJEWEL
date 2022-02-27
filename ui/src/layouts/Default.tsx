@@ -1,13 +1,15 @@
 import React from "react";
+import Popups from "../components/Popups";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="z-0 flex flex-col items-center w-full h-screen">
       {/* <Header />
       <Main>{children}</Main>
-      <Popups />
+      
       <Footer /> */}
       {children}
+      <Popups />
     </div>
   );
 };
