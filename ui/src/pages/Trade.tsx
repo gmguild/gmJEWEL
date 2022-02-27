@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import React, { useCallback, useState } from "react";
 import { useAccount, useProvider } from "wagmi";
 import Container from "../components/Container";
+import Layout from "../layouts/Default";
 import TradePage from "./TradePage";
 
 function useAddTokenToWallet(): [
@@ -55,11 +56,13 @@ function useAddTokenToWallet(): [
 
 export default function Trade() {
   return (
-    <Container
-      className="mx-auto font-lora py-4 md:py-8 lg:py-12"
-      maxWidth="2xl"
-    >
-      <TradePage />
-    </Container>
+    <Layout>
+      <Container
+        className="mx-auto font-lora py-4 md:py-8 lg:py-12"
+        maxWidth="2xl"
+      >
+        <TradePage />
+      </Container>
+    </Layout>
   );
 }
