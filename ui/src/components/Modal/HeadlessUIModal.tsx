@@ -178,7 +178,7 @@ const HeadlessUiModalControlled: FC<ControlledModalProps> = ({
           >
             <div
               className={classNames(
-                transparent ? "" : "bg-taupe-900 border border-taupe-800",
+                transparent ? "" : "bg-taupe-400 border border-taupe-300",
                 isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : "",
                 isDesktop
                   ? `w-full`

@@ -86,7 +86,7 @@ const CurrencyRow: FC<CurrencyRow> = ({ currency, style }) => {
       id={`token-item-${key}`}
       className={classNames(
         currency === selectedCurrency ? "opacity-20 pointer-events-none" : "",
-        `flex items-center w-full hover:bg-taupe-800/40 px-4 py-2 token-${currency?.symbol}`
+        `flex items-center w-full hover:bg-taupe-300/40 px-4 py-2 token-${currency?.symbol}`
       )}
       style={style}
       {...(currency !== selectedCurrency && {
@@ -135,7 +135,7 @@ function isBreakLine(x: unknown): x is BreakLine {
 
 const BreakLineComponent: FC<{ style: CSSProperties }> = ({ style }) => {
   return (
-    <div className="flex w-full px-4 border-t border-taupe-800" style={style}>
+    <div className="flex w-full px-4 border-t border-taupe-300" style={style}>
       <div className="flex flex-col gap-0.5 justify-center">
         <Typography variant="xs" weight={700}>
           {`Expanded results from inactive token lists`}
@@ -181,7 +181,7 @@ const CurrencyList: FC<CurrencyList> = ({ currencies, otherListTokens }) => {
   return (
     <div
       id="all-currencies-list"
-      className="flex flex-col flex-1 flex-grow min-h-[50vh] lg:min-h-fit overflow-hidden h-full divide-y divide-taupe-800"
+      className="flex flex-col flex-1 flex-grow min-h-[50vh] lg:min-h-fit overflow-hidden h-full divide-y divide-taupe-300"
     >
       <AutoSizer>
         {

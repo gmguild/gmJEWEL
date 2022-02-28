@@ -66,7 +66,7 @@ export default function Popover({
             ReactDOM.createPortal(
               <HeadlessuiPopover.Panel
                 static
-                className="z-1000 shadow-xl shadow-taupe-1000/80 rounded overflow-hidden"
+                className="z-1000 shadow-xl shadow-taupe-500/80 rounded overflow-hidden"
                 ref={setPopperElement as any}
                 style={styles.popper}
                 {...attributes.popper}

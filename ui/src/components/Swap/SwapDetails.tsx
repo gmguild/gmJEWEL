@@ -46,8 +46,8 @@ const SwapDetails: FC<SwapDetails> = ({
       {({ open }) => (
         <div
           className={classNames(
-            open ? "bg-taupe-900" : "",
-            "shadow-inner flex flex-col gap-2 py-2 rounded px-2 border border-taupe-700 transition hover:border-taupe-700",
+            open ? "bg-taupe-400" : "",
+            "shadow-inner flex flex-col gap-2 py-2 rounded px-2 border border-taupe-200 transition hover:border-taupe-200",
             className
           )}
         >

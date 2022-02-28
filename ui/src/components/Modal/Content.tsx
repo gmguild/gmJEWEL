@@ -23,7 +23,7 @@ export const BorderedModalContent: FC<ModalContentBorderedProps> = ({
       {...rest}
       className={classNames(
         className,
-        "border border-taupe-800/60 rounded p-4"
+        "border border-taupe-300/60 rounded p-4"
       )}
     >
       {children}

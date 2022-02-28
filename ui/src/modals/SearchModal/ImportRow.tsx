@@ -19,7 +19,7 @@ const ImportRow: FC<ImportRow> = ({ token, onClick }) => {
     >
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
-          <div className="rounded-full overflow-hidden border border-taupe-700">
+          <div className="rounded-full overflow-hidden border border-taupe-200">
             <CurrencyLogo currency={token} size={48} />
           </div>
           <div className="flex flex-col">

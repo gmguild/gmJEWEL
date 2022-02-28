@@ -61,7 +61,7 @@ export const TransactionSubmittedContent: FC<
         onClose={onDismiss}
       />
       <HeadlessUiModal.BorderedContent className="flex flex-col items-center justify-center gap-1">
-        <div className="w-[102px] h-[102px] bg-taupe-900 rounded-full">
+        <div className="w-[102px] h-[102px] bg-taupe-400 rounded-full">
           <Lottie animationData={receiptPrinting} autoplay loop={false} />
         </div>
         <Typography
