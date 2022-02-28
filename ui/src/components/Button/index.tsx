@@ -12,7 +12,8 @@ export type ButtonColor =
   | "pink"
   | "purple"
   | "gradient"
-  | "gray";
+  | "gray"
+  | "yellow";
 export type ButtonSize = "xs" | "sm" | "lg" | "default" | "none";
 export type ButtonVariant = "outlined" | "filled" | "empty";
 
@@ -32,14 +33,15 @@ const SIZE: { xs: string; sm: string; md: string; lg: string } = {
 
 const FILLED = {
   default:
-    "text-higher-emphesis hover:bg-gradient-to-b hover:from-black/20 focus:to-black/20 focus:bg-gradient-to-b focus:from-black/20 hover:to-black/20 active:bg-gradient-to-b active:from-black/40 active:to-black/40 disabled:pointer-events-none disabled:opacity-40",
+    "text-black hover:bg-gradient-to-b hover:from-black/20 focus:to-black/20 focus:bg-gradient-to-b focus:from-black/20 hover:to-black/20 active:bg-gradient-to-b active:from-black/40 active:to-black/40 disabled:pointer-events-none disabled:opacity-40",
   blue: "bg-blue",
   red: "bg-red",
   pink: "bg-pink",
   purple: "bg-purple",
   gradient:
-    "!bg-gradient-to-r from-blue to-pink-600 hover:from-blue/80 hover:to-pink-600/80 focus:from-blue/80 focus:to-pink-600/80 active:from-blue/70 active:to-pink-600/70 focus:border-blue-700",
+    "!bg-gradient-to-r from-white to-yellow-600 hover:from-white/80 hover:to-yellow-600/80 focus:from-white/80 focus:to-yellow-600/80 active:from-white/70 active:to-yellow-600/70 focus:border-blue-700",
   gray: "bg-taupe-200",
+  yellow: "bg-yellow",
 };
 
 const OUTLINED = {
@@ -52,6 +54,8 @@ const OUTLINED = {
   gradient:
     "border-purple hover:bg-purple/10 active:bg-purple/20 text-purple focus:bg-purple/10",
   gray: "border-taupe-200 hover:bg-taupe-200/30 active:bg-taupe-200/50 focus:bg-taupe-200/30",
+  yellow:
+    "border-yellow hover:bg-yellow/10 active:bg-yellow/20 text-yellow focus:bg-yellow/10",
 };
 
 const EMPTY = {
@@ -63,7 +67,8 @@ const EMPTY = {
   purple: "text-purple",
   gray: "text-higher-emphesis",
   gradient:
-    "!bg-gradient-to-r from-blue to-pink-600 hover:from-blue/80 hover:to-pink-600/80 focus:from-blue/80 focus:to-pink-600/80 active:from-blue/70 active:to-pink-600/70",
+    "!bg-gradient-to-r from-white to-yellow-600 hover:from-white/80 hover:to-yellow-600/80 focus:from-white/80 focus:to-yellow-600/80 active:from-white/70 active:to-yellow-600/70",
+  yellow: "text-yellow",
 };
 
 const VARIANT = {
@@ -94,7 +99,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       children,
       className = "",
-      color = "blue",
+      color = "yellow",
       size = "md",
       variant = "filled",
       startIcon = undefined,

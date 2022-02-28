@@ -20,7 +20,7 @@ const SwapModalFooter: FC<SwapModalFooter> = ({
         onClick={onConfirm}
         disabled={disabledConfirm}
         id="confirm-swap-or-send"
-        color="blue"
+        color="yellow"
       >
         {`Confirm Swap`}
       </Button>

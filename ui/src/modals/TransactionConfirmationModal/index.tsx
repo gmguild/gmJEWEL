@@ -86,7 +86,7 @@ export const TransactionSubmittedContent: FC<
       </HeadlessUiModal.BorderedContent>
 
       {currencyToAdd && library?.provider?.isMetaMask && (
-        <Button color="blue" onClick={!success ? addToken : onDismiss}>
+        <Button color="yellow" onClick={!success ? addToken : onDismiss}>
           <Typography variant="sm" weight={700}>
             {!success ? `Add ${currencyToAdd.symbol} to MetaMask` : `Dismiss`}
           </Typography>

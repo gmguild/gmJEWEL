@@ -10,7 +10,7 @@ import TransactionPopup from "./TranactionPopup";
 const AnimatedFader = ({ duration }) => (
   <div className="h-[3px] bg-taupe-300 w-full">
     <div
-      className="h-[3px] bg-gradient-to-r from-blue to-pink"
+      className="h-[3px] bg-gradient-to-r from-white to-yellow"
       style={{
         animationDuration: `${duration} ms`,
         animationName: "fader",
