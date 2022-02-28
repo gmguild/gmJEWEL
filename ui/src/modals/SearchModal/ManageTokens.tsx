@@ -53,7 +53,7 @@ const ManageTokens: FC = () => {
       chainId &&
       userAddedTokens.map((token) => (
         <div
-          className="flex justify-between px-4 py-3 hover:bg-dark-800/40"
+          className="flex justify-between px-4 py-3 hover:bg-taupe-800/40"
           key={token.address}
         >
           <div className="flex items-center gap-3">
@@ -102,7 +102,7 @@ const ManageTokens: FC = () => {
         className={classNames(
           searchQuery !== "" && !isAddressSearch
             ? "border-red"
-            : "border-dark-800 focus:border-blue",
+            : "border-taupe-800 focus:border-blue",
           "w-full bg-[rgba(0,0,0,0.2)] border rounded placeholder-secondary font-bold text-base p-4 appearance-none"
         )}
         value={searchQuery}
@@ -126,7 +126,7 @@ const ManageTokens: FC = () => {
             {`Clear all`}
           </Button>
         </div>
-        <div className="divide-y divide-dark-800">{tokenList}</div>
+        <div className="divide-y divide-taupe-800">{tokenList}</div>
       </HeadlessUiModal.BorderedContent>
       <div className="flex flex-grow h-full" />
       <Typography

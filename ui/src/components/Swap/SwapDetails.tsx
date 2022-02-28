@@ -46,8 +46,8 @@ const SwapDetails: FC<SwapDetails> = ({
       {({ open }) => (
         <div
           className={classNames(
-            open ? "bg-dark-900" : "",
-            "shadow-inner flex flex-col gap-2 py-2 rounded px-2 border border-dark-700 transition hover:border-dark-700",
+            open ? "bg-taupe-900" : "",
+            "shadow-inner flex flex-col gap-2 py-2 rounded px-2 border border-taupe-700 transition hover:border-taupe-700",
             className
           )}
         >
@@ -100,7 +100,7 @@ const SwapDetailsContent: FC<SwapDetails> = ({ trade, recipient }) => {
   const path = trade && (trade.route as Route<Currency, Currency>).path;
 
   return (
-    <div className="flex flex-col divide-y divide-dark-850">
+    <div className="flex flex-col divide-y divide-taupe-850">
       <div className="flex flex-col gap-1 pb-2">
         <div className="flex justify-between gap-4">
           <Typography variant="xs">{`Expected Output`}</Typography>

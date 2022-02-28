@@ -47,7 +47,7 @@ const SubmittedModalContent: FC<SubmittedModalContentProps> = ({
         subheader={subheader}
       />
       <HeadlessUiModal.Content>
-        <div className="flex flex-col divide-y divide-dark-700">
+        <div className="flex flex-col divide-y divide-taupe-700">
           <div className="flex justify-between gap-2 py-2">
             <Typography variant="sm" className="text-secondary">
               {`Transaction Hash`}

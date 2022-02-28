@@ -39,7 +39,7 @@ const SwapModalHeader: FC<SwapModalHeader> = ({
   return (
     <div className="grid gap-2">
       <div className="flex flex-col">
-        <HeadlessUiModal.BorderedContent className="bg-dark-1000/40 border !border-dark-800 rounded-2xl">
+        <HeadlessUiModal.BorderedContent className="bg-taupe-1000/40 border !border-taupe-800 rounded-2xl">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <div className="flex flex-col gap-1">
@@ -74,11 +74,11 @@ const SwapModalHeader: FC<SwapModalHeader> = ({
           </div>
         </HeadlessUiModal.BorderedContent>
         <div className="flex justify-center -mt-3 -mb-3">
-          <div className="border-2 border-dark-800 shadow-md rounded-full p-1 backdrop-blur-[20px] z-10">
+          <div className="border-2 border-taupe-800 shadow-md rounded-full p-1 backdrop-blur-[20px] z-10">
             <ArrowDown size={18} />
           </div>
         </div>
-        <HeadlessUiModal.BorderedContent className="bg-dark-1000/40 border !border-dark-800">
+        <HeadlessUiModal.BorderedContent className="bg-taupe-1000/40 border !border-taupe-800">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <div className="flex flex-col gap-1">
@@ -121,11 +121,11 @@ const SwapModalHeader: FC<SwapModalHeader> = ({
         recipient={recipient}
         inputCurrency={trade?.inputAmount.currency}
         outputCurrency={trade?.outputAmount.currency}
-        className="!border-dark-800"
+        className="!border-taupe-800"
       />
 
       {showAcceptChanges && (
-        <HeadlessUiModal.BorderedContent className="border !border-dark-800">
+        <HeadlessUiModal.BorderedContent className="border !border-taupe-800">
           <div className="flex items-center justify-between">
             <Typography variant="sm" weight={700}>
               {`Price Updated`}
