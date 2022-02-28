@@ -39,7 +39,7 @@ const FILLED = {
   purple: "bg-purple",
   gradient:
     "!bg-gradient-to-r from-blue to-pink-600 hover:from-blue/80 hover:to-pink-600/80 focus:from-blue/80 focus:to-pink-600/80 active:from-blue/70 active:to-pink-600/70 focus:border-blue-700",
-  gray: "bg-dark-700",
+  gray: "bg-taupe-700",
 };
 
 const OUTLINED = {
@@ -51,7 +51,7 @@ const OUTLINED = {
     "border-purple hover:bg-purple/10 active:bg-purple/20 text-purple focus:bg-purple/10",
   gradient:
     "border-purple hover:bg-purple/10 active:bg-purple/20 text-purple focus:bg-purple/10",
-  gray: "border-dark-700 hover:bg-dark-700/30 active:bg-dark-700/50 focus:bg-dark-700/30",
+  gray: "border-taupe-700 hover:bg-taupe-700/30 active:bg-taupe-700/50 focus:bg-taupe-700/30",
 };
 
 const EMPTY = {

@@ -20,7 +20,7 @@ const COLOR = {
   default: (checked) => (checked ? "bg-high-emphesis" : "bg-high-emphesis"),
   // @ts-ignore TYPE NEEDS FIXING
   gradient: (checked) =>
-    checked ? "bg-gradient-to-r from-blue to-pink" : "bg-dark-700",
+    checked ? "bg-gradient-to-r from-blue to-pink" : "bg-taupe-700",
 };
 
 const HEIGHT = {
@@ -54,7 +54,7 @@ const Switch: FC<SwitchProps> = ({
       checked={checked}
       onChange={onChange}
       className={classNames(
-        `flex items-center bg-dark-800 border border-dark-700 relative inline-flex flex-shrink-0 rounded-full cursor-pointer ease-in-out duration-200 ${id}`
+        `flex items-center bg-taupe-800 border border-taupe-700 relative inline-flex flex-shrink-0 rounded-full cursor-pointer ease-in-out duration-200 ${id}`
       )}
       style={{ height, width }}
     >
