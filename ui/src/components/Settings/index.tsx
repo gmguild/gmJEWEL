@@ -37,8 +37,8 @@ const SettingsTab: FC<SettingsTabProps> = ({
       <Popover
         placement="bottom-end"
         content={
-          <div className="flex flex-col gap-3 p-3 border rounded shadow-xl bg-taupe-900 w-80 border-taupe-700">
-            <div className="flex flex-col gap-4 p-3 border rounded border-taupe-800/60">
+          <div className="flex flex-col gap-3 p-3 border rounded shadow-xl bg-taupe-400 w-80 border-taupe-200">
+            <div className="flex flex-col gap-4 p-3 border rounded border-taupe-300/60">
               <Typography variant="xxs" weight={700} className="text-secondary">
                 {`Transaction Settings`}
               </Typography>
@@ -47,7 +47,7 @@ const SettingsTab: FC<SettingsTabProps> = ({
                 trident={trident}
               />
             </div>
-            <div className="flex flex-col gap-3 p-3 border rounded border-taupe-800/60">
+            <div className="flex flex-col gap-3 p-3 border rounded border-taupe-300/60">
               <Typography variant="xxs" weight={700} className="text-secondary">
                 {`Interface Settings`}
               </Typography>
@@ -79,7 +79,7 @@ const SettingsTab: FC<SettingsTabProps> = ({
                           setShowConfirmation(true);
                         }
                   }
-                  checkedIcon={<CheckIcon className="text-taupe-700" />}
+                  checkedIcon={<CheckIcon className="text-taupe-200" />}
                   uncheckedIcon={<CloseIcon />}
                   color="gradient"
                 />
@@ -107,7 +107,7 @@ const SettingsTab: FC<SettingsTabProps> = ({
                         ? setSingleHopOnly(false)
                         : setSingleHopOnly(true)
                     }
-                    checkedIcon={<CheckIcon className="text-taupe-700" />}
+                    checkedIcon={<CheckIcon className="text-taupe-200" />}
                     uncheckedIcon={<CloseIcon />}
                     color="gradient"
                   />

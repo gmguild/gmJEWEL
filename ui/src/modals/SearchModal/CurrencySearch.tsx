@@ -154,7 +154,7 @@ export function CurrencySearch({
           value={searchQuery}
           onChange={handleInput}
           onKeyDown={handleEnter}
-          className="w-full bg-[rgba(0,0,0,0.2)] border border-taupe-800 focus:border-blue rounded placeholder-secondary font-bold text-base p-4 appearance-none"
+          className="w-full bg-[rgba(0,0,0,0.2)] border border-taupe-300 focus:border-blue rounded placeholder-secondary font-bold text-base p-4 appearance-none"
         />
       )}
       {showCommonBases && <CommonBases />}
@@ -162,7 +162,7 @@ export function CurrencySearch({
       {searchToken && !searchTokenIsAdded && (
         <ImportRow token={searchToken} onClick={handleImport} />
       )}
-      <div className="h-full overflow-hidden overflow-y-auto border rounded border-taupe-800 bg-[rgba(0,0,0,0.2)]">
+      <div className="h-full overflow-hidden overflow-y-auto border rounded border-taupe-300 bg-[rgba(0,0,0,0.2)]">
         {filteredSortedTokens?.length > 0 ||
         filteredInactiveTokens?.length > 0 ? (
           <CurrencyList

@@ -8,7 +8,7 @@ import TransactionPopup from "./TranactionPopup";
 
 //@ts-ignore
 const AnimatedFader = ({ duration }) => (
-  <div className="h-[3px] bg-taupe-800 w-full">
+  <div className="h-[3px] bg-taupe-300 w-full">
     <div
       className="h-[3px] bg-gradient-to-r from-blue to-pink"
       style={{
@@ -59,7 +59,7 @@ export default function PopupItem({
 
   return (
     <div className="mb-4">
-      <div className="relative w-full overflow-hidden rounded bg-taupe-700">
+      <div className="relative w-full overflow-hidden rounded bg-taupe-200">
         <div className="flex flex-row p-4">
           {popupContent}
           <div className="cursor-pointer hover:text-white">

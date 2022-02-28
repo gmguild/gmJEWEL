@@ -96,8 +96,8 @@ const TransactionSettings: FC<TransactionSettingsProps> = ({
                 ? "border-yellow/60"
                 : !slippageIsDefault
                 ? "border-blue"
-                : "border-taupe-800",
-              "border-2 h-[36px] flex items-center px-2 rounded bg-taupe-1000/40"
+                : "border-taupe-300",
+              "border-2 h-[36px] flex items-center px-2 rounded bg-taupe-500/40"
             )}
             tabIndex={-1}
           >
@@ -184,7 +184,7 @@ const TransactionSettings: FC<TransactionSettingsProps> = ({
             <input
               className={classNames(
                 deadlineError ? "text-red" : "",
-                "font-bold bg-transparent placeholder-low-emphesis bg-taupe-1000/40 border-2 border-taupe-800 rounded px-3 py-2 max-w-[100px] focus:border-blue"
+                "font-bold bg-transparent placeholder-low-emphesis bg-taupe-500/40 border-2 border-taupe-300 rounded px-3 py-2 max-w-[100px] focus:border-blue"
               )}
               placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
               value={

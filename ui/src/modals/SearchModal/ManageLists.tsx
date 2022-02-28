@@ -79,7 +79,7 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
       id={listUrlRowHTMLId(listUrl)}
       className={classNames(
         isActive ? "text-high-emphesis" : "text-primary",
-        "flex justify-between p-4 hover:bg-taupe-800/40"
+        "flex justify-between p-4 hover:bg-taupe-300/40"
       )}
       key={listUrl}
     >
@@ -111,7 +111,7 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
             <Popover
               placement="bottom-start"
               content={
-                <div className="flex flex-col gap-1 border rounded shadow bg-taupe-900 border-taupe-700 p-3">
+                <div className="flex flex-col gap-1 border rounded shadow bg-taupe-400 border-taupe-200 p-3">
                   <a href={`https://tokenlists.org/token-list?url=${listUrl}`}>
                     <Typography
                       variant="sm"
@@ -156,7 +156,7 @@ const ListRow: FC<{ listUrl: string }> = memo(({ listUrl }) => {
         <Switch
           checked={isActive}
           onChange={() => (isActive ? handleDisableList() : handleEnableList())}
-          checkedIcon={<CheckIcon className="text-taupe-700" />}
+          checkedIcon={<CheckIcon className="text-taupe-200" />}
           uncheckedIcon={<CloseIcon />}
           color="gradient"
         />
@@ -264,7 +264,7 @@ const ManageLists: FC = () => {
         id="list-add-input"
         type="text"
         placeholder="https:// or ipfs:// or ENS name"
-        className="w-full bg-[rgba(0,0,0,0.2)] border border-taupe-800 focus:border-blue rounded placeholder-secondary font-bold text-base p-4 appearance-none"
+        className="w-full bg-[rgba(0,0,0,0.2)] border border-taupe-300 focus:border-blue rounded placeholder-secondary font-bold text-base p-4 appearance-none"
         value={listUrlInput}
         onChange={handleInput}
         title="List URI"
@@ -329,8 +329,8 @@ const ManageLists: FC = () => {
           </div>
         </HeadlessUiModal.BorderedContent>
       )}
-      <div className="h-full overflow-y-auto bg-[rgba(0,0,0,0.2)] border border-taupe-800 rounded overflow-hidden">
-        <div className="flex flex-col flex-1 flex-grow divide-y divide-taupe-800">
+      <div className="h-full overflow-y-auto bg-[rgba(0,0,0,0.2)] border border-taupe-300 rounded overflow-hidden">
+        <div className="flex flex-col flex-1 flex-grow divide-y divide-taupe-300">
           {sortedLists.map((listUrl) => (
             <ListRow key={listUrl} listUrl={listUrl} />
           ))}

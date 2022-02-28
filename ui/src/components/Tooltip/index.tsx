@@ -25,7 +25,7 @@ export default function Tooltip({
         <div
           className={classNames(
             className,
-            "w-full max-w-[228px] px-3 py-2 font-bold bg-taupe-900 border border-taupe-700 rounded text-sm shadow-lg"
+            "w-full max-w-[228px] px-3 py-2 font-bold bg-taupe-400 border border-taupe-200 rounded text-sm shadow-lg"
           )}
         >
           {text}

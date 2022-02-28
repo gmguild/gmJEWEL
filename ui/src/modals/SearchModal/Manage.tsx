@@ -19,7 +19,7 @@ const Manage: FC = () => {
         onClose={onDismiss}
         onBack={() => setView(CurrencyModalView.search)}
       />
-      <div className="flex rounded border border-taupe-800 hover:border-taupe-700">
+      <div className="flex rounded border border-taupe-300 hover:border-taupe-200">
         {[`Lists`, `Tokens`].map((title, i) => (
           <div
             key={i}
