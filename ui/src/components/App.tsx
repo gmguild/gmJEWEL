@@ -61,6 +61,7 @@ export function App() {
                     <Route path="/mint" element={<Mint />} />
                     <Route path="/redeem" element={<Redeem />} />
                     <Route path="/trade" element={<Trade />} />
+                    <Route path="/bazaar/:page" element={<Trade />} />
                     <Route path="/stake" element={<Stake />} />
                     <Route path="/info" element={<Info />} />
                   </Routes>
