@@ -1,4 +1,11 @@
-import { Currency, CurrencyAmount, JSBI } from "../package";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  JSBI,
+  NATIVE,
+  WNATIVE,
+} from "../package";
 
 const MIN_NATIVE_CURRENCY_FOR_GAS: JSBI = JSBI.exponentiate(
   JSBI.BigInt(10),
@@ -30,3 +37,24 @@ export function maxAmountSpend(
   }
   return currencyAmount;
 }
+
+export function unwrappedToken(currency: Currency): Currency {
+  if (currency.isNative) return currency;
+
+  if (currency.chainId in ChainId && currency.equals(WNATIVE[currency.chainId]))
+    return NATIVE[currency.chainId];
+
+  return currency;
+}
+
+export const isWrappedReturnNativeSymbol = (
+  chainId: ChainId | undefined,
+  address: string
+) => {
+  if (!chainId) return address;
+  if (address.toLowerCase() === WNATIVE[chainId].address.toLowerCase()) {
+    return NATIVE[chainId].symbol;
+  }
+
+  return address;
+};
