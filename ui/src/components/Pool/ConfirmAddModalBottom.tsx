@@ -20,7 +20,7 @@ export function ConfirmAddModalBottom({
   onAdd: () => void;
 }) {
   return (
-    <div className="p-6 mt-0 -m-6 rounded bg-dark-800">
+    <div className="p-6 mt-0 -m-6 rounded bg-taupe-300">
       <div className="grid gap-1">
         <div className="flex items-center justify-between">
           <div className="text-sm text-high-emphesis">{`Rates`}</div>

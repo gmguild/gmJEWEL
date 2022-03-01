@@ -72,7 +72,7 @@ export function MinimalPositionCard({
     <>
       {userPoolBalance &&
       JSBI.greaterThan(userPoolBalance.quotient, JSBI.BigInt(0)) ? (
-        <div className="p-5 rounded bg-dark-800 text-high-emphesis">
+        <div className="p-5 rounded bg-taupe-300 text-high-emphesis">
           <AutoColumn gap={"md"}>
             <div className="text-lg">Your Position</div>
             <div className="flex flex-col md:flex-row md:justify-between">
@@ -93,7 +93,7 @@ export function MinimalPositionCard({
                 <div className="text-secondary">Pool Tokens</div>
               </div>
             </div>
-            <div className="flex flex-col w-full p-3 mt-3 space-y-1 text-sm rounded bg-dark-900 text-high-emphesis">
+            <div className="flex flex-col w-full p-3 mt-3 space-y-1 text-sm rounded bg-taupe-400 text-high-emphesis">
               <div className="flex justify-between">
                 <div>{`Your pool share`}</div>
                 <div className="font-bold">
@@ -187,14 +187,14 @@ export default function FullPositionCard({
 
   return (
     <div
-      className="rounded bg-dark-800"
+      className="rounded bg-taupe-300"
       // style={{ backgroundColor }}
     >
       <Button
         variant="empty"
         className={classNames(
-          "flex items-center justify-between w-full px-4 py-6 cursor-pointer bg-dark-800 hover:bg-dark-700 !text-blue",
-          showMore && "!bg-dark-800"
+          "flex items-center justify-between w-full px-4 py-6 cursor-pointer bg-taupe-300 hover:bg-taupe-200 !text-blue",
+          showMore && "!bg-taupe-300"
         )}
         style={{ boxShadow: "none" }}
         onClick={() => setShowMore(!showMore)}
@@ -233,7 +233,7 @@ export default function FullPositionCard({
         leaveTo="opacity-0"
       >
         <div className="p-4 space-y-4">
-          <div className="px-4 py-4 space-y-1 text-sm rounded text-high-emphesis bg-dark-900">
+          <div className="px-4 py-4 space-y-1 text-sm rounded text-high-emphesis bg-taupe-400">
             <div className="flex items-center justify-between">
               <div>{`Your total pool tokens`}:</div>
               <div className="font-semibold">
@@ -292,7 +292,9 @@ export default function FullPositionCard({
                   color="blue"
                   onClick={() => {
                     navigate(
-                      `/add/${currencyId(currency0)}/${currencyId(currency1)}`
+                      `/bazaar/pool/add/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`
                     );
                   }}
                 >
@@ -302,9 +304,9 @@ export default function FullPositionCard({
                   color="blue"
                   onClick={() => {
                     navigate(
-                      `/remove/${currencyId(currency0)}/${currencyId(
-                        currency1
-                      )}`
+                      `/bazaar/pool/remove/${currencyId(
+                        currency0
+                      )}/${currencyId(currency1)}`
                     );
                   }}
                 >

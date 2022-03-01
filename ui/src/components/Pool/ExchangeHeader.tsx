@@ -24,9 +24,9 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({
 
   return (
     <div className="flex items-center justify-between mb-4 space-x-3">
-      <div className="flex rounded bg-dark-800 h-[46px]">
+      <div className="flex rounded bg-taupe-300 h-[46px]">
         <NavLink
-          activeClassName="font-bold border rounded text-high-emphesis border-dark-800 bg-gradient-to-r from-opaque-blue to-opaque-pink hover:from-blue hover:to-pink"
+          activeClassName="font-bold border rounded text-high-emphesis border-taupe-300 bg-gradient-to-r from-opaque-blue to-opaque-pink hover:from-blue hover:to-pink"
           href={`/${!isRemove ? "add" : "remove"}${
             input ? `/${currencyId(input)}` : ""
           }${output ? `/${currencyId(output)}` : ""}`}
@@ -39,7 +39,7 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({
       <div className="flex items-center">
         <div className="grid grid-flow-col gap-1">
           {chainId === ChainId.MAINNET && (
-            <div className="items-center hidden w-full h-full px-3 space-x-3 rounded cursor-pointer text-green text-opacity-80 hover:text-opacity-100 md:flex hover:bg-dark-800">
+            <div className="items-center hidden w-full h-full px-3 space-x-3 rounded cursor-pointer text-green text-opacity-80 hover:text-opacity-100 md:flex hover:bg-taupe-300">
               <svg
                 width="18"
                 height="20"
@@ -58,7 +58,7 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({
               </div>
             </div>
           )}
-          <div className="relative flex items-center w-full h-full rounded hover:bg-dark-800">
+          <div className="relative flex items-center w-full h-full rounded hover:bg-taupe-300">
             <Settings placeholderSlippage={allowedSlippage} />
           </div>
         </div>

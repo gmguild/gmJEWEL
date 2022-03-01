@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { TransactionResponse } from "@ethersproject/providers";
 import { useState } from "react";
-import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { ZERO_PERCENT } from "../../constants";
 import { maxAmountSpend } from "../../functions/currency";
@@ -60,10 +59,8 @@ import { MinimalPositionCard } from "../../components/PositionCard";
 
 export default function PoolPage() {
   const { account, chainId, library } = useActiveWeb3React();
-  const params = useParams();
   const navigate = useNavigate();
   //TODO: fix
-  console.log(params);
   const tokens = [""];
   const [currencyIdA, currencyIdB] = (tokens as string[]) || [
     undefined,
@@ -321,9 +318,9 @@ export default function PoolPage() {
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA);
       if (newCurrencyIdA === currencyIdB) {
-        navigate(`/add/${currencyIdB}/${currencyIdA}`);
+        navigate(`add/${currencyIdB}/${currencyIdA}`);
       } else {
-        navigate(`/add/${newCurrencyIdA}/${currencyIdB}`);
+        navigate(`add/${newCurrencyIdA}/${currencyIdB}`);
       }
     },
     [currencyIdB, navigate, currencyIdA]
@@ -333,12 +330,12 @@ export default function PoolPage() {
       const newCurrencyIdB = currencyId(currencyB);
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          navigate(`/add/${currencyIdB}/${newCurrencyIdB}`);
+          navigate(`add/${currencyIdB}/${newCurrencyIdB}`);
         } else {
-          navigate(`/add/${newCurrencyIdB}`);
+          navigate(`add/${newCurrencyIdB}`);
         }
       } else {
-        navigate(`/add/${currencyIdA ? currencyIdA : "ETH"}/${newCurrencyIdB}`);
+        navigate(`add/${currencyIdA ? currencyIdA : "ETH"}/${newCurrencyIdB}`);
       }
     },
     [currencyIdA, navigate, currencyIdB]
@@ -361,7 +358,7 @@ export default function PoolPage() {
         maxWidth="2xl"
       >
         <div className="flex items-center justify-between px-4 mb-5">
-          <NavLink href="/pool">
+          <NavLink href="/bazaar/pool">
             <a className="flex items-center space-x-2 text-base font-medium text-center cursor-pointer text-secondary hover:text-high-emphesis">
               <span>{`View Liquidity Positions`}</span>
               <svg
@@ -411,7 +408,7 @@ export default function PoolPage() {
 
         <DoubleGlowShadow>
           <div
-            className="p-4 space-y-4 rounded bg-dark-900"
+            className="p-4 space-y-4 rounded bg-taupe-400"
             style={{ zIndex: 1 }}
           >
             {/* <AddRemoveTabs creating={isCreate} adding={true} defaultSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} /> */}
@@ -465,8 +462,8 @@ export default function PoolPage() {
                     justify={isExpertMode ? "space-between" : "flex-start"}
                     style={{ padding: "0 1rem" }}
                   >
-                    <button className="z-10 -mt-6 -mb-6 rounded-full cursor-default bg-dark-900 p-3px">
-                      <div className="p-3 rounded-full bg-dark-800">
+                    <button className="z-10 -mt-6 -mb-6 rounded-full cursor-default bg-taupe-400 p-3px">
+                      <div className="p-3 rounded-full bg-taupe-300">
                         <Plus size="32" />
                       </div>
                     </button>
@@ -492,13 +489,13 @@ export default function PoolPage() {
               {currencies[Field.CURRENCY_A] &&
                 currencies[Field.CURRENCY_B] &&
                 pairState !== PairState.INVALID && (
-                  <div className="p-1 rounded bg-dark-800">
+                  <div className="p-1 rounded bg-taupe-300">
                     <LiquidityPrice
                       currencies={currencies}
                       price={price}
                       noLiquidity={noLiquidity}
                       poolTokenPercentage={poolTokenPercentage}
-                      className="bg-dark-900"
+                      className="bg-taupe-400"
                     />
                   </div>
                 )}

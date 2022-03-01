@@ -5,7 +5,7 @@ import Typography from "../Typography";
 
 const TYPE = {
   information: {
-    text: "text-high-emphesis",
+    text: "text-black",
     color: "bg-purple bg-opacity-20 text-high-emphesis",
     icon: (
       <svg
@@ -24,7 +24,7 @@ const TYPE = {
     ),
   },
   warning: {
-    text: "text-high-emphesis",
+    text: "text-black",
     color: "bg-yellow bg-opacity-25 text-high-emphesis",
     icon: (
       <svg
