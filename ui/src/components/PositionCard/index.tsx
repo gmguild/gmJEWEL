@@ -292,7 +292,7 @@ export default function FullPositionCard({
                   color="blue"
                   onClick={() => {
                     navigate(
-                      `/bazaar/pool/add/${currencyId(currency0)}/${currencyId(
+                      `/pool/add/${currencyId(currency0)}/${currencyId(
                         currency1
                       )}`
                     );
@@ -304,9 +304,9 @@ export default function FullPositionCard({
                   color="blue"
                   onClick={() => {
                     navigate(
-                      `/bazaar/pool/remove/${currencyId(
-                        currency0
-                      )}/${currencyId(currency1)}`
+                      `/pool/remove/${currencyId(currency0)}/${currencyId(
+                        currency1
+                      )}`
                     );
                   }}
                 >
