@@ -8,6 +8,7 @@ import user from "./user/reducer";
 import transactions from "./transactions/reducer";
 import web3Context from "./global/web3ContextSlice";
 import slippage from "./slippage/slippageSlice";
+import mint from "./mint/reducer";
 
 const reducer = combineReducers({
   multicall,
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   transactions,
   web3Context,
   slippage,
+  mint,
 });
 
 export default reducer;
