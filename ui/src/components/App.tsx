@@ -20,6 +20,7 @@ import Web3ProviderNetwork from "./Web3ProviderNetwork";
 import getLibrary from "../functions/getLibrary";
 import Updaters from "../state/updaters";
 import Portals from "./Portals";
+import Pool from "../pages/Pool";
 
 const chains: Chain[] = [
   {
@@ -60,8 +61,8 @@ export function App() {
                     <Route path="/home" element={<Home />} />
                     <Route path="/mint" element={<Mint />} />
                     <Route path="/redeem" element={<Redeem />} />
-                    <Route path="/trade" element={<Trade />} />
-                    <Route path="/bazaar/:page" element={<Trade />} />
+                    <Route path="/swap" element={<Trade />} />
+                    <Route path="/pool" element={<Pool />} />
                     <Route path="/stake" element={<Stake />} />
                     <Route path="/info" element={<Info />} />
                   </Routes>

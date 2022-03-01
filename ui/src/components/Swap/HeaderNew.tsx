@@ -30,7 +30,7 @@ const HeaderNew: FC<HeaderNewProps> = ({ inputCurrency, outputCurrency }) => {
         <NavLink
           activeClassName="text-high-emphesis"
           href={{
-            pathname: "/bazaar/swap",
+            pathname: "/swap",
             query: getQuery(inputCurrency, outputCurrency),
           }}
         >
@@ -41,7 +41,7 @@ const HeaderNew: FC<HeaderNewProps> = ({ inputCurrency, outputCurrency }) => {
         <NavLink
           activeClassName="text-high-emphesis"
           href={{
-            pathname: "/bazaar/pool",
+            pathname: "/pool",
             query: getQuery(inputCurrency, outputCurrency),
           }}
         >

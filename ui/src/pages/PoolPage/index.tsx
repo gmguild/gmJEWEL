@@ -358,7 +358,7 @@ export default function PoolPage() {
         maxWidth="2xl"
       >
         <div className="flex items-center justify-between px-4 mb-5">
-          <NavLink href="/bazaar/pool">
+          <NavLink href="/pool">
             <a className="flex items-center space-x-2 text-base font-medium text-center cursor-pointer text-secondary hover:text-high-emphesis">
               <span>{`View Liquidity Positions`}</span>
               <svg
