@@ -156,7 +156,8 @@ const pages = [
   { page: "/home", description: "Home" },
   { page: "/mint", description: "Mint" },
   { page: "/redeem", description: "Redeem" },
-  { page: "/bazaar/swap", description: "Bazaar" },
+  { page: "/swap", description: "Swap" },
+  { page: "/pool", description: "Pool" },
   { page: "/stake", description: "Stake" },
   { page: "/info", description: "Info" },
 ];
