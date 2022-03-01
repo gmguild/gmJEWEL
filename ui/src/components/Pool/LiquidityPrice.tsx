@@ -21,7 +21,7 @@ export default function LiquidityPrice({
   return (
     <div
       className={classNames(
-        "flex justify-between items-center rounded py-2 px-4 bg-dark-900",
+        "flex justify-between items-center rounded py-2 px-4 bg-taupe-400",
         className
       )}
     >
