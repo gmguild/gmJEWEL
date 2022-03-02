@@ -38,7 +38,11 @@ export const CUSTOM_BASES: {
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_ONLY,
-  [ChainId.HARMONY]: [...WRAPPED_NATIVE_ONLY[ChainId.HARMONY], HARMONY.GMG],
+  [ChainId.HARMONY]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.HARMONY],
+    HARMONY.GMG,
+    HARMONY.GMJEWEL,
+  ],
 };
 
 export const PINNED_PAIRS: {
