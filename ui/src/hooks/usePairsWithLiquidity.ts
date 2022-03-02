@@ -15,8 +15,6 @@ export const usePairsWithLiquidity = (): PairsWithLiquidity => {
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs();
 
-  // console.log(trackedTokenPairs);
-
   const tokenPairsWithLiquidityTokens = useMemo(
     () =>
       trackedTokenPairs.map((tokens) => ({
@@ -40,8 +38,6 @@ export const usePairsWithLiquidity = (): PairsWithLiquidity => {
       ),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   );
-
-  // console.log(liquidityTokensWithBalances);
 
   const v2Pairs = usePairs(
     liquidityTokensWithBalances.map(({ tokens }) => tokens)

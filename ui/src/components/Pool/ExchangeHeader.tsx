@@ -26,8 +26,8 @@ const ExchangeHeader: FC<ExchangeHeaderProps> = ({
     <div className="flex items-center justify-between mb-4 space-x-3">
       <div className="flex rounded bg-taupe-300 h-[46px]">
         <NavLink
-          activeClassName="font-bold border rounded text-high-emphesis border-taupe-300 bg-gradient-to-r from-opaque-blue to-opaque-pink hover:from-blue hover:to-pink"
-          href={`/${!isRemove ? "add" : "remove"}${
+          activeClassName="font-bold border rounded text-high-emphesis border-taupe-300 bg-gradient-to-r"
+          href={`/pool/${!isRemove ? "add" : "remove"}${
             input ? `/${currencyId(input)}` : ""
           }${output ? `/${currencyId(output)}` : ""}`}
         >

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { TransactionResponse } from "@ethersproject/providers";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ZERO_PERCENT } from "../../constants";
 import { maxAmountSpend } from "../../functions/currency";
 import {
@@ -60,12 +60,11 @@ import { MinimalPositionCard } from "../../components/PositionCard";
 export default function PoolPageAdd() {
   const { account, chainId, library } = useActiveWeb3React();
   const navigate = useNavigate();
-  //TODO: fix
-  const tokens = [""];
-  const [currencyIdA, currencyIdB] = (tokens as string[]) || [
-    undefined,
-    undefined,
-  ];
+  const params = useParams();
+  const [currencyIdA, currencyIdB] = ([
+    params["currencyA"],
+    params["currencyB"],
+  ] as string[]) || [undefined, undefined];
 
   const currencyA = useCurrency(currencyIdA);
   const currencyB = useCurrency(currencyIdB);
@@ -318,9 +317,9 @@ export default function PoolPageAdd() {
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA);
       if (newCurrencyIdA === currencyIdB) {
-        navigate(`add/${currencyIdB}/${currencyIdA}`);
+        navigate(`/pool/add/${currencyIdB}/${currencyIdA}`);
       } else {
-        navigate(`add/${newCurrencyIdA}/${currencyIdB}`);
+        navigate(`/pool/add/${newCurrencyIdA}/${currencyIdB}`);
       }
     },
     [currencyIdB, navigate, currencyIdA]
@@ -330,12 +329,14 @@ export default function PoolPageAdd() {
       const newCurrencyIdB = currencyId(currencyB);
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          navigate(`add/${currencyIdB}/${newCurrencyIdB}`);
+          navigate(`/pool/add/${currencyIdB}/${newCurrencyIdB}`);
         } else {
-          navigate(`add/${newCurrencyIdB}`);
+          navigate(`/pool/add/${newCurrencyIdB}`);
         }
       } else {
-        navigate(`add/${currencyIdA ? currencyIdA : "ETH"}/${newCurrencyIdB}`);
+        navigate(
+          `/pool/add/${currencyIdA ? currencyIdA : "ETH"}/${newCurrencyIdB}`
+        );
       }
     },
     [currencyIdA, navigate, currencyIdB]

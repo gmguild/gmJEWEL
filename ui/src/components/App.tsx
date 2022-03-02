@@ -63,7 +63,10 @@ export function App() {
                     <Route path="/redeem" element={<Redeem />} />
                     <Route path="/swap" element={<Trade />} />
                     <Route path="/pool" element={<Pool />} />
-                    <Route path="/pool/:page" element={<Pool />} />
+                    <Route
+                      path="/pool/:page/:currencyA/:currencyB"
+                      element={<Pool />}
+                    />
                     <Route path="/stake" element={<Stake />} />
                     <Route path="/info" element={<Info />} />
                   </Routes>
