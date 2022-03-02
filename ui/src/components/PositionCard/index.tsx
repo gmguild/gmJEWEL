@@ -193,7 +193,7 @@ export default function FullPositionCard({
       <Button
         variant="empty"
         className={classNames(
-          "flex items-center justify-between w-full px-4 py-6 cursor-pointer bg-taupe-300 hover:bg-taupe-200 !text-blue",
+          "flex items-center justify-between w-full px-4 py-6 cursor-pointer bg-taupe-300 hover:bg-taupe-200 !text-white",
           showMore && "!bg-taupe-300"
         )}
         style={{ boxShadow: "none" }}
@@ -289,7 +289,7 @@ export default function FullPositionCard({
             JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
               <div className="grid grid-cols-2 gap-4">
                 <Button
-                  color="blue"
+                  color="gradient"
                   onClick={() => {
                     navigate(
                       `/pool/add/${currencyId(currency0)}/${currencyId(
@@ -301,7 +301,7 @@ export default function FullPositionCard({
                   {`Add`}
                 </Button>
                 <Button
-                  color="blue"
+                  color="gradient"
                   onClick={() => {
                     navigate(
                       `/pool/remove/${currencyId(currency0)}/${currencyId(

@@ -16,11 +16,7 @@ export default function PoolPage() {
   const { loading, pairs } = usePairsWithLiquidity();
 
   return (
-    <Container
-      id="pool-page"
-      className="py-4 space-y-6 md:py-8 lg:py-12"
-      maxWidth="2xl"
-    >
+    <Container id="pool-page" className="space-y-6" maxWidth="2xl">
       <div className="p-4 mb-3 space-y-3">
         <Back />
 
@@ -38,9 +34,9 @@ export default function PoolPage() {
       />
 
       {!account ? (
-        <Web3Connect className="w-full !bg-dark-900 bg-gradient-to-r from-pink/80 hover:from-pink to-purple/80 hover:to-purple text-white h-[38px]" />
+        <Web3Connect className="w-full !bg-taupe-400 bg-gradient-to-r from-pink/80 hover:from-pink to-purple/80 hover:to-purple text-white h-[38px]" />
       ) : (
-        <div className="p-4 space-y-4 rounded bg-dark-900">
+        <div className="p-4 space-y-4 rounded bg-taupe-400">
           <div className="grid grid-flow-row gap-3">
             {loading ? (
               <Empty>

@@ -15,9 +15,9 @@ export default function Pool() {
       >
         {location.pathname == "/pool" ? (
           <PoolPage />
-        ) : location.pathname == "/pool/add" ? (
+        ) : location.pathname.startsWith("/pool/add") ? (
           <PoolPageAdd />
-        ) : location.pathname == "/pool/remove" ? (
+        ) : location.pathname.startsWith("/pool/remove") ? (
           <></>
         ) : (
           <></>
