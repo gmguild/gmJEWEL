@@ -160,7 +160,7 @@ module.exports = {
         'dark-400': '#545f7b',
         'low-emphesis': '#575757',
         primary: '#BFBFBF',
-        secondary: '#7F7F7F',
+        secondary: '#E0E0E0',
         'high-emphesis': '#E3E3E3',
         'higher-emphesis': '#FCFCFD',
       },

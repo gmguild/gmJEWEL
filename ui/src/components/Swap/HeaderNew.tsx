@@ -27,28 +27,9 @@ const HeaderNew: FC<HeaderNewProps> = ({ inputCurrency, outputCurrency }) => {
   return (
     <div className="flex items-center justify-between gap-1">
       <div className="flex gap-4">
-        <NavLink
-          activeClassName="text-high-emphesis"
-          href={{
-            pathname: "/swap",
-            query: getQuery(inputCurrency, outputCurrency),
-          }}
-        >
-          <Typography weight={700} className="text-secondary hover:text-white">
-            {`Swap`}
-          </Typography>
-        </NavLink>
-        <NavLink
-          activeClassName="text-high-emphesis"
-          href={{
-            pathname: "/pool",
-            query: getQuery(inputCurrency, outputCurrency),
-          }}
-        >
-          <Typography weight={700} className="text-secondary hover:text-white">
-            {`Pool`}
-          </Typography>
-        </NavLink>
+        <Typography weight={700} className="text-white">
+          Swap
+        </Typography>
       </div>
       <div className="flex gap-4">
         <Settings className="!w-6 !h-6" />
