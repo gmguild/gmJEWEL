@@ -17,6 +17,8 @@ import MULTICALL2_ABI from "../../constants/abi/multicall2.json";
 import { getContract } from "../../functions/contract";
 import WETH9_ABI from "../../constants/abi/weth9.json";
 import ROUTER_ABI from "../../constants/abi/router.json";
+import IUniswapV2PairABI from "../../constants/abi/uniswap-v2-pair.json";
+import EIP_2612_ABI from "../../constants/abi/eip-2612.json";
 
 export function useContract(
   address: string | undefined,
@@ -100,4 +102,15 @@ export function useRouterContract(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return useContract(ROUTER_ADDRESS[chainId], ROUTER_ABI, withSignerIfPossible);
+}
+
+export function usePairContract(
+  pairAddress?: string,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible);
+}
+
+export function useEIP2612Contract(tokenAddress?: string): Contract | null {
+  return useContract(tokenAddress, EIP_2612_ABI, false);
 }

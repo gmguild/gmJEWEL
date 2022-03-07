@@ -4,6 +4,7 @@ import Container from "../components/Container";
 import Layout from "../layouts/Default";
 import PoolPage from "./PoolPage";
 import PoolPageAdd from "./PoolPage/Add";
+import PoolPageRemove from "./PoolPage/Remove";
 
 export default function Pool() {
   const location = useLocation();
@@ -18,7 +19,7 @@ export default function Pool() {
         ) : location.pathname.startsWith("/pool/add") ? (
           <PoolPageAdd />
         ) : location.pathname.startsWith("/pool/remove") ? (
-          <></>
+          <PoolPageRemove />
         ) : (
           <></>
         )}

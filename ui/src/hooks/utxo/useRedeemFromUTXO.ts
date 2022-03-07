@@ -16,8 +16,6 @@ export function useRedeemFromUTXO(
     "fullRedeem"
   );
 
-  console.log("fullRedeem", utxoAddress, jewelAmount.toString());
-
   const fn = useCallback(async () => {
     try {
       setLoading(true);
