@@ -24,7 +24,6 @@ import {
 } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { USER_REJECTED_TX } from "../../services/web3/WalletError";
-import { useWalletModalToggle } from "../../state/application/hooks";
 import { useAppSelector } from "../../state/hooks";
 import { Field } from "../../state/mint/actions";
 import {
@@ -74,8 +73,6 @@ export default function PoolPageAdd() {
       ((currencyA && currencyEquals(currencyA, WNATIVE[chainId])) ||
         (currencyB && currencyEquals(currencyB, WNATIVE[chainId])))
   );
-
-  const toggleWalletModal = useWalletModalToggle(); // toggle wallet when disconnected
 
   const [isExpertMode] = useExpertModeManager();
 

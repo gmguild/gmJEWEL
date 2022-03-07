@@ -6,16 +6,6 @@ import { ChainId } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 
 const CHAIN_ID_SUBDOMAIN: { [chainId: number]: string } = {
-  [ChainId.MAINNET]: ChainSubdomain.MAINNET,
-  [ChainId.ROPSTEN]: ChainSubdomain.ROPSTEN,
-  [ChainId.RINKEBY]: ChainSubdomain.RINKEBY,
-  [ChainId.GÖRLI]: ChainSubdomain.GÖRLI,
-  [ChainId.KOVAN]: ChainSubdomain.KOVAN,
-  [ChainId.MATIC]: ChainSubdomain.POLYGON,
-  [ChainId.FANTOM]: ChainSubdomain.FANTOM,
-  [ChainId.XDAI]: ChainSubdomain.GNOSIS,
-  [ChainId.BSC]: ChainSubdomain.BSC,
-  [ChainId.ARBITRUM]: ChainSubdomain.ARBITRUM,
   [ChainId.AVALANCHE]: ChainSubdomain.AVALANCHE,
   [ChainId.HECO]: ChainSubdomain.HECO,
   [ChainId.HARMONY]: ChainSubdomain.HARMONY,
