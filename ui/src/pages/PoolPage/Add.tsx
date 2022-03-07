@@ -571,7 +571,7 @@ export default function PoolPageAdd() {
                             !!parsedAmounts[Field.CURRENCY_A] &&
                             !!parsedAmounts[Field.CURRENCY_B]
                               ? "red"
-                              : "blue"
+                              : "gradient"
                           }
                           onClick={() => {
                             isExpertMode ? onAdd() : setShowConfirm(true);
