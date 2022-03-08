@@ -10,12 +10,6 @@ interface DotsProps {
 export default function Dots({ children = <span />, className }: DotsProps) {
   return (
     <>
-      {/* @ts-ignore */}
-      {`
-          .dots::after {
-            content: ".";
-          }
-        `}
       <span
         className={classNames(
           "after:inline-block dots after:animate-ellipsis after:w-4 after:text-left",
