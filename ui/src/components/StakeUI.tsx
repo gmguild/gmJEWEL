@@ -71,7 +71,7 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
     loadingInformation || approving || staking || unstaking || claimingRewards;
 
   return (
-    <div className="bg-rune-edge p-4 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
+    <div className="bg-rune-edge p-4 rounded-md shadow-lg border-taupe border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">{props.tokenName}</h3>
       <p className="text-gray-300/50">
         APY: <span className="text-gray-100">{formattedAPY}</span>
@@ -198,7 +198,7 @@ export function StakedGMGUI() {
   const doing = loadingInformation || approving || staking || unstaking;
 
   return (
-    <div className="bg-rune-edge p-8 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
+    <div className="bg-rune-edge p-8 rounded-md shadow-lg border-taupe border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">xGMG single-sided staking pool</h3>
       <p className="text-gray-300/50 my-1">
         Staking Ratio:{" "}
