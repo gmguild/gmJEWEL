@@ -29,6 +29,8 @@ from web3._utils.filters import construct_event_filter_params
 from web3._utils.events import get_event_data
 from dotenv import load_dotenv, find_dotenv
 
+from discord_webhook import DiscordWebhook
+
 load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
@@ -47,10 +49,13 @@ PAWN_SHOP_REL_PATH = (
     else "../../../prod-deployment/contracts/PawnShop.json"
 )
 
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
+
 ADDRESSES = json.load(open(os.path.join(SCRIPT_DIR, DEPLOYMENT_REL_PATH)))
 
 CONTRACT_ADDRESS = ADDRESSES["PawnShop"]
-CONTRACT_FILE = json.load(open(os.path.join(SCRIPT_DIR, PAWN_SHOP_REL_PATH), "r"))
+CONTRACT_FILE = json.load(
+    open(os.path.join(SCRIPT_DIR, PAWN_SHOP_REL_PATH), "r"))
 CONTRACT_ABI = CONTRACT_FILE["abi"]
 FIRST_BLOCK_TO_SCAN = ADDRESSES["deploymentBlock"]
 
@@ -144,7 +149,7 @@ class EventScanner:
         self.filters = filters
 
         # Our JSON-RPC throttling parameters
-        self.min_scan_chunk_size = 100  # 12 s/block = 120 seconds period
+        self.min_scan_chunk_size = 10  # 12 s/block = 120 seconds period
         self.max_scan_chunk_size = max_chunk_scan_size
         self.max_request_retries = max_request_retries
         self.request_retry_seconds = request_retry_seconds
@@ -371,7 +376,8 @@ class EventScanner:
                 )
 
             # Try to guess how many blocks to fetch over `eth_getLogs` API next time
-            chunk_size = self.estimate_next_chunk_size(chunk_size, len(new_entries))
+            chunk_size = self.estimate_next_chunk_size(
+                chunk_size, len(new_entries))
 
             # Set where the next chunk starts
             current_block = current_end + 1
@@ -435,7 +441,8 @@ def _fetch_events_for_all_contracts(
     """
 
     if from_block is None:
-        raise TypeError("Missing mandatory keyword argument to getLogs: fromBlock")
+        raise TypeError(
+            "Missing mandatory keyword argument to getLogs: fromBlock")
 
     # Currently no way to poke this using a public Web3.py API.
     # This will return raw underlying ABI JSON object for the event
@@ -517,25 +524,29 @@ class SqliteDictState(IEventScannerState):
             journal_mode="WAL",
         )
         self.state_utxo_seen_events = SqliteDict(
-            filename=os.path.join(DB_FOLDER_PREFIX, "./state_utxo_seen_events.sqlite"),
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxo_seen_events.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxos_by_user = SqliteDict(
-            filename=os.path.join(DB_FOLDER_PREFIX, "./state_utxos_by_user.sqlite"),
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxos_by_user.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_utxo_redemptions = SqliteDict(
-            filename=os.path.join(DB_FOLDER_PREFIX, "./state_utxo_redemptions.sqlite"),
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_utxo_redemptions.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
         )
         self.state_aggregates = SqliteDict(
-            filename=os.path.join(DB_FOLDER_PREFIX, "./state_aggregates.sqlite"),
+            filename=os.path.join(
+                DB_FOLDER_PREFIX, "./state_aggregates.sqlite"),
             autocommit=False,
             flag="c",
             journal_mode="WAL",
@@ -615,6 +626,8 @@ class SqliteDictState(IEventScannerState):
             key = f"{block_number}-{txhash}-{log_index}-{event_type}"
             db[key] = True
 
+        print(event)
+
         # TODO: refactor all this so it"s not just one big function
         if event_type == "UTXOCreated":
             if not is_event_seen(self.state_utxo_seen_events):
@@ -633,7 +646,8 @@ class SqliteDictState(IEventScannerState):
                         not in self.state_utxos_by_user[utxoObject["minter"]]
                     ):
                         list_for_minter.append(utxoObject["utxoAddress"])
-                    self.state_utxos_by_user[utxoObject["minter"]] = list_for_minter
+                    self.state_utxos_by_user[utxoObject["minter"]
+                                             ] = list_for_minter
                 else:
                     self.state_utxos_by_user[utxoObject["minter"]] = [
                         utxoObject["utxoAddress"]
@@ -651,6 +665,8 @@ class SqliteDictState(IEventScannerState):
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
+                if int(args["newVal"]) > 0:
+                    notify_new_stash(args["newVal"])
                 mark_event_as_seen(self.state_utxo_seen_events)
             else:
                 logger.warn(
@@ -663,7 +679,8 @@ class SqliteDictState(IEventScannerState):
                     if "last_utxo_redemption_index" in self.state_meta
                     else "0"
                 ) or "0"
-                next_utxo_redemption_index = int(last_utxo_redemption_index) + 1
+                next_utxo_redemption_index = int(
+                    last_utxo_redemption_index) + 1
                 _redeem = args["redeemooor"].lower()
                 if args["redeemooor"].lower() == ADDRESSES["PawnShopRouter"].lower():
                     _redeem = tx["from"].lower()
@@ -678,6 +695,7 @@ class SqliteDictState(IEventScannerState):
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
+                notify_redeemed_stash(int(args["redeemedAmount"]))
                 mark_event_as_seen(self.state_utxo_redemptions)
                 self.state_meta[
                     "last_utxo_redemption_index"
@@ -740,22 +758,26 @@ class SqliteDictState(IEventScannerState):
             current_locked_jewel_in_protocol = get_agg("lockedJewelTotal")
             current_total_fees_paid = get_agg("totalFeesPaid")
             current_total_fees_paid_in_jewel = get_agg("totalFeesPaidInJewel")
-            current_total_redemptions_volume = get_agg("totalRedemptionsVolume")
+            current_total_redemptions_volume = get_agg(
+                "totalRedemptionsVolume")
 
             if event_type == "UTXOCreated":
                 update_agg("totalStashes", current_total_stashes + 1)
             elif event_type == "MintedFromUTXO":
                 update_agg(
                     "lockedJewelTotal",
-                    current_locked_jewel_in_protocol + int(args["mintedAmount"]),
+                    current_locked_jewel_in_protocol +
+                    int(args["mintedAmount"]),
                 )
             elif event_type == "UTXORedeemed":
                 update_agg(
                     "lockedJewelTotal",
-                    current_locked_jewel_in_protocol - int(args["redeemedAmount"]),
+                    current_locked_jewel_in_protocol -
+                    int(args["redeemedAmount"]),
                 )
                 update_agg(
-                    "totalFeesPaid", current_total_fees_paid + int(args["feePaid"])
+                    "totalFeesPaid", current_total_fees_paid +
+                    int(args["feePaid"])
                 )
                 update_agg(
                     "totalFeesPaidInJewel",
@@ -763,7 +785,8 @@ class SqliteDictState(IEventScannerState):
                 )
                 update_agg(
                     "totalRedemptionsVolume",
-                    current_total_redemptions_volume + int(args["redeemedAmount"]),
+                    current_total_redemptions_volume +
+                    int(args["redeemedAmount"]),
                 )
 
             mark_event_as_seen(self.state_aggregates)
@@ -834,7 +857,8 @@ def run(sc):
 
     # Scan from [last block scanned] - [latest ethereum block]
     # Note that our chain reorg safety blocks cannot go negative
-    start_block = max(state.get_last_scanned_block() - chain_reorg_safety_blocks, 0)
+    start_block = max(state.get_last_scanned_block() -
+                      chain_reorg_safety_blocks, 0)
     end_block = scanner.get_suggested_scan_end_block()
     blocks_to_scan = end_block - start_block
 
@@ -868,3 +892,19 @@ def run(sc):
 
 
 scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (scheduler,))
+
+
+def notify_new_stash(value):
+    webhook = DiscordWebhook(
+        url=DISCORD_WEBHOOK_URL,
+        content=f"New stash has been minted! {value/1e18:.3f} locked jewel can be claimed.",
+    )
+    response = webhook.execute()
+
+
+def notify_redeemed_stash(redeemed_value):
+    webhook = DiscordWebhook(
+        url=DISCORD_WEBHOOK_URL,
+        content=f"A stash has just been redeemed for {redeemed_value/1e18:.3f}. Need to be quicker next time!",
+    )
+    response = webhook.execute()
