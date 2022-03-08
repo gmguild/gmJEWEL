@@ -9,7 +9,7 @@ body {
   background-repeat: no-repeat;
   min-height: 100vh;
   background-color: var(--primary);
-  color: #BFBFBF;
+  color: #374151;
 }
 
 #app {
