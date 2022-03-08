@@ -32,6 +32,12 @@ export const getCurrencyLogoUrls = (currency): string[] => {
 
   if (currency.chainId in BLOCKCHAIN) {
     urls.push(
+      `https://raw.githubusercontent.com/gmguild/gmJEWEL/dev/ui/src/assets/${
+        // @ts-ignore
+        BLOCKCHAIN[currency.chainId]
+      }/${currency.address}.png`
+    );
+    urls.push(
       `https://raw.githubusercontent.com/sushiswap/logos/main/network/${
         // @ts-ignore
         BLOCKCHAIN[currency.chainId]
