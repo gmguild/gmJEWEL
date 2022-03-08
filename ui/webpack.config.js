@@ -78,6 +78,6 @@ module.exports = function(_env, argv) {
     devServer: {
       historyApiFallback: true
     },
-    devtool: isDevelopment && "cheap-module-source-map",
+    devtool: argv.mode !== "production" && "cheap-module-source-map",
   }
 };
