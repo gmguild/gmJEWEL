@@ -15,3 +15,11 @@ export const GMJEWEL = new Token(
   "gmJEWEL",
   "Greedy Merchant Jewel"
 );
+
+export const JEWEL = new Token(
+  ChainId.HARMONY,
+  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F",
+  18,
+  "JEWEL",
+  "Jewels"
+);

@@ -14,13 +14,21 @@ const WRAPPED_NATIVE_ONLY: ChainTokenList = {
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainTokenList = {
-  [ChainId.HARMONY]: [...WRAPPED_NATIVE_ONLY[ChainId.HARMONY], HARMONY.GMG],
+  [ChainId.HARMONY]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.HARMONY],
+    HARMONY.GMG,
+    HARMONY.JEWEL,
+  ],
 };
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   // ...WRAPPED_NATIVE_ONLY,
-  [ChainId.HARMONY]: [...WRAPPED_NATIVE_ONLY[ChainId.HARMONY], HARMONY.GMG],
+  [ChainId.HARMONY]: [
+    ...WRAPPED_NATIVE_ONLY[ChainId.HARMONY],
+    HARMONY.GMG,
+    HARMONY.JEWEL,
+  ],
 };
 
 export const ADDITIONAL_BASES: {
