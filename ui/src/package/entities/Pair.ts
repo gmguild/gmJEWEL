@@ -46,8 +46,8 @@ export class Pair {
       currencyAmounts[0].currency.chainId,
       Pair.getAddress(currencyAmounts[0].currency, currencyAmounts[1].currency),
       18,
-      "UNI-V2",
-      "Uniswap V2"
+      "JEWEL-LP",
+      "Jewel LP Token"
     );
     this.tokenAmounts = currencyAmounts as [
       CurrencyAmount<Token>,

@@ -2,6 +2,7 @@ import { Contract } from "ethers";
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
 import {
+  ChainId,
   ENS_REGISTRAR_ADDRESS,
   MULTICALL2_ADDRESS,
   ROUTER_ADDRESS,
@@ -19,6 +20,7 @@ import WETH9_ABI from "../../constants/abi/weth9.json";
 import ROUTER_ABI from "../../constants/abi/router.json";
 import IUniswapV2PairABI from "../../constants/abi/uniswap-v2-pair.json";
 import EIP_2612_ABI from "../../constants/abi/eip-2612.json";
+import { abis, addresses } from "../../utils/env";
 
 export function useContract(
   address: string | undefined,
@@ -113,4 +115,15 @@ export function usePairContract(
 
 export function useEIP2612Contract(tokenAddress?: string): Contract | null {
   return useContract(tokenAddress, EIP_2612_ABI, false);
+}
+
+export function useMasterChefContract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
+  return useContract(
+    chainId === ChainId.HARMONY ? addresses.MasterJeweler : undefined,
+    abis.MasterJeweler,
+    withSignerIfPossible
+  );
 }

@@ -9,16 +9,19 @@ import Empty from "../../components/Empty";
 import FullPositionCard from "../../components/PositionCard";
 import Typography from "../../components/Typography";
 import Web3Connect from "../../components/Web3Connect";
+import { MasterJewelerFarms } from "../../config/chef";
 import { usePairsWithLiquidity } from "../../hooks/usePairsWithLiquidity";
-import { CurrencyAmount } from "../../package";
+import { useUserInfos } from "../../hooks/useStakingInfo";
+import { ChainId } from "../../package";
 import { useActiveWeb3React } from "../../services/web3";
 import { addresses } from "../../utils/env";
 
 export default function PoolPage() {
   const navigate = useNavigate();
 
-  const { account } = useActiveWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const { loading, pairs } = usePairsWithLiquidity();
+  const stakingPairs = useUserInfos(MasterJewelerFarms[ChainId.HARMONY]);
 
   return (
     <Container id="pool-page" className="space-y-6" maxWidth="2xl">
@@ -66,10 +69,12 @@ export default function PoolPage() {
                   <FullPositionCard
                     key={v2Pair.liquidityToken.address}
                     pair={v2Pair}
-                    stakedBalance={CurrencyAmount.fromRawAmount(
-                      v2Pair.liquidityToken,
-                      "0"
-                    )}
+                    stakedBalance={
+                      Object.values(stakingPairs).find(
+                        (i) =>
+                          i?.LPToken.address == v2Pair.liquidityToken.address
+                      )?.amount
+                    }
                   />
                 ))}
               </>
