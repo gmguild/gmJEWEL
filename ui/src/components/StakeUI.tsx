@@ -11,7 +11,7 @@ import { useERC20 } from "../hooks/token/useERC20";
 import { useStakeGMG } from "../hooks/staking/useStakeGMG";
 import { useUnstakeGMG } from "../hooks/staking/useUnstakeGMG";
 import { TextFieldWithMax } from "./TextFieldWithMax";
-import { Button } from "./Button";
+import { Button } from "./OldButton";
 import { usexGMGToken } from "../hooks/staking/usexGMGToken";
 import { B_0 } from "../utils/constants";
 import { useStakingAPY } from "../hooks/staking/useStakingAPY";
@@ -71,7 +71,7 @@ export function StakeMasterJewelerUI(props: IStakeUI) {
     loadingInformation || approving || staking || unstaking || claimingRewards;
 
   return (
-    <div className="bg-rune-edge p-4 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
+    <div className="bg-rune-edge p-4 rounded-md shadow-lg border-taupe border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">{props.tokenName}</h3>
       <p className="text-gray-300/50">
         APY: <span className="text-gray-100">{formattedAPY}</span>
@@ -172,7 +172,12 @@ export function StakedGMGUI() {
   const formattedBalance = useFormattedBigNumber(balance, " GMG");
   const formattedStakedBalance = useFormattedBigNumber(stakedBalance, " xGMG");
   const formattedRatio = useFormattedBigNumber(ratio);
-  const formattedStakedAfterRatioBalance = (stakedBalance && ratio) ? (bigNumberToFloat(stakedBalance) * bigNumberToFloat(ratio)).toLocaleString() : '0'
+  const formattedStakedAfterRatioBalance =
+    stakedBalance && ratio
+      ? (
+          bigNumberToFloat(stakedBalance) * bigNumberToFloat(ratio)
+        ).toLocaleString()
+      : "0";
   const [depositValue, setDepositValue] = React.useState<BigNumber>(
     BigNumber.from(0)
   );
@@ -193,7 +198,7 @@ export function StakedGMGUI() {
   const doing = loadingInformation || approving || staking || unstaking;
 
   return (
-    <div className="bg-rune-edge p-8 rounded-md shadow-lg border-rune border-8 flex flex-col items-center justify-center">
+    <div className="bg-rune-edge p-8 rounded-md shadow-lg border-taupe border-8 flex flex-col items-center justify-center">
       <h3 className="text-xl text-white">xGMG single-sided staking pool</h3>
       <p className="text-gray-300/50 my-1">
         Staking Ratio:{" "}
@@ -204,7 +209,9 @@ export function StakedGMGUI() {
       <p className="text-gray-300/50 my-1">
         You have{" "}
         <span className="text-gray-100">
-          {loadingInformation ? "...loading..." : formattedStakedAfterRatioBalance}
+          {loadingInformation
+            ? "...loading..."
+            : formattedStakedAfterRatioBalance}
         </span>
         {""} GMG staked
       </p>

@@ -6,14 +6,19 @@ declare module "*.json" {
 declare module "*.png" {
   const value: string;
   export = value;
- }
+}
 
-declare module '*.mp3' {
+declare module "*.mp3" {
   const value: string;
   export = value;
 }
 
 declare module "GmgDeployment" {
-  const value: Record<string, string>
-  export = value
+  const value: Record<string, string>;
+  export = value;
+}
+
+declare module "toformat" {
+  const value: any;
+  export = value;
 }

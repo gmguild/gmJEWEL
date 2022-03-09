@@ -11,7 +11,7 @@ import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { classNames } from "../utils/classNames";
 import { useFormattedBigNumber } from "../hooks/util/useFormattedBigNumber";
 import { JewelStash } from "./JewelStash";
-import { Button } from "./Button";
+import { Button } from "./OldButton";
 
 export function CreateUTXO() {
   const [createUTXO, creatingUTXO] = useCreateUTXO();

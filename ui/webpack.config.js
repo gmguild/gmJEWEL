@@ -40,6 +40,9 @@ module.exports = function(_env, argv) {
       ],
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer','Buffer'],
+      }),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "./src/index.html"),
         title: 'Greedy Merchants Guild',
@@ -59,6 +62,12 @@ module.exports = function(_env, argv) {
     ].filter(Boolean),
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
+      fallback: {
+        "buffer": require.resolve('buffer'),
+        'assert': require.resolve("assert/"),
+        'crypto': require.resolve('crypto-browserify'),
+        'stream': require.resolve('stream')
+      }
     },
     output: {
       path: path.resolve(__dirname, '../build/ui'),
@@ -69,6 +78,6 @@ module.exports = function(_env, argv) {
     devServer: {
       historyApiFallback: true
     },
-    devtool: isDevelopment && "cheap-module-source-map",
+    devtool: argv.mode !== "production" && "cheap-module-source-map",
   }
 };

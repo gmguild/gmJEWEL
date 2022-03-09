@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 body {
-  background-image: url('./assets/Banner.jpeg');
+  /* background-image: url('./assets/Banner.jpeg'); */
   background-position: 0 0;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
+  background-color: var(--primary);
+  color: #374151;
 }
 
 #app {
