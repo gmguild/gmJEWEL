@@ -352,10 +352,10 @@ export default function PoolPageAdd() {
     <>
       <Container
         id="add-liquidity-page"
-        className="py-4 space-y-6 md:py-8 lg:py-12"
+        className="pb-4 space-y-6 md:pb-8 lg:pb-12"
         maxWidth="2xl"
       >
-        <div className="flex items-center justify-between px-4 mb-5">
+        <div className="flex items-center justify-between px-4 mb-5 bg-taupe-400 py-2 rounded-lg">
           <NavLink href="/pool">
             <a className="flex items-center space-x-2 text-base font-medium text-center cursor-pointer text-secondary hover:text-high-emphesis">
               <span>{`View Liquidity Positions`}</span>
@@ -411,11 +411,11 @@ export default function PoolPageAdd() {
           >
             {/* <AddRemoveTabs creating={isCreate} adding={true} defaultSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} /> */}
 
-            <ExchangeHeader
+            {/* <ExchangeHeader
               input={currencies[Field.CURRENCY_A]}
               output={currencies[Field.CURRENCY_B]}
               allowedSlippage={allowedSlippage}
-            />
+            /> */}
 
             <TransactionConfirmationModal
               isOpen={showConfirm}
