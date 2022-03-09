@@ -1,35 +1,61 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber, useContractRead } from "wagmi";
-import { abis } from "../../utils/env";
+import { abis, addresses } from "../../utils/env";
 
-export function useUTXOValue(utxoAddress: string): [ethers.utils.Result | undefined, boolean] {
+export function useUTXOValues(utxoAddress: string): [
+  {
+    feeToPay: ethers.BigNumber | undefined;
+    utxoValue: ethers.BigNumber | undefined;
+    mintedAmount: ethers.BigNumber | undefined;
+  },
+  boolean
+] {
   const [loading, setLoading] = useState(true);
-  const [{
-    data: blockNumber
-  }] = useBlockNumber({
-    watch: true
+  const [{ data: blockNumber }] = useBlockNumber({
+    watch: true,
   });
-  const [{ data: utxoValue }, read] = useContractRead(
+  const [{ data: utxoValues }, read] = useContractRead(
     {
-      addressOrName: utxoAddress,
-      contractInterface: abis.UTXO,
+      addressOrName: addresses.PawnShopRouter,
+      contractInterface: abis.PawnShopRouter,
     },
-    "nominalCombinedValue",
-    useMemo(() => ({ skip: true, overrides: { gasLimit: 1000000 } }), [])
+    "utxoValues",
+    useMemo(
+      () => ({
+        skip: true,
+        overrides: { gasLimit: 1000000 },
+        args: utxoAddress,
+      }),
+      [utxoAddress]
+    )
   );
 
   useEffect(() => {
-    if(!blockNumber) return;
-    if(loading) return;
+    if (!blockNumber) return;
+    if (loading) return;
 
-    read()
+    read();
   }, [blockNumber]);
 
   useEffect(() => {
     setLoading(true);
     read().finally(() => setLoading(false));
-  }, [utxoAddress])
+  }, [utxoAddress]);
 
-  return [utxoValue, !!loading];
+  if (!utxoValues) {
+    return [
+      { feeToPay: undefined, utxoValue: undefined, mintedAmount: undefined },
+      !!loading,
+    ];
+  }
+
+  return [
+    {
+      feeToPay: utxoValues[0] as any,
+      utxoValue: utxoValues[1] as any,
+      mintedAmount: utxoValues[2] as any,
+    },
+    !!loading,
+  ];
 }

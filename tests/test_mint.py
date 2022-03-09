@@ -14,9 +14,9 @@ def shared_setup(fn_isolation):
     pass
 
 
-@given(id=strategy("uint", max_value=24))
+@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
 def test_mint_from_utxo(jewel_token, pawn_shop, gm_jewel, UTXO, id):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     user = users[id]
 
     name = get_random_name()
@@ -55,7 +55,7 @@ def test_mint_from_utxo(jewel_token, pawn_shop, gm_jewel, UTXO, id):
 def test_cant_mint_from_utxo_when_paused(
     jewel_token, pawn_shop, gm_jewel, UTXO, deployer
 ):
-    users = users_with_locked_jewel()
+    users = users_with_locked_jewel
     user = users[0]
 
     name = get_random_name()

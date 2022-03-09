@@ -6,7 +6,7 @@ import { useMintFromUTXO } from "../hooks/utxo/useMintFromUTXO";
 import { useSendJewelToUTXO } from "../hooks/utxo/useSendJewelToUTXO";
 import { useCreateUTXO } from "../hooks/utxo/useCreateUTXO";
 import { useUTXOMintedAmount } from "../hooks/utxo/useUTXOMintedAmount";
-import { useUTXOValue } from "../hooks/utxo/useUTXOValue";
+import { useUTXOValues } from "../hooks/utxo/useUTXOValue";
 import { useJewelBalance } from "../hooks/token/useJewelBalance";
 import { classNames } from "../utils/classNames";
 import { useFormattedBigNumber } from "../hooks/util/useFormattedBigNumber";
@@ -105,7 +105,7 @@ function ActiveUTXO({
   utxo: UTXO;
   forceRefreshUTXOs: () => void;
 }) {
-  const [utxoValue, loadingUTXOValue] = useUTXOValue(utxo.utxoAddress);
+  const [{ utxoValue }, loadingUTXOValue] = useUTXOValues(utxo.utxoAddress);
   const [mintedAmount, loadingMintedAmount] = useUTXOMintedAmount(
     utxo.utxoAddress
   );
