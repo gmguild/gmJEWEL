@@ -240,12 +240,14 @@ export default function FullPositionCard({
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : "-"}
               </div>
             </div>
-            {/* {stakedBalance && (
-                <div className="flex items-center justify-between">
-                  <div>{i18n._(t`Pool tokens in rewards pool`)}:</div>
-                  <div className="font-semibold">{stakedBalance.toSignificant(4)}</div>
+            {stakedBalance && (
+              <div className="flex items-center justify-between">
+                <div>{`Pool tokens in rewards pool`}:</div>
+                <div className="font-semibold">
+                  {stakedBalance.toSignificant(4)}
                 </div>
-              )} */}
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <div>{`Pooled ${currency0?.symbol}`}:</div>
               {token0Deposited ? (

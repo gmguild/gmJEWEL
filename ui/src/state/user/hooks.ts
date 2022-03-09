@@ -176,8 +176,8 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
     }),
     18,
     // TODO: get correct tokens
-    "UNI-V2",
-    "Uniswap V2"
+    "JEWEL-LP",
+    "Jewel LP Token"
   );
 }
 
