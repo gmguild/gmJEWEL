@@ -27,9 +27,17 @@ export default function PoolPage() {
 
       <Alert
         title={`Liquidity Provider Rewards`}
-        message={`Liquidity providers earn a 0.25% fee on all trades proportional to their share of
-                          the pool. Fees are added to the pool, accrue in real time and can be claimed by
-                          withdrawing your liquidity`}
+        message={
+          <>
+            <p>
+              Liquidity providers earn a 0.25% fee on all trades proportional to their share of
+              the pool. Fees are added to the pool, accrue in real time and can be claimed by
+              withdrawing your liquidity
+            </p>
+            <br />
+            <p className="underline">NOTE: your staked liquidity will not be shown here! Please visit the &quot;Stake&quot; page and unstake to manage your liquidity positions.</p>
+          </>
+        }
         type="information"
       />
 
