@@ -28,12 +28,12 @@ function useNetworkOrchistrator() {
         if (chainId !== chainIdFromCookie && chainId in CHAIN_ID_SUBDOMAIN) {
           // Remove the cookie to prevent wallet prompt from running while location is reassigned
           Cookies.remove("chain-id");
-          window.location.assign(
-            window.location.href.replace(
-              /(:\/\/\w+\.)/,
-              `://${CHAIN_ID_SUBDOMAIN[chainId]}.`
-            )
-          );
+          // window.location.assign(
+          //   window.location.href.replace(
+          //     /(:\/\/\w+\.)/,
+          //     `://${CHAIN_ID_SUBDOMAIN[chainId]}.`
+          //   )
+          // );
         }
       };
       ethereum.on("chainChanged", handleChainChanged);
