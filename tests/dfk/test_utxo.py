@@ -19,35 +19,20 @@ def test_cant_create_utxo_when_paused(pawn_shop, deployer):
 
     users = users_with_locked_crystal
     user = users[0]
-    name = get_random_name()
 
     with brownie.reverts():
         pawn_shop.createUTXO({"from": user})
 
-    with brownie.reverts():
-        pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": user})
 
-
-def test_create_utxo_with_profile_with_unique_name(pawn_shop, profiles, bob):
-    name = get_random_name()
-    pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": bob})
-    assert profiles.nameTaken(name)
-
-
-def test_create_utxo_separately(pawn_shop, profiles, bob, UTXO):
-    name = get_random_name()
+def test_create_utxo_separately(pawn_shop, bob, UTXO):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
-    utxo.createProfile(name.encode("utf-8"), {"from": bob})
-    assert profiles.nameTaken(name)
+    assert utxo
 
 
 @given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
 def test_send_to_utxo(pawn_shop, bob, UTXO, crystal_token, id):
-    name = get_random_name()
-    _utxo = pawn_shop.createUTXOWithProfile(
-        name.encode("utf-8"), {"from": bob}
-    ).return_value
+    _utxo = pawn_shop.create({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
     whale = users_with_locked_crystal[id]
@@ -66,10 +51,7 @@ def test_send_to_utxo(pawn_shop, bob, UTXO, crystal_token, id):
 
 @given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
 def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
-    name = get_random_name()
-    _utxo = pawn_shop.createUTXOWithProfile(
-        name.encode("utf-8"), {"from": bob}
-    ).return_value
+    _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
     whale = users_with_locked_crystal[id]
@@ -94,10 +76,7 @@ def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
 
 @given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
 def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
-    name = get_random_name()
-    _utxo = pawn_shop.createUTXOWithProfile(
-        name.encode("utf-8"), {"from": bob}
-    ).return_value
+    _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
     whale = users_with_locked_crystal[id]

@@ -40,6 +40,8 @@ users_with_locked_jewel = [
     "0x6333DD17adb9171bbdF7604292490D9b75847561",
 ]
 
+users_with_locked_crystal = ["0xe028CB3E566059A0a0D43b90eF011eA1399E29c8"]
+
 
 def anti_whale_transfer_value():
     return 1500767312484200867793381

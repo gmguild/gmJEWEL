@@ -19,8 +19,7 @@ def test_mint_from_utxo(crystal_token, pawn_shop, gm_crystal, UTXO, id):
     users = users_with_locked_crystal
     user = users[id]
 
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": user})
+    tx = pawn_shop.createUTXO({"from": user})
     created_utxo = UTXO.at(tx.return_value)
 
     UTXO_start_balance = created_utxo.nominalCombinedValue()
@@ -58,8 +57,7 @@ def test_cant_mint_from_utxo_when_paused(
     users = users_with_locked_crystal
     user = users[0]
 
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": user})
+    tx = pawn_shop.createUTXO({"from": user})
     created_utxo = UTXO.at(tx.return_value)
 
     UTXO_start_balance = created_utxo.nominalCombinedValue()

@@ -19,8 +19,7 @@ def test_view(pawn_shop_router, pawn_shop, id, UTXO, crystal_token, bob, gm_crys
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
@@ -70,8 +69,7 @@ def test_full_redeem(
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
@@ -140,8 +138,7 @@ def test_full_redeem_via_force_redeem(
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)

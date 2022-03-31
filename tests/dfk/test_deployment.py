@@ -13,10 +13,5 @@ def test_deployment(crystal_token, gm_crystal, pawn_shop):
     pass
 
 
-def test_create_profile(profiles, bob):
-    name = get_random_name()
-    profiles.createProfile(name, 0, {"from": bob})
-
-
 def test_create_utxo(pawn_shop, bob):
     pawn_shop.createUTXO({"from": bob})

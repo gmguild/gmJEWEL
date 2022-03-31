@@ -17,8 +17,7 @@ def test_redeem_from_minted_utxo_combined(
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
@@ -67,9 +66,7 @@ def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
     users = users_with_locked_crystal
     whale = users[id]
 
-    # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
@@ -119,8 +116,7 @@ def test_redeem_from_minted_utxo_unlocked(
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
@@ -169,8 +165,7 @@ def test_redeem_from_minted_utxo_unlocked_with_partial_jewel_payment(
     whale = users[id]
 
     # create UTXO
-    name = get_random_name()
-    tx = pawn_shop.createUTXOWithProfile(name.encode("utf-8"), {"from": whale})
+    tx = pawn_shop.createUTXO({"from": whale})
     created_utxo = UTXO.at(tx.return_value)
 
     whale_bal = crystal_token.balanceOf(whale)
