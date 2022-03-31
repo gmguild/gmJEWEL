@@ -257,6 +257,8 @@ def _redeemUTXOForFullCombinedValue(_redeemer: address, _utxo: address, _jewelAm
     assert self.isValidUTXO[_utxo] # dev: utxo is not valid address minted by this PawnShop contract
 
     utxoCombinedValue: uint256 = UTXO(_utxo).nominalCombinedValue()
+    assert utxoCombinedValue > 0 # dev: empty stash
+    assert _jewelAmount < utxoCombinedValue # dev: cannot overpay for stash
     feeBps: uint256 = self._getFeeTier(utxoCombinedValue)
     feeToPay: uint256 = utxoCombinedValue * feeBps / 10_000
 
@@ -290,6 +292,8 @@ def _redeemUTXOForUnlockedValue(_redeemer: address, _utxo: address, _jewelAmount
     assert self.isValidUTXO[_utxo] # dev: utxo is not valid address minted by this PawnShop contract
 
     utxoUnlockedValue: uint256 = UTXO(_utxo).nominalUnlockedValue()
+    assert utxoUnlockedValue > 0 # dev: empty stash
+    assert _jewelAmount < utxoUnlockedValue # dev: cannot overpay for stash
     feeBps: uint256 = self._getFeeTier(utxoUnlockedValue)
     feeToPay: uint256 = utxoUnlockedValue * feeBps / 10_000
 
