@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlitedict import SqliteDict
 
 from routers.jewel import router as jewel
+from routers.crystal import router as crystal
 
 app = FastAPI()
 
@@ -16,3 +17,4 @@ app.add_middleware(
 )
 
 app.include_router(jewel, prefix="/jewel")
+app.include_router(crystal, prefix="/crystal")

@@ -42,12 +42,12 @@ IS_DEV = "PRODUCTION" not in os.environ or os.environ["PRODUCTION"] != "true"
 
 SCRIPT_DIR = os.path.dirname(__file__)  # <-- absolute dir the script is in
 DEPLOYMENT_REL_PATH = (
-    "../../../ui/deployment.json" if IS_DEV else "../../../ui/deployment-prod.json"
+    "../../../ui/deployment-crystal.json" if IS_DEV else "../../../ui/deployment-crystal-prod.json"
 )
 PAWN_SHOP_REL_PATH = (
-    "../../../build/contracts/hPawnShop.json"
+    "../../../build/contracts/PawnShopV2.json"
     if IS_DEV
-    else "../../../prod-deployment/contracts/PawnShop.json"
+    else "../../../prod-deployment-crystal/contracts/PawnShopV2.json"
 )
 
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
@@ -60,7 +60,7 @@ CONTRACT_FILE = json.load(
 CONTRACT_ABI = CONTRACT_FILE["abi"]
 FIRST_BLOCK_TO_SCAN = ADDRESSES["deploymentBlock"]
 
-DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, "../../db/jewel")
+DB_FOLDER_PREFIX = os.path.join(SCRIPT_DIR, "../../db/crystal")
 
 
 class IEventScannerState(ABC):
@@ -630,6 +630,8 @@ class SqliteDictState(IEventScannerState):
             key = f"{block_number}-{txhash}-{log_index}-{event_type}"
             db[key] = True
 
+        print(event)
+
         # TODO: refactor all this so it"s not just one big function
         if event_type == "UTXOCreated":
             if not is_event_seen(self.state_utxo_seen_events):
@@ -684,8 +686,6 @@ class SqliteDictState(IEventScannerState):
                 next_utxo_redemption_index = int(
                     last_utxo_redemption_index) + 1
                 _redeem = args["redeemooor"].lower()
-                if args["redeemooor"].lower() == ADDRESSES["PawnShopRouter"].lower():
-                    _redeem = tx["from"].lower()
                 self.state_utxo_redemptions[next_utxo_redemption_index] = {
                     "tx": txhash,
                     "utxoAddress": args["UTXOAddress"].lower(),
@@ -805,8 +805,8 @@ scheduler = sched.scheduler(time.time, time.sleep)
 
 def run(sc):
     api_url = (
-        os.environ["HARMONY_RPC_URL"]
-        if "HARMONY_RPC_URL" in os.environ
+        os.environ["DFK_RPC_URL"]
+        if "DFK_RPC_URL" in os.environ
         else "http://127.0.0.1:8545"
     )
 
@@ -900,7 +900,7 @@ scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (scheduler,))
 def notify_new_stash(value):
     webhook = DiscordWebhook(
         url=DISCORD_WEBHOOK_URL,
-        content=f"New JEWEL stash has been minted! {value/1e18:.3f} locked JEWEL can be claimed.",
+        content=f"New CRYSTAL stash has been minted! {value/1e18:.3f} locked CRYSTAL can be claimed.",
     )
     response = webhook.execute()
 
@@ -908,6 +908,6 @@ def notify_new_stash(value):
 def notify_redeemed_stash(redeemed_value):
     webhook = DiscordWebhook(
         url=DISCORD_WEBHOOK_URL,
-        content=f"A JEWEL stash has just been redeemed for {redeemed_value/1e18:.3f}. Need to be quicker next time!",
+        content=f"A CRYSTAL stash has just been redeemed for {redeemed_value/1e18:.3f}. Need to be quicker next time!",
     )
     response = webhook.execute()
