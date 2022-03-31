@@ -1,17 +1,22 @@
-import pytest
+from tests.dfk.conftest import TEST_USERS_WITH_LOCKED_CRYSTAL
 
 from tests.helpers import (
     anti_whale_transfer_value,
-    get_random_name,
-    users_with_locked_crystal,
 )
 from brownie.test import given, strategy
-import brownie
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
 def test_redeem_from_minted_utxo_combined(
-    crystal_token, pawn_shop, gm_crystal, UTXO, bob, id, deployer
+    crystal_token,
+    pawn_shop,
+    gm_crystal,
+    UTXO,
+    bob,
+    id,
+    deployer,
+    users_with_locked_crystal,
+    chain,
 ):
     users = users_with_locked_crystal
     whale = users[id]
@@ -51,6 +56,7 @@ def test_redeem_from_minted_utxo_combined(
     utxo_unlocked = crystal_token.balanceOf(created_utxo)
 
     gm_crystal.approve(pawn_shop, bal, {"from": whale})
+    chain.sleep(259201)
 
     pawn_shop.redeemUTXOForFullCombinedValue(created_utxo, 0, {"from": whale})
     post_locked = crystal_token.lockOf(whale)
@@ -59,9 +65,18 @@ def test_redeem_from_minted_utxo_combined(
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
 def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
-    crystal_token, pawn_shop, gm_crystal, UTXO, bob, id, deployer, dfk_bank_account
+    crystal_token,
+    pawn_shop,
+    gm_crystal,
+    UTXO,
+    bob,
+    id,
+    deployer,
+    dfk_bank_account,
+    users_with_locked_crystal,
+    chain,
 ):
     users = users_with_locked_crystal
     whale = users[id]
@@ -101,6 +116,7 @@ def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
     crystal_token.approve(pawn_shop, bal, {"from": whale})
     gm_crystal.approve(pawn_shop, bal, {"from": whale})
 
+    chain.sleep(259202)
     pawn_shop.redeemUTXOForFullCombinedValue(created_utxo, bal // 100, {"from": whale})
     post_locked = crystal_token.lockOf(whale)
     post_unlocked = crystal_token.balanceOf(whale)
@@ -108,9 +124,16 @@ def test_redeem_from_minted_utxo_combined_with_partial_jewel_payment(
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
 def test_redeem_from_minted_utxo_unlocked(
-    crystal_token, pawn_shop, gm_crystal, UTXO, bob, id, deployer
+    crystal_token,
+    pawn_shop,
+    gm_crystal,
+    UTXO,
+    bob,
+    id,
+    deployer,
+    users_with_locked_crystal,
 ):
     users = users_with_locked_crystal
     whale = users[id]
@@ -157,12 +180,19 @@ def test_redeem_from_minted_utxo_unlocked(
     assert post_unlocked == initial_unlocked + utxo_unlocked
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
 def test_redeem_from_minted_utxo_unlocked_with_partial_jewel_payment(
-    crystal_token, pawn_shop, gm_crystal, UTXO, bob, id, deployer, dfk_bank_account
+    crystal_token,
+    pawn_shop,
+    gm_crystal,
+    UTXO,
+    bob,
+    id,
+    deployer,
+    dfk_bank_account,
+    users_with_locked_crystal,
 ):
-    users = users_with_locked_crystal
-    whale = users[id]
+    whale = users_with_locked_crystal[id]
 
     # create UTXO
     tx = pawn_shop.createUTXO({"from": whale})

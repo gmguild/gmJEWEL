@@ -22,3 +22,8 @@ def alice(accounts):
 @pytest.fixture(scope="module")
 def bob(accounts):
     yield accounts[2]
+
+
+@pytest.fixture(autouse=True)
+def shared_setup(fn_isolation):
+    pass

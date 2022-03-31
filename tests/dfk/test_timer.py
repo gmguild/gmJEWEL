@@ -1,13 +1,13 @@
 import brownie
-from brownie.test import given, strategy
 
 from tests.helpers import (
     anti_whale_transfer_value,
-    users_with_locked_crystal,
 )
 
 
-def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, chain):
+def test_send_all_jewel_from_utxo(
+    pawn_shop, bob, UTXO, crystal_token, chain, users_with_locked_crystal
+):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 

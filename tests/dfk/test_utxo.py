@@ -1,11 +1,9 @@
 import pytest
 import brownie
-from tests.helpers import (
-    anti_whale_transfer_value,
-    get_random_name,
-    users_with_locked_crystal,
-)
 from brownie.test import given, strategy
+from tests.helpers import anti_whale_transfer_value
+
+from tests.dfk.conftest import TEST_USERS_WITH_LOCKED_CRYSTAL
 
 
 @pytest.fixture(autouse=True)
@@ -13,12 +11,11 @@ def shared_setup(fn_isolation):
     pass
 
 
-def test_cant_create_utxo_when_paused(pawn_shop, deployer):
+def test_cant_create_utxo_when_paused(pawn_shop, deployer, users_with_locked_crystal):
     pawn_shop.pause({"from": deployer})
     assert pawn_shop.isPaused() == True
 
-    users = users_with_locked_crystal
-    user = users[0]
+    user = users_with_locked_crystal[0]
 
     with brownie.reverts():
         pawn_shop.createUTXO({"from": user})
@@ -30,8 +27,10 @@ def test_create_utxo_separately(pawn_shop, bob, UTXO):
     assert utxo
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
-def test_send_to_utxo(pawn_shop, bob, UTXO, crystal_token, id):
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
+def test_send_to_utxo(
+    pawn_shop, bob, UTXO, crystal_token, id, users_with_locked_crystal
+):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
@@ -49,8 +48,10 @@ def test_send_to_utxo(pawn_shop, bob, UTXO, crystal_token, id):
     assert utxo.nominalCombinedValue() == locked_bal + unlocked_bal
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
-def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
+def test_send_unlocked_jewel_from_utxo(
+    pawn_shop, bob, UTXO, crystal_token, id, users_with_locked_crystal
+):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
@@ -74,8 +75,10 @@ def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
     assert crystal_token.balanceOf(bob) == amount_to_transfer
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
-def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id, chain):
+@given(id=strategy("uint", max_value=TEST_USERS_WITH_LOCKED_CRYSTAL))
+def test_send_all_jewel_from_utxo(
+    pawn_shop, bob, UTXO, crystal_token, id, chain, users_with_locked_crystal
+):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 

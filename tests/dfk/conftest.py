@@ -16,27 +16,16 @@ def gm_crystal(deployer, gmCRYSTAL, alice):
 
 @pytest.fixture(scope="module")
 def pawn_shop(
-    deployer, utxo_template, gm_crystal, central_bank, PawnShop, crystal_token
+    deployer, utxo_template, gm_crystal, central_bank, PawnShopV2, crystal_token
 ):
     contract = deployer.deploy(
-        PawnShop,
+        PawnShopV2,
         gm_crystal,
         utxo_template,
         central_bank,
         crystal_token.address,
     )
     gm_crystal.addMinter(contract.address, {"from": deployer})
-    yield contract
-
-
-@pytest.fixture(scope="module")
-def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_crystal, crystal_token):
-    contract = deployer.deploy(
-        PawnShopRouter,
-        pawn_shop,
-        gm_crystal,
-        crystal_token.address,
-    )
     yield contract
 
 
@@ -48,14 +37,29 @@ def central_bank(deployer, crystal_token, gm_crystal, CentralBank):
 
 
 @pytest.fixture(scope="module")
-def dfk_bank_account(accounts, crystal_token):
+def dfk_bank_account(crystal_token):
     """For the tests we assume the bank account is a single source of jewel
     We will often use this jewel to pay for fees, so we only need an address
     which has a supply of jewel. Instead lets get frisky to give us some crystals"""
-    acct = accounts[-1]
+    acct = "0x00000000000000000000000000000000DeaD0000"
     owner = crystal_token.owner()
     crystal_token.mint(acct, 100000e18, {"from": owner})
     yield acct
+
+
+vitamin_butane = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B"
+dead_beef = "0x00000000000000000000000000000000DeaDBeef"
+TEST_USERS_WITH_LOCKED_CRYSTAL = 2 - 1
+# we use this for list indexing, so subtract 1 from number of addresses
+
+
+@pytest.fixture(scope="module")
+def users_with_locked_crystal(crystal_token):
+    owner = crystal_token.owner()
+    for user in [vitamin_butane, dead_beef]:
+        crystal_token.mint(user, 1000000 * 1e18, {"from": owner})
+        crystal_token.lock(user, 900000 * 1e18, {"from": owner})
+    yield [vitamin_butane, dead_beef]
 
 
 # DefiKingdom contracts
