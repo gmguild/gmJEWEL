@@ -23,19 +23,18 @@ def test_leave(staked_gmg, alice, gmg_token, value, deployer):
 
 
 @given(value=strategy("uint256", min_value="1 ether", max_value="1_000_000 ether"))
-def test_swap1(staked_gmg, deployer, gm_jewel, jewel_token, uniswap_pool1, value):
-    gm_jewel.mint(staked_gmg, value, {"from": deployer})
-    staked_gmg.swap([gm_jewel, jewel_token], value, 0, {"from": deployer})
-    assert gm_jewel.balanceOf(staked_gmg) == 0
-    assert jewel_token.balanceOf(staked_gmg) > 0
+def test_swap1(staked_gmg, deployer, gm_crystal, crystal_token, uniswap_pool1, value):
+    gm_crystal.mint(staked_gmg, value, {"from": deployer})
+    staked_gmg.swap([gm_crystal, crystal_token], value, 0, {"from": deployer})
+    assert gm_crystal.balanceOf(staked_gmg) == 0
+    assert crystal_token.balanceOf(staked_gmg) > 0
 
 
 @given(value=strategy("uint256", min_value="1 ether", max_value="1_000_000 ether"))
-def test_swap2(staked_gmg, deployer, gmg_token, jewel_token, uniswap_pool2, value):
-    jewel_token.transfer(
-        staked_gmg, value, {
-            "from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
+def test_swap2(staked_gmg, deployer, gmg_token, crystal_token, uniswap_pool2, value):
+    crystal_token.transfer(
+        staked_gmg, value, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
-    staked_gmg.swap([jewel_token, gmg_token], value, 0, {"from": deployer})
-    assert jewel_token.balanceOf(staked_gmg) == 0
+    staked_gmg.swap([crystal_token, gmg_token], value, 0, {"from": deployer})
+    assert crystal_token.balanceOf(staked_gmg) == 0
     assert gmg_token.balanceOf(staked_gmg) > 0

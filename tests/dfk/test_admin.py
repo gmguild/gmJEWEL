@@ -66,40 +66,40 @@ def test_pawn_shop_non_owner_cannot_unpause(pawn_shop, alice):
 # LL JEWEL
 
 
-def test_gm_jewel_init_owner(gm_jewel, deployer):
-    assert gm_jewel.owner() == deployer
+def test_gm_crystal_init_owner(gm_crystal, deployer):
+    assert gm_crystal.owner() == deployer
 
 
-def test_gm_jewel_change_owner(gm_jewel, deployer, alice):
-    gm_jewel.transferOwnership(alice, {"from": deployer})
-    assert gm_jewel.owner() == alice
+def test_gm_crystal_change_owner(gm_crystal, deployer, alice):
+    gm_crystal.transferOwnership(alice, {"from": deployer})
+    assert gm_crystal.owner() == alice
 
 
-def test_gm_jewel_cant_change_owner_if_not_admin(gm_jewel, alice):
+def test_gm_crystal_cant_change_owner_if_not_admin(gm_crystal, alice):
     with brownie.reverts():
-        gm_jewel.transferOwnership(alice, {"from": alice})
+        gm_crystal.transferOwnership(alice, {"from": alice})
 
 
-def test_gm_jewel_add_minter(gm_jewel, alice, deployer):
-    gm_jewel.addMinter(alice, {"from": deployer})
-    assert gm_jewel.isMinter(alice) == True
+def test_gm_crystal_add_minter(gm_crystal, alice, deployer):
+    gm_crystal.addMinter(alice, {"from": deployer})
+    assert gm_crystal.isMinter(alice) == True
 
 
-def test_gm_jewel_remove_minter(gm_jewel, alice, deployer):
-    gm_jewel.addMinter(alice, {"from": deployer})
-    assert gm_jewel.isMinter(alice) == True
-    gm_jewel.removeMinter(alice, {"from": deployer})
-    assert gm_jewel.isMinter(alice) == False
+def test_gm_crystal_remove_minter(gm_crystal, alice, deployer):
+    gm_crystal.addMinter(alice, {"from": deployer})
+    assert gm_crystal.isMinter(alice) == True
+    gm_crystal.removeMinter(alice, {"from": deployer})
+    assert gm_crystal.isMinter(alice) == False
 
 
-def test_gm_jewel_cant_add_minter_if_not_admin(gm_jewel, alice):
+def test_gm_crystal_cant_add_minter_if_not_admin(gm_crystal, alice):
     with brownie.reverts():
-        gm_jewel.addMinter(alice, {"from": alice})
+        gm_crystal.addMinter(alice, {"from": alice})
 
 
-def test_gm_jewel_cant_remove_minter_if_not_admin(gm_jewel, alice):
+def test_gm_crystal_cant_remove_minter_if_not_admin(gm_crystal, alice):
     with brownie.reverts():
-        gm_jewel.removeMinter(alice, {"from": alice})
+        gm_crystal.removeMinter(alice, {"from": alice})
 
 
 # CENTRAL BANK

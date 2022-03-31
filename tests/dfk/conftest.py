@@ -1,7 +1,7 @@
 import pytest
 from brownie import ZERO_ADDRESS
 
-jewel_address = "0x04b9da42306b023f3572e106b11d82aad9d32ebb"
+crystal_address = "0x04b9da42306b023f3572e106b11d82aad9d32ebb"
 
 
 @pytest.fixture(scope="module")
@@ -11,41 +11,40 @@ def utxo_template(deployer, UTXO):
 
 
 @pytest.fixture(scope="module")
-def gm_jewel(deployer, gmJEWEL, alice):
-    contract = deployer.deploy(gmJEWEL)
+def gm_crystal(deployer, gmCRYSTAL, alice):
+    contract = deployer.deploy(gmCRYSTAL)
     contract.mint(alice, 100 * 1e18, {"from": deployer})
     yield contract
 
 
 @pytest.fixture(scope="module")
-def pawn_shop(deployer, utxo_template, gm_jewel, central_bank, PawnShop):
+def pawn_shop(deployer, utxo_template, gm_crystal, central_bank, PawnShop):
     contract = deployer.deploy(
         PawnShop,
-        gm_jewel,
+        gm_crystal,
         utxo_template,
         central_bank,
-        jewel_address,
-        ZERO_ADDRESS,
+        crystal_address,
     )
-    gm_jewel.addMinter(contract.address, {"from": deployer})
+    gm_crystal.addMinter(contract.address, {"from": deployer})
     yield contract
 
 
 @pytest.fixture(scope="module")
-def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_jewel):
+def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_crystal):
     contract = deployer.deploy(
         PawnShopRouter,
         pawn_shop,
-        gm_jewel,
-        jewel_address,
+        gm_crystal,
+        crystal_address,
     )
     yield contract
 
 
 @pytest.fixture(scope="module")
-def central_bank(deployer, jewel_token, gm_jewel, CentralBank):
-    contract = deployer.deploy(CentralBank, gm_jewel, jewel_token)
-    gm_jewel.addMinter(contract.address, {"from": deployer})
+def central_bank(deployer, crystal_token, gm_crystal, CentralBank):
+    contract = deployer.deploy(CentralBank, gm_crystal, crystal_token)
+    gm_crystal.addMinter(contract.address, {"from": deployer})
     yield contract
 
 
@@ -55,31 +54,31 @@ def gmg_token(deployer, GMGToken):
 
 
 @pytest.fixture(scope="module")
-def staked_gmg(deployer, StakedGMG, gmg_token, jewel_token):
-    yield deployer.deploy(StakedGMG, gmg_token, deployer, uniswap_router, jewel_token)
+def staked_gmg(deployer, StakedGMG, gmg_token, crystal_token):
+    yield deployer.deploy(StakedGMG, gmg_token, deployer, uniswap_router, crystal_token)
 
 
 @pytest.fixture(scope="module")
-def uniswap_pool1(deployer, gm_jewel, jewel_token, interface):
+def uniswap_pool1(deployer, gm_crystal, crystal_token, interface):
     contract = interface.IUniswapV2Factory(uniswap_factory)
-    contract.createPair(gm_jewel, jewel_token, {"from": deployer})
-    pool_addr = contract.getPair(gm_jewel, jewel_token)
+    contract.createPair(gm_crystal, crystal_token, {"from": deployer})
+    pool_addr = contract.getPair(gm_crystal, crystal_token)
     pool = interface.IUniswapV2Pair(pool_addr)
-    jewel_token.transfer(
+    crystal_token.transfer(
         pool, 5_000_000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
-    gm_jewel.mint(pool, 10_000_000 * 1e18, {"from": deployer})
+    gm_crystal.mint(pool, 10_000_000 * 1e18, {"from": deployer})
     pool.mint(deployer, {"from": deployer})
     yield contract
 
 
 @pytest.fixture(scope="module")
-def uniswap_pool2(deployer, gmg_token, jewel_token):
+def uniswap_pool2(deployer, gmg_token, crystal_token):
     contract = interface.IUniswapV2Factory(uniswap_factory)
-    contract.createPair(gmg_token, jewel_token, {"from": deployer})
-    pool_addr = contract.getPair(gmg_token, jewel_token)
+    contract.createPair(gmg_token, crystal_token, {"from": deployer})
+    pool_addr = contract.getPair(gmg_token, crystal_token)
     pool = interface.IUniswapV2Pair(pool_addr)
-    jewel_token.transfer(
+    crystal_token.transfer(
         pool, 5_000_000 * 1e18, {"from": "0xa9ce83507d872c5e1273e745abcfda849daa654f"}
     )
     gmg_token.mint(pool, 10_000_000 * 1e18, {"from": deployer})
@@ -104,6 +103,6 @@ def master_jeweler(deployer, MasterJeweler, gmg_token):
 
 
 @pytest.fixture(scope="module")
-def jewel_token(interface):
-    contract = interface.Jewel(jewel_address)
+def crystal_token(interface):
+    contract = interface.Jewel(crystal_address)
     yield contract

@@ -9,7 +9,7 @@ def shared_setup(fn_isolation):
     pass
 
 
-def test_deployment(jewel_token, gm_jewel, pawn_shop):
+def test_deployment(crystal_token, gm_crystal, pawn_shop):
     pass
 
 

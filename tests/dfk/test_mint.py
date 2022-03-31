@@ -3,7 +3,7 @@ import pytest
 from tests.helpers import (
     anti_whale_transfer_value,
     get_random_name,
-    users_with_locked_jewel,
+    users_with_locked_crystal,
 )
 from brownie.test import given, strategy
 import brownie
@@ -14,9 +14,9 @@ def shared_setup(fn_isolation):
     pass
 
 
-@given(id=strategy("uint", max_value=len(users_with_locked_jewel) - 1))
-def test_mint_from_utxo(jewel_token, pawn_shop, gm_jewel, UTXO, id):
-    users = users_with_locked_jewel
+@given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
+def test_mint_from_utxo(crystal_token, pawn_shop, gm_crystal, UTXO, id):
+    users = users_with_locked_crystal
     user = users[id]
 
     name = get_random_name()
@@ -25,15 +25,15 @@ def test_mint_from_utxo(jewel_token, pawn_shop, gm_jewel, UTXO, id):
 
     UTXO_start_balance = created_utxo.nominalCombinedValue()
 
-    whale_bal = jewel_token.balanceOf(user)
+    whale_bal = crystal_token.balanceOf(user)
     if whale_bal > anti_whale_transfer_value():
         return
 
-    jewel_token.transferAll(created_utxo.address, {"from": user})
+    crystal_token.transferAll(created_utxo.address, {"from": user})
 
-    assert jewel_token.balanceOf(user) == 0
-    assert jewel_token.lockOf(user) == 0
-    user_start_bal = gm_jewel.balanceOf(user)
+    assert crystal_token.balanceOf(user) == 0
+    assert crystal_token.lockOf(user) == 0
+    user_start_bal = gm_crystal.balanceOf(user)
 
     utxo_val = created_utxo.nominalCombinedValue()
     minted_from = pawn_shop.mintedFromUTXO(created_utxo)
@@ -47,15 +47,15 @@ def test_mint_from_utxo(jewel_token, pawn_shop, gm_jewel, UTXO, id):
 
     pawn_shop.mintFromUTXO(created_utxo, {"from": user})
     assert (
-        gm_jewel.balanceOf(user) - user_start_bal
+        gm_crystal.balanceOf(user) - user_start_bal
         == created_utxo.nominalCombinedValue() - UTXO_start_balance
     )
 
 
 def test_cant_mint_from_utxo_when_paused(
-    jewel_token, pawn_shop, gm_jewel, UTXO, deployer
+    crystal_token, pawn_shop, gm_crystal, UTXO, deployer
 ):
-    users = users_with_locked_jewel
+    users = users_with_locked_crystal
     user = users[0]
 
     name = get_random_name()
@@ -64,15 +64,15 @@ def test_cant_mint_from_utxo_when_paused(
 
     UTXO_start_balance = created_utxo.nominalCombinedValue()
 
-    whale_bal = jewel_token.balanceOf(user)
+    whale_bal = crystal_token.balanceOf(user)
     if whale_bal > anti_whale_transfer_value():
         return
 
-    jewel_token.transferAll(created_utxo.address, {"from": user})
+    crystal_token.transferAll(created_utxo.address, {"from": user})
 
-    assert jewel_token.balanceOf(user) == 0
-    assert jewel_token.lockOf(user) == 0
-    user_start_bal = gm_jewel.balanceOf(user)
+    assert crystal_token.balanceOf(user) == 0
+    assert crystal_token.lockOf(user) == 0
+    user_start_bal = gm_crystal.balanceOf(user)
 
     utxo_val = created_utxo.nominalCombinedValue()
     minted_from = pawn_shop.mintedFromUTXO(created_utxo)
@@ -90,4 +90,4 @@ def test_cant_mint_from_utxo_when_paused(
     with brownie.reverts():
         pawn_shop.mintFromUTXO(created_utxo, {"from": user})
 
-    assert gm_jewel.balanceOf(user) - user_start_bal == 0
+    assert gm_crystal.balanceOf(user) - user_start_bal == 0
