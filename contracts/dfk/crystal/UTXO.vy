@@ -9,18 +9,11 @@ interface JewelToken:
     def transfer(_to: address, _amount: uint256) -> bool: nonpayable
     def transferAll(_to: address): nonpayable
 
-interface Profile:
-    def addressToIndex(profileAddress: address) -> uint256: view
-
 
 # ERC20 address for JEWEL Token
 JEWEL: address
-# Address for Profiles contract
-Profiles: address
 # Address for PawnShop contract
 PawnShop: address
-# Each UTXO contract must be linked to a profile
-profileId: uint256
 # Each UTXO has a "minter", this is the person that receives the liquid token on deposit to the PawnShop
 # Note: this does not necessarily need to be the person that deposits locked token
 minter: public(address)
@@ -30,7 +23,7 @@ minter: public(address)
 
 
 @external
-def initialize(_pawnshop: address, _minter: address, _jewel: address, _profiles: address):
+def initialize(_pawnshop: address, _minter: address, _jewel: address):
     """
     @dev Initialize contract without assigning profile
     """
@@ -38,21 +31,7 @@ def initialize(_pawnshop: address, _minter: address, _jewel: address, _profiles:
     self.PawnShop = _pawnshop
     self.JEWEL    = _jewel
     self.minter   = _minter
-    self.Profiles = _profiles
     
-
-@external
-def createProfile(_name: Bytes[32]):
-    assert self.profileId == 0 # dev: already has profile
-    picId: uint8 = 0
-    response: Bytes[32] = raw_call(
-        self.Profiles, 
-        _abi_encode(_name, picId, method_id=method_id("createProfile(string,uint8)")),
-        max_outsize=32,
-    )
-    assert convert(response, bool) # dev: error making profile
-    self.profileId = Profile(self.Profiles).addressToIndex(self)
-
 
 @external
 def transferAll(_to: address):

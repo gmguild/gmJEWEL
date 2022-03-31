@@ -16,8 +16,7 @@ interface JewelToken:
     def transferAll(_to: address): nonpayable
 
 interface UTXO:
-    def initialize(_pawnshop: address, _minter: address, _jewel: address, _profiles: address): nonpayable
-    def createProfile(_name: Bytes[32]): nonpayable
+    def initialize(_pawnshop: address, _minter: address, _jewel: address): nonpayable
     def transferAll(_to: address): nonpayable
     def transferUnlocked(_to: address, _amount: uint256): nonpayable
     def minter() -> address: view
@@ -90,8 +89,6 @@ LIQLOCKJEWEL_TOKEN_ADDRESS: immutable(address)
 UTXO_TEMPLATE_ADDRESS: immutable(address)
 # Address of deployed CentralBank contract
 CENTRAL_BANK_ADDRESS: immutable(address)
-# Address of deployed Profiles contract
-PROFILES_ADDRESS: immutable(address)
 
 # Lists canonical UTXO addresses
 isValidUTXO: public(HashMap[address, bool])
@@ -116,12 +113,11 @@ getUTXO: public(HashMap[address, address[MAXIMUM_NUMBER_UTXOS]])
 numUTXOs: public(HashMap[address, uint256])
 
 @external
-def __init__(_lljewel: address, _template: address, _central_bank: address, _jewel: address, _profiles: address):
+def __init__(_lljewel: address, _template: address, _central_bank: address, _jewel: address):
     LIQLOCKJEWEL_TOKEN_ADDRESS = _lljewel
     UTXO_TEMPLATE_ADDRESS      = _template
     CENTRAL_BANK_ADDRESS       = _central_bank
     JEWEL_TOKEN_ADDRESS        = _jewel
-    PROFILES_ADDRESS           = _profiles
 
     self.owner = msg.sender
 
@@ -186,7 +182,7 @@ def _createUTXO(_minter: address) -> address:
     num: uint256 = self.numUTXOs[_minter]
     assert num < MAXIMUM_NUMBER_UTXOS # dev: too many UTXOs
     utxo: address = create_forwarder_to(UTXO_TEMPLATE_ADDRESS)
-    UTXO(utxo).initialize(self, _minter, JEWEL_TOKEN_ADDRESS, PROFILES_ADDRESS)
+    UTXO(utxo).initialize(self, _minter, JEWEL_TOKEN_ADDRESS)
     self.getUTXO[_minter][num] = utxo
     self.numUTXOs[_minter] += 1
     self.isValidUTXO[utxo] = True
@@ -198,14 +194,6 @@ def _createUTXO(_minter: address) -> address:
 def createUTXO() -> address:
     assert self.isPaused == False # dev: contract is paused
     return self._createUTXO(msg.sender)
-
-
-@external
-def createUTXOWithProfile(_name: Bytes[32]) -> address:
-    assert self.isPaused == False # dev: contract is paused
-    utxo: address = self._createUTXO(msg.sender)
-    UTXO(utxo).createProfile(_name)
-    return utxo
 
 
 @view
