@@ -85,6 +85,7 @@ function combineMaps(
     1285: { ...map1[1285], ...map2[1285] }, // moonriver
     122: { ...map1[122], ...map2[122] }, // fuse
     40: { ...map1[40], ...map2[40] }, // telos
+    53935: { ...map1[53935], ...map2[53935] }, // dfk chain
   };
 }
 

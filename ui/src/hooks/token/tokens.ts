@@ -109,6 +109,7 @@ function useTokensFromMap(
 
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList();
+  console.log(allTokens);
   return useTokensFromMap(allTokens, true);
 }
 
