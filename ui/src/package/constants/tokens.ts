@@ -260,6 +260,13 @@ export const WETH9: TokenMap = {
 };
 
 export const WNATIVE: TokenMap = {
+  [ChainId.DFK]: new Token(
+    ChainId.DFK,
+    WNATIVE_ADDRESS[ChainId.DFK],
+    18,
+    "WJEWEL",
+    "wJewel"
+  ),
   [ChainId.MAINNET]: WETH9[ChainId.MAINNET],
   [ChainId.ROPSTEN]: WETH9[ChainId.ROPSTEN],
   [ChainId.RINKEBY]: WETH9[ChainId.RINKEBY],

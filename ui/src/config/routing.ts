@@ -1,6 +1,7 @@
 import { ChainId, Token, WNATIVE } from "../package";
 
 import * as HARMONY from "./tokens/harmony";
+import * as DFK from "./tokens/dfk";
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[];
@@ -8,6 +9,7 @@ type ChainTokenList = {
 
 const WRAPPED_NATIVE_ONLY: ChainTokenList = {
   [ChainId.HARMONY]: [WNATIVE[ChainId.HARMONY]],
+  [ChainId.DFK]: [WNATIVE[ChainId.DFK]],
 };
 
 /**
@@ -19,6 +21,7 @@ export const COMMON_BASES: ChainTokenList = {
     HARMONY.GMG,
     HARMONY.JEWEL,
   ],
+  [ChainId.DFK]: [...WRAPPED_NATIVE_ONLY[ChainId.DFK], DFK.CRYSTAL, DFK.xJEWEL],
 };
 
 // used to construct intermediary pairs for trading
@@ -29,6 +32,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     HARMONY.GMG,
     HARMONY.JEWEL,
   ],
+  [ChainId.DFK]: [...WRAPPED_NATIVE_ONLY[ChainId.DFK], DFK.CRYSTAL, DFK.xJEWEL],
 };
 
 export const ADDITIONAL_BASES: {
