@@ -131,7 +131,7 @@ def withdrawCentralBankJewel(_amount: uint256):
     self._withdrawCentralBankJewelTo(self.feeWallet, _amount)
 
 @external
-def setKeeper(new_keeper: address):
+def updateKeeper(new_keeper: address):
     assert msg.sender == self.owner
     self.keeper = new_keeper
 

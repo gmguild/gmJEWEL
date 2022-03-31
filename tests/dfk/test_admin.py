@@ -168,4 +168,15 @@ def test_central_bank_cant_change_feeWallet_if_not_admin(central_bank, alice):
         central_bank.updateFeeWallet(alice, {"from": alice})
 
 
-# need to test new keeper
+def test_central_bank_init_keeper(central_bank, deployer):
+    assert central_bank.keeper() == deployer
+
+
+def test_central_bank_change_feeWallet(central_bank, deployer, alice):
+    central_bank.updateKeeper(alice, {"from": deployer})
+    assert central_bank.keeper() == alice
+
+
+def test_central_bank_cant_change_feeWallet_if_not_admin(central_bank, alice):
+    with brownie.reverts():
+        central_bank.updateKeeper(alice, {"from": alice})

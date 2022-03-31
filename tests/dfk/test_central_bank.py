@@ -80,6 +80,21 @@ def test_owner_can_withdraw_protocol_jewel(
     assert crystal_token.balanceOf(central_bank) == "50 ether"
 
 
+def test_keeper_can_withdraw_protocol_jewel(
+    deployer, alice, central_bank, crystal_token, dfk_bank_account, bob
+):
+    crystal_token.transfer(alice, "100 ether", {"from": dfk_bank_account})
+    crystal_token.approve(central_bank, "100 ether", {"from": alice})
+    central_bank.buy("100 ether", {"from": alice})
+
+    assert crystal_token.balanceOf(central_bank) == "100 ether"
+    central_bank.updateKeeper(bob, {"from": deployer})
+    central_bank.withdrawCentralBankJewel("50 ether", {"from": bob})
+
+    assert crystal_token.balanceOf(deployer) == "50 ether"
+    assert crystal_token.balanceOf(central_bank) == "50 ether"
+
+
 def test_non_owner_cannot_withdraw_protocol_jewel(
     deployer, alice, central_bank, crystal_token, dfk_bank_account
 ):
