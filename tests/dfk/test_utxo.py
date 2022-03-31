@@ -32,7 +32,7 @@ def test_create_utxo_separately(pawn_shop, bob, UTXO):
 
 @given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
 def test_send_to_utxo(pawn_shop, bob, UTXO, crystal_token, id):
-    _utxo = pawn_shop.create({"from": bob}).return_value
+    _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
     whale = users_with_locked_crystal[id]

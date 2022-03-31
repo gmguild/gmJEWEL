@@ -1,8 +1,6 @@
 import pytest
 from brownie import ZERO_ADDRESS
 
-crystal_address = "0x04b9da42306b023f3572e106b11d82aad9d32ebb"
-
 
 @pytest.fixture(scope="module")
 def utxo_template(deployer, UTXO):
@@ -18,25 +16,27 @@ def gm_crystal(deployer, gmCRYSTAL, alice):
 
 
 @pytest.fixture(scope="module")
-def pawn_shop(deployer, utxo_template, gm_crystal, central_bank, PawnShop):
+def pawn_shop(
+    deployer, utxo_template, gm_crystal, central_bank, PawnShop, crystal_token
+):
     contract = deployer.deploy(
         PawnShop,
         gm_crystal,
         utxo_template,
         central_bank,
-        crystal_address,
+        crystal_token.address,
     )
     gm_crystal.addMinter(contract.address, {"from": deployer})
     yield contract
 
 
 @pytest.fixture(scope="module")
-def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_crystal):
+def pawn_shop_router(deployer, PawnShopRouter, pawn_shop, gm_crystal, crystal_token):
     contract = deployer.deploy(
         PawnShopRouter,
         pawn_shop,
         gm_crystal,
-        crystal_address,
+        crystal_token.address,
     )
     yield contract
 
