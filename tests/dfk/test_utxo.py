@@ -75,7 +75,7 @@ def test_send_unlocked_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
 
 
 @given(id=strategy("uint", max_value=len(users_with_locked_crystal) - 1))
-def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
+def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id, chain):
     _utxo = pawn_shop.createUTXO({"from": bob}).return_value
     utxo = UTXO.at(_utxo)
 
@@ -89,6 +89,7 @@ def test_send_all_jewel_from_utxo(pawn_shop, bob, UTXO, crystal_token, id):
 
     start_bal = crystal_token.totalBalanceOf(utxo)
 
+    chain.sleep(259201)
     utxo.transferAll(bob, {"from": pawn_shop})
 
     assert crystal_token.totalBalanceOf(utxo) == 0

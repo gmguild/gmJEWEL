@@ -1,5 +1,4 @@
 import pytest
-from brownie import ZERO_ADDRESS
 
 
 @pytest.fixture(scope="module")
