@@ -38,6 +38,7 @@ LIQLOCKJEWEL_TOKEN_ADDRESS: immutable(address)
 owner: public(address)
 isPaused: public(bool)
 feeWallet: public(address)
+keeper: public(address)
 
 
 @external
@@ -47,6 +48,7 @@ def __init__(_lljewel: address, _jewel: address):
 
     self.owner = msg.sender
     self.feeWallet = msg.sender
+    self.keeper = msg.sender
 
 
 @internal
@@ -125,8 +127,13 @@ def _withdrawCentralBankJewelTo(_to: address, _amount: uint256):
 
 @external
 def withdrawCentralBankJewel(_amount: uint256):
-    assert msg.sender == self.owner # dev: only owner can withdraw
+    assert msg.sender in [self.owner,self.keeper] # dev: only owner can withdraw
     self._withdrawCentralBankJewelTo(self.feeWallet, _amount)
+
+@external
+def setKeeper(new_keeper: address):
+    assert msg.sender == self.owner
+    self.keeper = new_keeper
 
 
 @external
