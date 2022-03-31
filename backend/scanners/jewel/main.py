@@ -8,6 +8,7 @@ where events are added wherever the scanner left off.
 
 import os
 import sched
+from eth_typing import BlockNumber
 from web3.providers.rpc import HTTPProvider
 import json
 import datetime
@@ -88,7 +89,7 @@ class IEventScannerState(ABC):
 
     @abstractmethod
     def process_event(
-        self, block_when: datetime.datetime, event: AttributeDict
+        self, block_when: datetime.datetime, event: AttributeDict, latest_block_number: BlockNumber
     ) -> object:
         """Process incoming events.
 
@@ -270,7 +271,8 @@ class EventScanner:
                     evt["event"],
                     evt["blockNumber"],
                 )
-                processed = self.state.process_event(block_when, evt, tx=tx)
+                processed = self.state.process_event(
+                    block_when, evt, tx=tx, latest_block_number=self.web3.eth.blockNumber)
                 all_processed.append(processed)
 
         end_block_timestamp = get_block_when(end_block)
@@ -599,7 +601,7 @@ class SqliteDictState(IEventScannerState):
         self.commit()
 
     def process_event(
-        self, block_when: datetime.datetime, event: AttributeDict, tx: AttributeDict
+        self, block_when: datetime.datetime, event: AttributeDict, tx: AttributeDict, latest_block_number: BlockNumber
     ) -> str:
         """Record a ERC-20 transfer in our database."""
         # Events are keyed by their transaction hash and log index
@@ -625,8 +627,6 @@ class SqliteDictState(IEventScannerState):
         def mark_event_as_seen(db):
             key = f"{block_number}-{txhash}-{log_index}-{event_type}"
             db[key] = True
-
-        print(event)
 
         # TODO: refactor all this so it"s not just one big function
         if event_type == "UTXOCreated":
@@ -665,7 +665,7 @@ class SqliteDictState(IEventScannerState):
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
-                if int(args["newVal"]) > 0:
+                if int(args["newVal"]) > 0 and block_number > (latest_block_number - 100):
                     notify_new_stash(args["newVal"])
                 mark_event_as_seen(self.state_utxo_seen_events)
             else:
@@ -695,7 +695,8 @@ class SqliteDictState(IEventScannerState):
                     "blockNumber": block_number,
                     "timestamp": block_when.timestamp() * 1000,  # milliseconds
                 }
-                notify_redeemed_stash(int(args["redeemedAmount"]))
+                if block_number > (latest_block_number - 100):
+                    notify_redeemed_stash(int(args["redeemedAmount"]))
                 mark_event_as_seen(self.state_utxo_redemptions)
                 self.state_meta[
                     "last_utxo_redemption_index"
@@ -897,7 +898,7 @@ scheduler.enter(RUN_EVERY_X_SECONDS, 1, run, (scheduler,))
 def notify_new_stash(value):
     webhook = DiscordWebhook(
         url=DISCORD_WEBHOOK_URL,
-        content=f"New stash has been minted! {value/1e18:.3f} locked jewel can be claimed.",
+        content=f"New JEWEL stash has been minted! {value/1e18:.3f} locked JEWEL can be claimed.",
     )
     response = webhook.execute()
 
@@ -905,6 +906,6 @@ def notify_new_stash(value):
 def notify_redeemed_stash(redeemed_value):
     webhook = DiscordWebhook(
         url=DISCORD_WEBHOOK_URL,
-        content=f"A stash has just been redeemed for {redeemed_value/1e18:.3f}. Need to be quicker next time!",
+        content=f"A JEWEL stash has just been redeemed for {redeemed_value/1e18:.3f}. Need to be quicker next time!",
     )
     response = webhook.execute()
