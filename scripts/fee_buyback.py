@@ -1,5 +1,5 @@
 from brownie import interface, accounts, chain, network, web3, Wei
-from brownie import UTXO, gmJEWEL, PawnShop, CentralBank, GMGToken, MasterJeweler, StakedGMG
+from brownie import hUTXO, gmJEWEL, hPawnShop, hCentralBank, GMGToken, MasterJeweler, StakedGMG
 import json
 import os
 
@@ -12,8 +12,8 @@ def main():
     jewel = interface.Jewel(ADDRESSES["JewelToken"])
     gmg = GMGToken.at(ADDRESSES["GMGToken"])
     xgmg = StakedGMG.at(ADDRESSES["StakedGMG"])
-    central_bank = CentralBank.at(ADDRESSES["CentralBank"])
-    pawn_shop = PawnShop.at(ADDRESSES["PawnShop"])
+    central_bank = hCentralBank.at(ADDRESSES["CentralBank"])
+    pawn_shop = hPawnShop.at(ADDRESSES["PawnShop"])
 
     factory = interface.IUniswapV2Factory(ADDRESSES["UniswapFactory"])
     router = interface.IUniswapV2Router(ADDRESSES["UniswapRouter"])
