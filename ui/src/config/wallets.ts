@@ -5,7 +5,7 @@ import { ChainId } from "../package";
 
 import RPC from "./rpc";
 
-const supportedChainIds = [ChainId.HARMONY, ChainId.AVALANCHE];
+const supportedChainIds = [ChainId.HARMONY, ChainId.DFK];
 
 export const network = new NetworkConnector({
   defaultChainId: 1,
