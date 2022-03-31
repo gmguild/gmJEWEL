@@ -6,7 +6,7 @@ import os
 from brownie import web3
 
 from scripts.helpers import toDict
-from tests.conftest import alice
+from tests.harmony.conftest import alice
 
 profiles_address = "0xabD4741948374b1f5DD5Dd7599AC1f85A34cAcDD"
 jewel_address = "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F"

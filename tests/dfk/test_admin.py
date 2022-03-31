@@ -1,11 +1,5 @@
 import pytest
 
-from tests.helpers import (
-    get_random_name,
-    users_with_locked_jewel,
-)
-from brownie import accounts
-from brownie.test import given, strategy
 import brownie
 
 
