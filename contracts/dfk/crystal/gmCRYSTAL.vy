@@ -50,8 +50,8 @@ isMinter: public(HashMap[address, bool])
 
 @external
 def __init__():
-    self.name     = "Greedy Merchant Jewel"
-    self.symbol   = "gmJEWEL"
+    self.name     = "Greedy Merchant Crystal"
+    self.symbol   = "gmCRYSTAL"
     self.decimals = 18
 
     self.owner                = msg.sender
