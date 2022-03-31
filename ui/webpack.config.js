@@ -54,6 +54,7 @@ module.exports = function(_env, argv) {
       new webpack.DefinePlugin({
         SERVICE_URL: JSON.stringify(isProduction ? "https://api.gmg.money" : 'http://localhost:8000'),
         RPC_URL: JSON.stringify(isProduction ? "https://api.harmony.one" : 'http://localhost:8545'),
+        DFK_URL: JSON.stringify(process.env.DFK_URL)
       }),
       isProduction ? new webpack.NormalModuleReplacementPlugin(
         /env\/dev/,

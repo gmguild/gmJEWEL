@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useBlockNumber, useContractRead } from "wagmi";
+import { useMemo } from "react";
+import { useSingleCallResult } from "../../state/multicall/hooks";
 import { B_1 } from "../../utils/constants";
 import { bigNumberToFloat } from "../../utils/conversion";
 import { abis, addresses } from "../../utils/env";
+import { useContract } from "../contract/useContract";
 
 export function usePrices(): [
   {
@@ -14,24 +15,13 @@ export function usePrices(): [
   },
   boolean
 ] {
-  const [loading, setLoading] = useState(true);
-  const [{ data: blockNumber }] = useBlockNumber({
-    watch: true,
-  });
-
-  const [{ data: jewelUsdcReserves }, readJewelUsdcReserves] = useContractRead(
-    {
-      // jewel-1usdc
-      addressOrName: "0xA1221A5BBEa699f507CC00bDedeA05b5d2e32Eba",
-      contractInterface: abis.UniswapV2Pair,
-    },
-    "getReserves",
-    useMemo(
-      () => ({
-        skip: true,
-      }),
-      []
-    )
+  const jewelUsdContract = useContract(
+    "0xA1221A5BBEa699f507CC00bDedeA05b5d2e32Eba",
+    abis.UniswapV2Pair
+  );
+  const { result: jewelUsdcReserves } = useSingleCallResult(
+    jewelUsdContract,
+    "getReserves"
   );
 
   const jewelPrice = useMemo(() => {
@@ -44,21 +34,14 @@ export function usePrices(): [
     );
   }, [jewelUsdcReserves]);
 
-  const [{ data: jewelgmJewelReserves }, readJewelGmJewelReserves] =
-    useContractRead(
-      {
-        // jewel-gmJewel
-        addressOrName: addresses.JgmJLPToken,
-        contractInterface: abis.UniswapV2Pair,
-      },
-      "getReserves",
-      useMemo(
-        () => ({
-          skip: true,
-        }),
-        []
-      )
-    );
+  const jewelGmJewelContract = useContract(
+    addresses.JgmJLPToken,
+    abis.UniswapV2Pair
+  );
+  const { result: jewelgmJewelReserves } = useSingleCallResult(
+    jewelGmJewelContract,
+    "getReserves"
+  );
 
   const gmJewelPriceInJewel = useMemo(() => {
     if (!jewelgmJewelReserves) return undefined;
@@ -76,20 +59,15 @@ export function usePrices(): [
     return gmJewelPriceInJewel * jewelPrice;
   }, [gmJewelPriceInJewel, jewelPrice]);
 
-  const [{ data: gmgReserves }, readJewelGmgReserves] = useContractRead(
-    {
-      // jewel-GMG
-      addressOrName: addresses.JGMGLPToken,
-      contractInterface: abis.UniswapV2Pair,
-    },
-    "getReserves",
-    useMemo(
-      () => ({
-        skip: true,
-      }),
-      []
-    )
+  const jewelGMGContract = useContract(
+    addresses.JGMGLPToken,
+    abis.UniswapV2Pair
   );
+  const { result: gmgReserves } = useSingleCallResult(
+    jewelGMGContract,
+    "getReserves"
+  );
+
   const gmgPriceInJewel = useMemo(() => {
     if (!gmgReserves) return undefined;
     if (!gmgReserves[0]) return undefined;
@@ -107,26 +85,6 @@ export function usePrices(): [
     return gmgPriceInJewel * jewelPrice;
   }, [gmgPriceInJewel, jewelPrice]);
 
-  useEffect(() => {
-    if (!blockNumber) return;
-    if (loading) return;
-
-    Promise.allSettled([
-      readJewelUsdcReserves(),
-      readJewelGmJewelReserves(),
-      readJewelGmgReserves(),
-    ]);
-  }, [blockNumber]);
-
-  useEffect(() => {
-    setLoading(true);
-    Promise.allSettled([
-      readJewelUsdcReserves(),
-      readJewelGmJewelReserves(),
-      readJewelGmgReserves(),
-    ]).finally(() => setLoading(false));
-  }, []);
-
   return [
     {
       jewelPrice,
@@ -135,6 +93,6 @@ export function usePrices(): [
       gmgPriceInJewel,
       gmgPriceInUSD,
     },
-    loading,
+    jewelPrice === undefined,
   ];
 }
