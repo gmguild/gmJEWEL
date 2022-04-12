@@ -91,6 +91,7 @@ export const WETH9_ADDRESS: AddressMap = {
 };
 
 export const WNATIVE_ADDRESS: AddressMap = {
+  [ChainId.DFK]: "0xCCb93dABD71c8Dad03Fc4CE5559dC3D89F67a260",
   [ChainId.MAINNET]: WETH9_ADDRESS[ChainId.MAINNET],
   [ChainId.ROPSTEN]: WETH9_ADDRESS[ChainId.ROPSTEN],
   [ChainId.RINKEBY]: WETH9_ADDRESS[ChainId.RINKEBY],

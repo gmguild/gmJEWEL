@@ -89,6 +89,8 @@ const FuseLogo =
   "https://raw.githubusercontent.com/sushiswap/logos/main/token/fuse.jpg";
 const TelosLogo =
   "https://raw.githubusercontent.com/sushiswap/logos/main/token/telos.jpg";
+const DFKLogo =
+  "https://raw.githubusercontent.com/gmguild/gmJEWEL/dev/ui/src/assets/DFKJewel.png";
 
 const LOGO: Record<ChainId, string> = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -120,6 +122,7 @@ const LOGO: Record<ChainId, string> = {
   [ChainId.MOONRIVER]: MovrLogo,
   [ChainId.FUSE]: FuseLogo,
   [ChainId.TELOS]: TelosLogo,
+  [ChainId.DFK]: DFKLogo,
 };
 
 export interface CurrencyLogoProps {

@@ -1,4 +1,5 @@
 import { ChainId } from "../package";
+import { dfkUrl } from "../utils/env";
 
 const RPC = {
   [ChainId.MAINNET]: "https://api.sushirelay.com/v1",
@@ -35,6 +36,8 @@ const RPC = {
   [ChainId.CELO]: "https://forno.celo.org",
   [ChainId.MOONRIVER]: "https://rpc.moonriver.moonbeam.network",
   [ChainId.TELOS]: "https://mainnet.telos.net/evm",
+  [ChainId.DFK]:
+    dfkUrl ?? "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc",
 };
 
 export default RPC;
